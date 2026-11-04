@@ -29,14 +29,16 @@ $gcal = 'https://calendar.google.com/calendar/render?' . http_build_query([
 $pageTitle = 'Undangan ' . $ev['name'] . ' ' . $c['title'];
 $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
-/** Ornamen bintang delapan (khatam) sebagai pemisah. */
+/** Ornamen pemisah: belah ketupat dengan dua titik. */
 function ornament(string $class = ''): string
 {
     return '<div class="ornament ' . $class . '" aria-hidden="true">'
         . '<span class="line"></span>'
-        . '<svg viewBox="0 0 40 40" width="22" height="22"><g fill="none" stroke="currentColor" stroke-width="1.2">'
-        . '<rect x="9" y="9" width="22" height="22"/><rect x="9" y="9" width="22" height="22" transform="rotate(45 20 20)"/>'
-        . '<circle cx="20" cy="20" r="3.2" fill="currentColor" stroke="none"/></g></svg>'
+        . '<svg viewBox="0 0 48 16" width="48" height="16" fill="currentColor">'
+        . '<circle cx="9" cy="8" r="1.4"/>'
+        . '<path d="M24 1.5 30.5 8 24 14.5 17.5 8Z" fill="none" stroke="currentColor" stroke-width="1"/>'
+        . '<path d="M24 5.2 26.8 8 24 10.8 21.2 8Z"/>'
+        . '<circle cx="39" cy="8" r="1.4"/></svg>'
         . '<span class="line"></span></div>';
 }
 ?>
@@ -62,7 +64,8 @@ function ornament(string $class = ''): string
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=1">
+    <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
     <noscript><style>.reveal{opacity:1;transform:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -197,15 +200,20 @@ function ornament(string $class = ''): string
         <p class="eyebrow reveal">Lokasi</p>
         <h3 class="section-title reveal"><?= e($ev['venue']) ?></h3>
         <div class="map reveal">
-            <iframe src="<?= e($ev['maps_embed']) ?>"
-                    title="Peta lokasi <?= e($ev['venue']) ?>"
-                    allowfullscreen loading="lazy"
-                    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <div id="map" class="map-canvas" role="region" aria-label="Peta lokasi <?= e($ev['venue']) ?>"
+                 data-lat="<?= e((string) $ev['lat']) ?>" data-lng="<?= e((string) $ev['lng']) ?>"
+                 data-label="<?= e($ev['venue']) ?>">
+                <a class="map-fallback" href="<?= e($ev['maps_url']) ?>" target="_blank" rel="noopener">Buka peta lokasi</a>
+            </div>
         </div>
         <div class="actions reveal">
             <a class="btn btn-dark" href="<?= e($ev['maps_url']) ?>" target="_blank" rel="noopener">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                Petunjuk Arah
+                Google Maps
+            </a>
+            <a class="btn btn-outline" href="<?= e($ev['waze_url']) ?>" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
+                Waze
             </a>
         </div>
     </section>
@@ -303,6 +311,7 @@ function ornament(string $class = ''): string
     </footer>
 </main>
 
-<script src="assets/js/main.js?v=1" defer></script>
+<script src="assets/vendor/leaflet/leaflet.js" defer></script>
+<script src="assets/js/main.js?v=2" defer></script>
 </body>
 </html>

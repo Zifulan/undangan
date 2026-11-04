@@ -62,6 +62,44 @@
         timer = setInterval(tick, 1000);
     }
 
+    /* ---------- Peta (Leaflet + OpenStreetMap/CARTO) ---------- */
+    var mapEl = document.getElementById('map');
+    if (mapEl && window.L) {
+        var lat = parseFloat(mapEl.getAttribute('data-lat'));
+        var lng = parseFloat(mapEl.getAttribute('data-lng'));
+        mapEl.innerHTML = '';
+
+        var map = L.map(mapEl, {
+            center: [lat, lng],
+            zoom: 16,
+            scrollWheelZoom: false,          // jangan "membajak" scroll halaman
+            dragging: !L.Browser.mobile,      // di HP, satu jari tetap untuk scroll halaman
+            tap: false,
+            attributionControl: true
+        });
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            subdomains: 'abcd',
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        }).addTo(map);
+        map.attributionControl.setPrefix(false);
+
+        L.marker([lat, lng], {
+            icon: L.divIcon({ className: '', html: '<div class="map-pin"></div>', iconSize: [34, 44], iconAnchor: [17, 40] }),
+            keyboard: false
+        })
+            .addTo(map)
+            .bindTooltip(mapEl.getAttribute('data-label'), {
+                permanent: true, direction: 'bottom', offset: [0, 6], className: 'map-label'
+            });
+
+        // Ukuran peta dihitung ulang setelah undangan dibuka / tampil.
+        var fix = function () { map.invalidateSize(); map.setView([lat, lng], 16); };
+        if (openBtn) openBtn.addEventListener('click', function () { setTimeout(fix, 1100); });
+        window.addEventListener('resize', function () { map.invalidateSize(); });
+    }
+
     /* ---------- RSVP ---------- */
     var form = document.getElementById('rsvpForm');
     if (!form) return;
