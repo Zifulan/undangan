@@ -414,10 +414,29 @@ main {
     font-family: var(--font-body);
 }
 
-.map-fallback { font-size: .85rem; color: var(--ink-soft); }
+.map-canvas { position: relative; }
+
+/* Kartu lokasi: tampil bila peta interaktif tidak bisa dimuat */
+.map-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .35rem;
+    padding: 1.5rem;
+    color: var(--espresso);
+    text-decoration: none;
+    text-align: center;
+}
+.map-fallback svg { color: var(--brass); margin-bottom: .25rem; }
+.map-fallback strong { font-family: var(--font-display); font-size: 1.35rem; font-weight: 500; }
+.map-fallback span { font-size: .8rem; letter-spacing: .08em; color: var(--ink-soft); }
+
+/* Peta interaktif menutupi kartu lokasi setelah tile pertama termuat */
+.map-leaflet { position: absolute; inset: 0; opacity: 0; pointer-events: none; transition: opacity .4s; }
+.map-canvas.is-ready .map-leaflet { opacity: 1; pointer-events: auto; }
 
 /* Warnai tile peta agar senada dengan palet ivory/espresso */
-.map-canvas .leaflet-tile-pane { filter: sepia(.35) saturate(.75) brightness(1.02) contrast(.95); }
+.map-canvas .leaflet-tile-pane { filter: grayscale(.25) sepia(.4) saturate(.7) brightness(1.03) contrast(.92); }
 .map-canvas.leaflet-container { background: var(--ivory-2); font-family: var(--font-body); }
 
 .map-canvas .leaflet-control-zoom { border: 1px solid var(--line); box-shadow: none; }

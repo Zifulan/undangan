@@ -4,7 +4,13 @@ declare(strict_types=1);
 require __DIR__ . '/includes/bootstrap.php';
 
 $c     = $CONTENT;
-$ev    = $c['event'];
+$ev    = $c['event'] + [
+    // Cadangan bila includes/content.php di server masih versi lama.
+    'lat'      => -6.2104465,
+    'lng'      => 106.7371328,
+    'maps_url' => 'https://maps.google.com/?cid=11657600879784974533',
+    'waze_url' => 'https://waze.com/ul?ll=-6.2104465,106.7371328&navigate=yes',
+];
 $guest = trim(mb_substr((string) ($_GET['to'] ?? ''), 0, 80));
 
 $wishes  = [];
@@ -65,7 +71,7 @@ function ornament(string $class = ''): string
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=2">
+    <link rel="stylesheet" href="assets/css/style.css?v=3">
     <noscript><style>.reveal{opacity:1;transform:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -203,7 +209,11 @@ function ornament(string $class = ''): string
             <div id="map" class="map-canvas" role="region" aria-label="Peta lokasi <?= e($ev['venue']) ?>"
                  data-lat="<?= e((string) $ev['lat']) ?>" data-lng="<?= e((string) $ev['lng']) ?>"
                  data-label="<?= e($ev['venue']) ?>">
-                <a class="map-fallback" href="<?= e($ev['maps_url']) ?>" target="_blank" rel="noopener">Buka peta lokasi</a>
+                <a class="map-fallback" href="<?= e($ev['maps_url']) ?>" target="_blank" rel="noopener">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                    <strong><?= e($ev['venue']) ?></strong>
+                    <span>Ketuk untuk membuka peta</span>
+                </a>
             </div>
         </div>
         <div class="actions reveal">
@@ -312,6 +322,6 @@ function ornament(string $class = ''): string
 </main>
 
 <script src="assets/vendor/leaflet/leaflet.js" defer></script>
-<script src="assets/js/main.js?v=2" defer></script>
+<script src="assets/js/main.js?v=3" defer></script>
 </body>
 </html>

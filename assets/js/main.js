@@ -62,14 +62,18 @@
         timer = setInterval(tick, 1000);
     }
 
-    /* ---------- Peta (Leaflet + OpenStreetMap/CARTO) ---------- */
+    /* ---------- Peta (Leaflet + OpenStreetMap) ---------- */
     var mapEl = document.getElementById('map');
-    if (mapEl && window.L) {
+    var initMap = function () {
         var lat = parseFloat(mapEl.getAttribute('data-lat'));
         var lng = parseFloat(mapEl.getAttribute('data-lng'));
-        mapEl.innerHTML = '';
+        if (!isFinite(lat) || !isFinite(lng)) throw new Error('Koordinat peta tidak valid');
 
-        var map = L.map(mapEl, {
+        var holder = document.createElement('div');
+        holder.className = 'map-leaflet';
+        mapEl.appendChild(holder);
+
+        var map = L.map(holder, {
             center: [lat, lng],
             zoom: 16,
             scrollWheelZoom: false,          // jangan "membajak" scroll halaman
@@ -78,10 +82,10 @@
             attributionControl: true
         });
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-            subdomains: 'abcd',
+        // Tile standar OpenStreetMap: gratis, tanpa API key (wajib mencantumkan atribusi).
+        var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
         map.attributionControl.setPrefix(false);
 
@@ -98,6 +102,21 @@
         var fix = function () { map.invalidateSize(); map.setView([lat, lng], 16); };
         if (openBtn) openBtn.addEventListener('click', function () { setTimeout(fix, 1100); });
         window.addEventListener('resize', function () { map.invalidateSize(); });
+
+        // Peta baru ditampilkan setelah tile pertama termuat. Bila tile diblokir
+        // (jaringan / ad-blocker), kartu lokasi di bawahnya tetap terlihat & bisa diketuk.
+        tiles.once('tileload', function () { mapEl.classList.add('is-ready'); });
+    };
+
+    if (mapEl && window.L) {
+        try {
+            initMap();
+        } catch (err) {
+            // Peta gagal dibuat: biarkan kartu lokasi (fallback) yang tampil.
+            var broken = mapEl.querySelector('.map-leaflet');
+            if (broken) broken.remove();
+            if (window.console) console.warn('[peta]', err);
+        }
     }
 
     /* ---------- RSVP ---------- */
