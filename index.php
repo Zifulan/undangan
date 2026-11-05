@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=11">
+    <link rel="stylesheet" href="assets/css/style.css?v=12">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -189,11 +189,12 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <p class="person-parents"><?= $G['parents'] ?></p>
             </article>
 
-            <div class="arch reveal" aria-hidden="true">
-                <?= arch_frame() ?>
-                <div class="arch-body"<?= slot_bg('bg-banner.jpg') ?>>
-                    <span class="script arch-mono"><?= e(mb_substr($G['nickname'], 0, 1)) ?><small>&amp;</small><?= e(mb_substr($B['nickname'], 0, 1)) ?></span>
-                </div>
+            <div class="orchid reveal" aria-hidden="true">
+                <picture>
+                    <source srcset="<?= e(img_url('orchid-frame.webp')) ?>" type="image/webp">
+                    <img src="<?= e(img_url('orchid-frame.png')) ?>" alt="" width="760" height="1175" loading="lazy" decoding="async">
+                </picture>
+                <span class="script orchid-mono"><span class="m-letter"><?= e(mb_substr($G['nickname'], 0, 1)) ?></span><span class="m-amp">&amp;</span><span class="m-letter"><?= e(mb_substr($B['nickname'], 0, 1)) ?></span></span>
             </div>
 
             <article class="person reveal">
@@ -357,6 +358,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
 </main>
 
-<script src="assets/js/main.js?v=9" defer></script>
+<script src="assets/js/main.js?v=10" defer></script>
 </body>
 </html>

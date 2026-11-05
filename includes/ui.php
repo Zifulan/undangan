@@ -12,7 +12,6 @@ declare(strict_types=1);
  *   floral-rsvp.png     bunga di pojok kartu RSVP (PNG transparan, ±600px)
  *   floral-envelope.png bunga di pojok amplop sampul (PNG transparan, ±600px)
  *   bg-cover.jpg        lukisan latar sampul (potret, ±1080×1920)
- *   bg-banner.jpg       lukisan pemandangan di belakang monogram (lebar, ±1920×800)
  *   envelope-liner.jpg  lukisan di bagian dalam tutup amplop (±800×600)
  */
 
@@ -110,12 +109,3 @@ function cartouche_frame(): string
         . '</svg>';
 }
 
-/** Bingkai jendela melengkung (arch) untuk monogram. */
-function arch_frame(): string
-{
-    return '<svg class="arch-frame" viewBox="0 0 200 280" preserveAspectRatio="none" aria-hidden="true">'
-        . '<path class="af-fill" d="M22 272 L22 104 A78 78 0 0 1 178 104 L178 272Z"/>'
-        . '<path class="af-line" filter="url(#doodle-rough)" d="M8 278 L8 102 A92 92 0 0 1 192 102 L192 278Z" vector-effect="non-scaling-stroke"/>'
-        . '<path class="af-line" filter="url(#doodle-rough)" d="M15 272 L15 103 A85 85 0 0 1 185 103 L185 272Z" vector-effect="non-scaling-stroke"/>'
-        . '</svg>';
-}
