@@ -108,7 +108,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <p class="arabic arabic-bismillah reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
 
         <div class="cartouche cartouche-hero tilt-l reveal">
-            <span class="tape tape-rose tape-tl" aria-hidden="true"></span>
             <?= cartouche_frame() ?>
             <?= slot_img('floral-hero.png', 'floral floral-hero') ?>
             <?= doodle('rings', 'dd dd-hero-rings') ?>
@@ -131,7 +130,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <?= doodle('crescent', 'dd dd-corner-r') ?>
         <div class="opening-grid">
             <div class="calendar-wrap tilt-r reveal">
-                <span class="tape tape-sage tape-tl" aria-hidden="true"></span>
                 <?= doodle_calendar($startTs) ?>
                 <?= slot_img('floral-date.png', 'floral floral-date') ?>
             </div>
@@ -147,7 +145,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         </div>
 
         <figure class="ayat sketch tilt-s reveal">
-            <span class="tape tape-sage tape-top" aria-hidden="true"></span>
             <?= doodle('quran', 'dd-inline') ?>
             <p class="arabic arabic-ayat" lang="ar" dir="rtl">
                 وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ
@@ -202,8 +199,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
         <dl class="event-meta sketch tilt-r reveal">
-            <span class="tape tape-rose tape-tl" aria-hidden="true"></span>
-            <span class="tape tape-rose tape-br" aria-hidden="true"></span>
             <div>
                 <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
                 <dd><?= e(tanggal_id($ev['start'])) ?></dd>
@@ -238,8 +233,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <p class="venue-name reveal"><?= e($ev['venue']) ?></p>
 
         <div class="map sketch tilt-l reveal">
-            <span class="tape tape-sage tape-tl" aria-hidden="true"></span>
-            <span class="tape tape-sage tape-tr" aria-hidden="true"></span>
             <div id="map" class="map-canvas" role="region" aria-label="Peta lokasi <?= e($ev['venue']) ?>"
                  data-lat="<?= e((string) $ev['lat']) ?>" data-lng="<?= e((string) $ev['lng']) ?>"
                  data-label="<?= e($ev['venue']) ?>">

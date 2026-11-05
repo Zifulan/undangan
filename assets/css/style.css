@@ -1007,32 +1007,12 @@ p { margin: 0 0 1rem; }
 }
 
 /* =========================================================
-   2. TATA LETAK SCRAPBOOK: miring & selotip washi
+   2. TATA LETAK SCRAPBOOK: kartu sedikit miring
    ========================================================= */
 .tilt-l { rotate: -1.4deg; }
 .tilt-r { rotate: 1.6deg; }
 .tilt-s { rotate: -.7deg; }
 
-.tape {
-    position: absolute;
-    z-index: 5;
-    width: 92px;
-    height: 26px;
-    opacity: .82;
-    pointer-events: none;
-    /* tepi sobek bergerigi */
-    clip-path: polygon(0 8%, 4% 0, 8% 10%, 12% 2%, 16% 0, 84% 0, 88% 8%, 92% 0, 96% 10%, 100% 4%, 100% 92%, 96% 100%, 92% 90%, 88% 100%, 84% 94%, 16% 100%, 12% 92%, 8% 100%, 4% 90%, 0 96%);
-    box-shadow: 0 1px 2px rgba(46, 27, 31, .12);
-}
-.tape-sage { background: repeating-linear-gradient(-45deg, #BFC5A6 0 6px, #B3BA97 6px 12px); }
-.tape-rose { background: repeating-linear-gradient(45deg, #E6C3C8 0 5px, #DDB3B9 5px 10px); }
-
-.tape-tl { top: -10px; left: -18px; transform: rotate(-32deg); }
-.tape-tr { top: -10px; right: -18px; transform: rotate(32deg); }
-.tape-br { bottom: -10px; right: -18px; transform: rotate(-32deg); }
-.tape-top { top: -13px; left: 50%; margin-left: -46px; transform: rotate(-3deg); }
-
-.cartouche-hero .tape-tl { top: 6px; left: -14px; }
 
 /* =========================================================
    3. UCAPAN SEBAGAI KERTAS TEMPEL
@@ -1058,18 +1038,6 @@ p { margin: 0 0 1rem; }
 .wish:nth-child(3n+2) { background-color: #E8EBDA; --tilt: 1.3deg; }
 .wish:nth-child(3n)   { background-color: #FBF6EA; --tilt: -.6deg; }
 
-/* selotip kecil di atas setiap catatan */
-.wish::before {
-    content: "";
-    position: absolute;
-    top: -9px;
-    left: 50%;
-    width: 64px;
-    height: 18px;
-    margin-left: -32px;
-    background: rgba(201, 174, 132, .45);
-    rotate: -4deg;
-}
 
 .wish p {
     font-family: "Caveat", var(--font-script), cursive;
@@ -1137,5 +1105,4 @@ p { margin: 0 0 1rem; }
     .wish.is-new, .rsvp-thanks.is-in { animation: none; }
 }
 .draw .dcal-heart path { stroke-dasharray: none; stroke-dashoffset: 0; }
-.calendar-wrap .tape-tl { top: 13%; left: -16px; }
 .note.is-sent > .section-script { display: none; }
