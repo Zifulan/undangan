@@ -10,6 +10,7 @@ $ev    = $c['event'] + [
     'lng'      => 106.7371328,
     'maps_url' => 'https://maps.google.com/?cid=11657600879784974533',
     'waze_url' => 'https://waze.com/ul?ll=-6.2104465,106.7371328&navigate=yes',
+    'city'     => 'Jakarta',
 ];
 $guest = trim(mb_substr((string) ($_GET['to'] ?? ''), 0, 80));
 
@@ -22,31 +23,26 @@ try {
     // Halaman tetap tampil walau database belum disiapkan.
 }
 
-$startIso = date('c', strtotime($ev['start']));
+$startTs  = strtotime($ev['start']);
+$startIso = date('c', $startTs);
 $gcal = 'https://calendar.google.com/calendar/render?' . http_build_query([
     'action'   => 'TEMPLATE',
     'text'     => $ev['name'] . ' ' . $c['groom']['nickname'] . ' & ' . $c['bride']['nickname'],
-    'dates'    => gmdate('Ymd\THis\Z', strtotime($ev['start'])) . '/' . gmdate('Ymd\THis\Z', strtotime($ev['end'])),
+    'dates'    => gmdate('Ymd\THis\Z', $startTs) . '/' . gmdate('Ymd\THis\Z', strtotime($ev['end'])),
     'details'  => 'Akad Nikah ' . $c['groom']['name'] . ' & ' . $c['bride']['name'],
     'location' => $ev['venue'],
     'ctz'      => 'Asia/Jakarta',
 ]);
 
+$G = $c['groom'];
+$B = $c['bride'];
+$monogram  = mb_substr($G['nickname'], 0, 1) . mb_substr($B['nickname'], 0, 1);   // "FG"
+$sealText  = mb_substr($G['nickname'], 0, 1) . '&' . mb_substr($B['nickname'], 0, 1); // "F&G"
+$months    = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+$days      = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
 $pageTitle = 'Undangan ' . $ev['name'] . ' ' . $c['title'];
 $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
-
-/** Ornamen pemisah: belah ketupat dengan dua titik. */
-function ornament(string $class = ''): string
-{
-    return '<div class="ornament ' . $class . '" aria-hidden="true">'
-        . '<span class="line"></span>'
-        . '<svg viewBox="0 0 48 16" width="48" height="16" fill="currentColor">'
-        . '<circle cx="9" cy="8" r="1.4"/>'
-        . '<path d="M24 1.5 30.5 8 24 14.5 17.5 8Z" fill="none" stroke="currentColor" stroke-width="1"/>'
-        . '<path d="M24 5.2 26.8 8 24 10.8 21.2 8Z"/>'
-        . '<circle cx="39" cy="8" r="1.4"/></svg>'
-        . '<span class="line"></span></div>';
-}
 ?>
 <!doctype html>
 <html lang="id">
@@ -55,7 +51,7 @@ function ornament(string $class = ''): string
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title><?= e($pageTitle) ?></title>
     <meta name="description" content="<?= e($pageDesc) ?>">
-    <meta name="theme-color" content="#1A110B">
+    <meta name="theme-color" content="#4A1C24">
     <meta name="robots" content="noindex, nofollow">
 
     <meta property="og:type" content="website">
@@ -69,64 +65,91 @@ function ornament(string $class = ''): string
     <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=3">
-    <noscript><style>.reveal{opacity:1;transform:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
+    <link rel="stylesheet" href="assets/css/style.css?v=4">
+    <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
 
-<!-- ============ COVER ============ -->
-<section class="cover" id="cover" aria-label="Sampul undangan">
-    <div class="frame" aria-hidden="true"></div>
+<!-- ============ SAMPUL: AMPLOP & SEGEL ============ -->
+<section class="cover paper" id="cover" aria-label="Sampul undangan"<?= slot_bg('bg-cover.jpg') ?>>
     <div class="cover-inner">
-        <p class="eyebrow">Undangan <?= e($ev['name']) ?></p>
-        <h1 class="names-script">
-            <?= e($c['groom']['nickname']) ?>
-            <span class="amp">&amp;</span>
-            <?= e($c['bride']['nickname']) ?>
-        </h1>
-        <p class="cover-date"><?= e(tanggal_id($ev['start'])) ?></p>
-
-        <?= ornament('on-dark') ?>
-
         <div class="recipient">
-            <p class="recipient-label">Kepada Yth.<br>Bapak/Ibu/Saudara/i</p>
+            <p class="caps">Kepada Yth. Bapak/Ibu/Saudara/i</p>
             <p class="recipient-name"><?= $guest !== '' ? e($guest) : 'Tamu Undangan' ?></p>
         </div>
 
-        <button type="button" class="btn btn-light" id="openInvitation">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 7l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="1.5"/></svg>
-            Buka Undangan
-        </button>
+        <div class="envelope" id="envelope">
+            <div class="env-back"></div>
+            <div class="env-card">
+                <p class="caps caps-xs">Undangan Akad Nikah</p>
+                <p class="script env-names"><?= e($G['nickname']) ?> <span>&amp;</span> <?= e($B['nickname']) ?></p>
+                <p class="caps caps-xs"><?= e(date('d . m . Y', $startTs)) ?></p>
+            </div>
+            <div class="env-pocket"></div>
+            <div class="env-flap-wrap"><div class="env-flap"<?= slot_bg('envelope-liner.jpg') ?>></div></div>
+            <?= slot_img('floral-envelope.png', 'floral floral-envelope') ?>
+            <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
+                <?= wax_seal($sealText, 'plum') ?>
+            </button>
+        </div>
+
+        <p class="cover-hint">Ketuk segel untuk membuka</p>
     </div>
 </section>
 
 <main id="main">
 
-    <!-- ============ HERO ============ -->
-    <section class="hero section-dark">
-        <div class="frame" aria-hidden="true"></div>
-        <p class="arabic arabic-lg reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-        <p class="eyebrow reveal">Akad Nikah</p>
-        <h2 class="names-script reveal">
-            <?= e($c['groom']['nickname']) ?>
-            <span class="amp">&amp;</span>
-            <?= e($c['bride']['nickname']) ?>
-        </h2>
-        <p class="hero-date reveal"><?= e(tanggal_id($ev['start'])) ?></p>
-        <div class="scroll-hint" aria-hidden="true"><span></span></div>
+    <!-- ============ KARTU NAMA ============ -->
+    <section class="section paper hero" id="beranda">
+        <p class="arabic arabic-bismillah reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+
+        <div class="cartouche cartouche-hero reveal">
+            <?= cartouche_frame() ?>
+            <?= slot_img('floral-hero.png', 'floral floral-hero') ?>
+            <div class="cartouche-body">
+                <p class="caps">Undangan<br>Akad Nikah</p>
+                <h1 class="couple-names">
+                    <span class="script name-script words"><?= e($G['nickname']) ?></span>
+                    <span class="caps caps-name"><?= e($G['name']) ?></span>
+                    <span class="script name-and">dan</span>
+                    <span class="script name-script words"><?= e($B['nickname']) ?></span>
+                    <span class="caps caps-name"><?= e($B['name']) ?></span>
+                </h1>
+            </div>
+        </div>
     </section>
 
-    <!-- ============ SALAM & AYAT ============ -->
-    <section class="section intro">
-        <p class="arabic reveal" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
-        <p class="lead reveal">
-            Dengan memohon rahmat dan ridho Allah Subhanahu wa Ta'ala, kami bermaksud
-            menyelenggarakan akad nikah putra-putri kami.
-        </p>
+    <!-- ============ PEMBUKA & TANGGAL ============ -->
+    <section class="section paper opening" id="pembuka">
+        <div class="opening-grid">
+            <div class="cartouche cartouche-date reveal">
+                <?= cartouche_frame() ?>
+                <?= slot_img('floral-date.png', 'floral floral-date') ?>
+                <div class="cartouche-body">
+                    <p class="script date-month"><?= e($months[(int) date('n', $startTs)]) ?></p>
+                    <p class="date-day"><?= e(date('j', $startTs)) ?></p>
+                    <p class="caps caps-sm">Dua Ribu<br>Dua Puluh Enam</p>
+                    <p class="script date-city"><?= e($days[(int) date('w', $startTs)]) ?></p>
+                </div>
+            </div>
 
-        <?= ornament('reveal') ?>
+            <div class="opening-text">
+                <p class="arabic reveal" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
+                <p class="caps caps-sm reveal">Awal dari</p>
+                <h2 class="script section-script words reveal">Ikatan Suci Kami</h2>
+                <p class="reveal">
+                    Dengan memohon rahmat dan ridho Allah Subhanahu wa Ta'ala, kami bermaksud
+                    menyelenggarakan akad nikah putra-putri kami.
+                </p>
+                <p class="reveal">
+                    Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir
+                    dan memberikan doa restu.
+                </p>
+                <p class="script signature reveal"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></p>
+            </div>
+        </div>
 
         <figure class="ayat reveal">
             <p class="arabic arabic-ayat" lang="ar" dir="rtl">
@@ -138,52 +161,61 @@ function ornament(string $class = ''): string
                 Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu
                 benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.”
             </blockquote>
-            <figcaption>QS. Ar-Rum : 21</figcaption>
+            <figcaption class="caps caps-xs">QS. Ar-Rum : 21</figcaption>
         </figure>
     </section>
 
     <!-- ============ MEMPELAI ============ -->
-    <section class="section couple" id="mempelai">
-        <p class="eyebrow reveal">Mempelai</p>
+    <section class="section wine couple" id="mempelai">
+        <p class="caps caps-sm reveal">Kedua</p>
+        <h2 class="script section-script words reveal">Mempelai</h2>
 
-        <article class="person reveal">
-            <div class="monogram" aria-hidden="true"><?= e(mb_substr($c['groom']['nickname'], 0, 1)) ?></div>
-            <h3 class="person-name"><?= e($c['groom']['name']) ?></h3>
-            <p class="person-parents"><?= $c['groom']['parents'] ?></p>
-        </article>
+        <div class="couple-grid">
+            <article class="person reveal">
+                <h3 class="script person-nick"><?= e($G['nickname']) ?></h3>
+                <p class="caps person-name"><?= e($G['name']) ?></p>
+                <p class="person-parents"><?= $G['parents'] ?></p>
+            </article>
 
-        <div class="couple-amp reveal" aria-hidden="true">&amp;</div>
+            <div class="arch reveal" aria-hidden="true">
+                <?= arch_frame() ?>
+                <div class="arch-body"<?= slot_bg('bg-banner.jpg') ?>>
+                    <span class="script arch-mono"><?= e(mb_substr($G['nickname'], 0, 1)) ?><small>&amp;</small><?= e(mb_substr($B['nickname'], 0, 1)) ?></span>
+                </div>
+            </div>
 
-        <article class="person reveal">
-            <div class="monogram" aria-hidden="true"><?= e(mb_substr($c['bride']['nickname'], 0, 1)) ?></div>
-            <h3 class="person-name"><?= e($c['bride']['name']) ?></h3>
-            <p class="person-parents"><?= $c['bride']['parents'] ?></p>
-        </article>
+            <article class="person reveal">
+                <h3 class="script person-nick"><?= e($B['nickname']) ?></h3>
+                <p class="caps person-name"><?= e($B['name']) ?></p>
+                <p class="person-parents"><?= $B['parents'] ?></p>
+            </article>
+        </div>
     </section>
 
-    <!-- ============ ACARA ============ -->
-    <section class="section section-dark event" id="acara">
-        <div class="frame" aria-hidden="true"></div>
-        <p class="eyebrow reveal">Insya Allah akan dilaksanakan pada</p>
+    <!-- ============ BANNER MONOGRAM ============ -->
+    <section class="banner" aria-hidden="true"<?= slot_bg('bg-banner.jpg') ?>>
+        <span class="script banner-mono reveal"><?= e(mb_substr($G['nickname'], 0, 1)) ?><span>&amp;</span><?= e(mb_substr($B['nickname'], 0, 1)) ?></span>
+    </section>
 
-        <div class="event-card reveal">
-            <h3 class="event-title"><?= e($ev['name']) ?></h3>
-            <?= ornament('on-dark') ?>
-            <dl class="event-meta">
-                <div>
-                    <dt>Hari &amp; Tanggal</dt>
-                    <dd><?= e(tanggal_id($ev['start'])) ?></dd>
-                </div>
-                <div>
-                    <dt>Waktu</dt>
-                    <dd><?= e($ev['time_text']) ?></dd>
-                </div>
-                <div>
-                    <dt>Tempat</dt>
-                    <dd><?= e($ev['venue']) ?></dd>
-                </div>
-            </dl>
-        </div>
+    <!-- ============ AKAD NIKAH ============ -->
+    <section class="section wine event" id="acara">
+        <p class="caps caps-sm reveal">Insya Allah akan dilaksanakan</p>
+        <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
+
+        <dl class="event-meta reveal">
+            <div>
+                <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
+                <dd><?= e(tanggal_id($ev['start'])) ?></dd>
+            </div>
+            <div>
+                <dt class="caps caps-xs">Waktu</dt>
+                <dd><?= e($ev['time_text']) ?></dd>
+            </div>
+            <div>
+                <dt class="caps caps-xs">Tempat</dt>
+                <dd><?= e($ev['venue']) ?></dd>
+            </div>
+        </dl>
 
         <div class="countdown reveal" id="countdown" data-target="<?= e($startIso) ?>" aria-live="polite">
             <div><span data-unit="days">0</span><small>Hari</small></div>
@@ -191,20 +223,19 @@ function ornament(string $class = ''): string
             <div><span data-unit="minutes">0</span><small>Menit</small></div>
             <div><span data-unit="seconds">0</span><small>Detik</small></div>
         </div>
-        <p class="countdown-done" id="countdownDone" hidden>Alhamdulillah, hari bahagia telah tiba.</p>
+        <p class="script countdown-done" id="countdownDone" hidden>Alhamdulillah, hari bahagia telah tiba</p>
 
         <div class="actions reveal">
-            <a class="btn btn-light" href="<?= e($gcal) ?>" target="_blank" rel="noopener">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-                Simpan ke Kalender
-            </a>
+            <a class="btn btn-ivory" href="<?= e($gcal) ?>" target="_blank" rel="noopener">Simpan ke Kalender</a>
         </div>
     </section>
 
     <!-- ============ LOKASI ============ -->
-    <section class="section location" id="lokasi">
-        <p class="eyebrow reveal">Lokasi</p>
-        <h3 class="section-title reveal"><?= e($ev['venue']) ?></h3>
+    <section class="section paper location" id="lokasi">
+        <p class="caps caps-sm reveal">Lokasi</p>
+        <h2 class="script section-script words reveal">Menuju Masjid</h2>
+        <p class="venue-name reveal"><?= e($ev['venue']) ?></p>
+
         <div class="map reveal">
             <div id="map" class="map-canvas" role="region" aria-label="Peta lokasi <?= e($ev['venue']) ?>"
                  data-lat="<?= e((string) $ev['lat']) ?>" data-lng="<?= e((string) $ev['lng']) ?>"
@@ -216,70 +247,69 @@ function ornament(string $class = ''): string
                 </a>
             </div>
         </div>
+
         <div class="actions reveal">
-            <a class="btn btn-dark" href="<?= e($ev['maps_url']) ?>" target="_blank" rel="noopener">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                Google Maps
-            </a>
-            <a class="btn btn-outline" href="<?= e($ev['waze_url']) ?>" target="_blank" rel="noopener">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
-                Waze
-            </a>
+            <a class="btn btn-wine" href="<?= e($ev['maps_url']) ?>" target="_blank" rel="noopener">Google Maps</a>
+            <a class="btn btn-outline" href="<?= e($ev['waze_url']) ?>" target="_blank" rel="noopener">Waze</a>
         </div>
     </section>
 
     <!-- ============ RSVP & UCAPAN ============ -->
-    <section class="section rsvp" id="rsvp">
-        <p class="eyebrow reveal">Konfirmasi Kehadiran</p>
-        <h3 class="section-title reveal">RSVP &amp; Doa Restu</h3>
-        <p class="muted reveal">Mohon kesediaannya untuk mengonfirmasi kehadiran dan menitipkan doa untuk kami.</p>
+    <section class="section paper rsvp" id="rsvp">
+        <div class="note reveal">
+            <?= slot_img('floral-rsvp.png', 'floral floral-rsvp') ?>
+            <div class="note-seal"><?= wax_seal($sealText, 'olive') ?></div>
+            <p class="caps">Mohon</p>
+            <h2 class="script section-script">Konfirmasi</h2>
+            <p class="muted">Kehadiran &amp; doa restu Anda sangat berarti bagi kami.</p>
 
-        <?php if (!$dbReady): ?>
-            <p class="notice reveal">Formulir konfirmasi sedang disiapkan. Silakan kembali beberapa saat lagi.</p>
-        <?php else: ?>
-        <form class="rsvp-form reveal" id="rsvpForm" action="api/rsvp.php" method="post" novalidate>
-            <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-            <input type="hidden" name="invited_as" value="<?= e($guest) ?>">
-            <div class="hp" aria-hidden="true">
-                <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-            </div>
-
-            <label class="field">
-                <span>Nama</span>
-                <input type="text" name="name" maxlength="100" required autocomplete="name"
-                       value="<?= e($guest) ?>" placeholder="Nama Anda">
-            </label>
-
-            <fieldset class="field">
-                <legend>Kehadiran</legend>
-                <div class="choices">
-                    <label class="choice"><input type="radio" name="attendance" value="hadir" required><span>Hadir</span></label>
-                    <label class="choice"><input type="radio" name="attendance" value="tidak_hadir"><span>Tidak Hadir</span></label>
-                    <label class="choice"><input type="radio" name="attendance" value="ragu"><span>Masih Ragu</span></label>
+            <?php if (!$dbReady): ?>
+                <p class="notice">Formulir konfirmasi sedang disiapkan. Silakan kembali beberapa saat lagi.</p>
+            <?php else: ?>
+            <form class="rsvp-form" id="rsvpForm" action="api/rsvp.php" method="post" novalidate>
+                <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                <input type="hidden" name="invited_as" value="<?= e($guest) ?>">
+                <div class="hp" aria-hidden="true">
+                    <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
                 </div>
-            </fieldset>
 
-            <label class="field" id="guestsField" hidden>
-                <span>Jumlah tamu</span>
-                <select name="guests">
-                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <option value="<?= $i ?>"><?= $i ?> orang</option>
-                    <?php endfor; ?>
-                </select>
-            </label>
+                <label class="field">
+                    <span class="caps caps-xs">Nama</span>
+                    <input type="text" name="name" maxlength="100" required autocomplete="name"
+                           value="<?= e($guest) ?>" placeholder="Nama Anda">
+                </label>
 
-            <label class="field">
-                <span>Ucapan &amp; doa <em>(opsional)</em></span>
-                <textarea name="message" rows="4" maxlength="500" placeholder="Tuliskan ucapan dan doa terbaik…"></textarea>
-            </label>
+                <fieldset class="field">
+                    <legend class="caps caps-xs">Kehadiran</legend>
+                    <div class="choices">
+                        <label class="choice"><input type="radio" name="attendance" value="hadir" required><span>Hadir</span></label>
+                        <label class="choice"><input type="radio" name="attendance" value="tidak_hadir"><span>Tidak Hadir</span></label>
+                        <label class="choice"><input type="radio" name="attendance" value="ragu"><span>Masih Ragu</span></label>
+                    </div>
+                </fieldset>
 
-            <button type="submit" class="btn btn-dark btn-block">Kirim</button>
-            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-        </form>
-        <?php endif; ?>
+                <label class="field" id="guestsField" hidden>
+                    <span class="caps caps-xs">Jumlah tamu</span>
+                    <select name="guests">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <option value="<?= $i ?>"><?= $i ?> orang</option>
+                        <?php endfor; ?>
+                    </select>
+                </label>
+
+                <label class="field">
+                    <span class="caps caps-xs">Ucapan &amp; doa <em>(opsional)</em></span>
+                    <textarea name="message" rows="4" maxlength="500" placeholder="Tuliskan ucapan dan doa terbaik…"></textarea>
+                </label>
+
+                <button type="submit" class="btn btn-wine btn-block">Kirim</button>
+                <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            </form>
+            <?php endif; ?>
+        </div>
 
         <div class="wishes reveal">
-            <h4 class="wishes-title">Ucapan &amp; Doa <span id="wishCount"><?= count($wishes) ?: '' ?></span></h4>
+            <h3 class="script wishes-title">Ucapan &amp; Doa <span id="wishCount"><?= count($wishes) ?: '' ?></span></h3>
             <ul class="wish-list" id="wishList">
                 <?php foreach ($wishes as $w): ?>
                     <li class="wish">
@@ -297,31 +327,25 @@ function ornament(string $class = ''): string
     </section>
 
     <!-- ============ PENUTUP ============ -->
-    <section class="section section-dark closing">
-        <div class="frame" aria-hidden="true"></div>
-        <p class="lead reveal">
-            Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i
-            berkenan hadir dan memberikan doa restu.
-        </p>
+    <section class="section wine closing">
         <p class="arabic reveal" lang="ar" dir="rtl">بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</p>
-        <p class="muted-light reveal"><em>“Semoga Allah memberkahimu dalam suka maupun duka, dan mempersatukan kalian berdua dalam kebaikan.”</em> (HR. Abu Dawud &amp; Tirmidzi)</p>
+        <p class="closing-trans reveal"><em>“Semoga Allah memberkahimu dalam suka maupun duka, dan mempersatukan kalian berdua dalam kebaikan.”</em><br><span class="caps caps-xs">HR. Abu Dawud &amp; Tirmidzi</span></p>
 
-        <?= ornament('on-dark reveal') ?>
+        <div class="closing-seal reveal"><?= wax_seal($sealText, 'olive') ?></div>
 
         <p class="arabic reveal" lang="ar" dir="rtl">وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
-        <p class="signoff reveal">Kami yang berbahagia,</p>
-        <p class="names-script names-sm reveal">
-            <?= e($c['groom']['nickname']) ?> <span class="amp">&amp;</span> <?= e($c['bride']['nickname']) ?>
-        </p>
-        <p class="muted-light reveal">beserta keluarga besar</p>
+        <p class="caps caps-sm reveal">Dengan cinta,</p>
+        <p class="script closing-names words reveal"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></p>
+        <p class="caps caps-sm reveal"><?= e(strtoupper(tanggal_id($ev['start'], false))) ?></p>
+        <p class="closing-family reveal">beserta keluarga besar</p>
     </section>
 
     <footer class="footer">
-        <p><?= e($c['groom']['nickname']) ?> &amp; <?= e($c['bride']['nickname']) ?> · <?= e(date('Y', strtotime($ev['start']))) ?></p>
+        <p class="caps caps-xs"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?> · <?= e(date('Y', $startTs)) ?></p>
     </footer>
 </main>
 
 <script src="assets/vendor/leaflet/leaflet.js" defer></script>
-<script src="assets/js/main.js?v=3" defer></script>
+<script src="assets/js/main.js?v=4" defer></script>
 </body>
 </html>

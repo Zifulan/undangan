@@ -3,22 +3,48 @@
 
     var body = document.body;
 
-    /* ---------- Buka undangan ---------- */
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- Pecah judul menjadi kata (animasi muncul per kata) ---------- */
+    document.querySelectorAll('.words').forEach(function (el) {
+        var parts = el.textContent.trim().split(/\s+/);
+        el.setAttribute('aria-label', el.textContent.trim());
+        el.innerHTML = parts.map(function (word, i) {
+            var span = document.createElement('span');
+            span.className = 'w';
+            span.setAttribute('aria-hidden', 'true');
+            span.style.setProperty('--i', i);
+            span.textContent = word;
+            return span.outerHTML;
+        }).join(' ');
+    });
+
+    /* ---------- Buka undangan: segel → tutup amplop → kartu keluar ---------- */
     var cover = document.getElementById('cover');
     var openBtn = document.getElementById('openInvitation');
+    var OPEN_MS = reduceMotion ? 0 : 2300;
 
     if (openBtn) {
         openBtn.addEventListener('click', function () {
-            cover.classList.add('is-open');
-            body.classList.remove('is-locked');
-            window.scrollTo(0, 0);
-            setTimeout(function () { cover.setAttribute('hidden', ''); }, 1100);
+            if (cover.classList.contains('is-opening')) return;
+            cover.classList.add('is-opening');
+            setTimeout(function () {
+                cover.classList.add('is-open');
+                body.classList.remove('is-locked');
+                window.scrollTo(0, 0);
+                setTimeout(function () { cover.setAttribute('hidden', ''); }, 1000);
+            }, OPEN_MS);
         });
     }
 
     /* ---------- Animasi muncul saat di-scroll ---------- */
-    var reveals = document.querySelectorAll('.reveal');
-    if ('IntersectionObserver' in window) {
+    // Dimulai setelah amplop dibuka, agar animasi tidak terjadi di balik sampul.
+    var startReveals = function () {
+        var reveals = document.querySelectorAll('.reveal, .words:not(.reveal)');
+        if (!('IntersectionObserver' in window)) {
+            reveals.forEach(function (el) { el.classList.add('is-visible'); });
+            return;
+        }
         var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
@@ -28,8 +54,12 @@
             });
         }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
         reveals.forEach(function (el) { io.observe(el); });
+    };
+
+    if (openBtn) {
+        openBtn.addEventListener('click', function () { setTimeout(startReveals, OPEN_MS + 200); }, { once: true });
     } else {
-        reveals.forEach(function (el) { el.classList.add('is-visible'); });
+        startReveals();
     }
 
     /* ---------- Hitung mundur ---------- */
@@ -100,7 +130,7 @@
 
         // Ukuran peta dihitung ulang setelah undangan dibuka / tampil.
         var fix = function () { map.invalidateSize(); map.setView([lat, lng], 16); };
-        if (openBtn) openBtn.addEventListener('click', function () { setTimeout(fix, 1100); });
+        if (openBtn) openBtn.addEventListener('click', function () { setTimeout(fix, OPEN_MS + 300); });
         window.addEventListener('resize', function () { map.invalidateSize(); });
 
         // Peta baru ditampilkan setelah tile pertama termuat. Bila tile diblokir

@@ -81,7 +81,7 @@ if ($authed) {
     <title>Admin RSVP · <?= e($CONTENT['title']) ?></title>
     <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
     <style>
-        :root { --ivory:#FFFBF0; --ivory-2:#F5EDDC; --espresso:#1A110B; --brass:#A88A5F; --ink:#6B5848; --line:#E4D7BF; }
+        :root { --ivory:#FAF6EE; --ivory-2:#F4EFE4; --espresso:#4A1C24; --brass:#A3AA87; --ink:#6C5A5C; --line:#DDD2C0; }
         * { box-sizing: border-box; }
         body { margin:0; background:var(--ivory); color:var(--espresso); font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
         .wrap { max-width:1100px; margin:0 auto; padding:24px 16px 48px; }

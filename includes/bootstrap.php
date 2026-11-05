@@ -82,3 +82,5 @@ function base_url(): string
     }
     return $scheme . '://' . $host . $dir;
 }
+
+require_once __DIR__ . '/ui.php';
