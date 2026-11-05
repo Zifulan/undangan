@@ -57,7 +57,9 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <meta property="og:type" content="website">
     <meta property="og:title" content="<?= e($pageTitle) ?>">
     <meta property="og:description" content="<?= e($pageDesc) ?>">
-    <meta property="og:image" content="<?= e(base_url()) ?>/assets/img/og.jpg">
+    <meta property="og:image" content="<?= e(base_url() . '/' . img_url('og.jpg')) ?>">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:alt" content="Undangan akad nikah <?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?>, <?= e(tanggal_id($ev['start'])) ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
