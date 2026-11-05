@@ -67,7 +67,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=5">
+    <link rel="stylesheet" href="assets/css/style.css?v=6">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -77,7 +77,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 <section class="cover paper" id="cover" aria-label="Sampul undangan"<?= slot_bg('bg-cover.jpg') ?>>
     <div class="cover-inner">
         <div class="recipient">
-            <p class="caps">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+            <p class="caps">Kepada Yth.</p>
             <p class="recipient-name"><?= $guest !== '' ? e($guest) : 'Tamu Undangan' ?></p>
         </div>
 
@@ -96,7 +96,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             </button>
         </div>
 
-        <p class="cover-hint">Ketuk segel untuk membuka</p>
+        <p class="cover-hint">Ketuk segel</p>
     </div>
 </section>
 
@@ -129,34 +129,22 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <section class="section paper opening" id="pembuka">
         <?= doodle('crescent', 'dd dd-corner-r') ?>
         <div class="opening-grid">
-            <div class="cartouche cartouche-date reveal">
-                <?= cartouche_frame() ?>
+            <div class="calendar-wrap reveal">
+                <?= doodle_calendar($startTs) ?>
                 <?= slot_img('floral-date.png', 'floral floral-date') ?>
-                <div class="cartouche-body">
-                    <p class="script date-month"><?= e($months[(int) date('n', $startTs)]) ?></p>
-                    <p class="date-day"><?= e(date('j', $startTs)) ?></p>
-                    <p class="caps caps-sm">Dua Ribu<br>Dua Puluh Enam</p>
-                    <p class="script date-city"><?= e($days[(int) date('w', $startTs)]) ?></p>
-                </div>
             </div>
 
             <div class="opening-text">
                 <p class="arabic reveal" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
-                <p class="caps caps-sm reveal">Awal dari</p>
                 <h2 class="script section-script words reveal">Ikatan Suci Kami</h2>
                 <p class="reveal">
                     Dengan memohon rahmat dan ridho Allah Subhanahu wa Ta'ala, kami bermaksud
                     menyelenggarakan akad nikah putra-putri kami.
                 </p>
-                <p class="reveal">
-                    Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir
-                    dan memberikan doa restu.
-                </p>
-                <p class="script signature reveal"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></p>
             </div>
         </div>
 
-        <figure class="ayat reveal">
+        <figure class="ayat sketch reveal">
             <?= doodle('quran', 'dd-inline') ?>
             <p class="arabic arabic-ayat" lang="ar" dir="rtl">
                 وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ
@@ -173,8 +161,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ MEMPELAI ============ -->
     <section class="section wine couple" id="mempelai">
+        <?= wave_edge('top', 1) ?><?= wave_edge('bottom', 2) ?>
         <?= doodle('hearts', 'dd-inline dd-sm reveal') ?>
-        <p class="caps caps-sm reveal">Kedua</p>
         <h2 class="script section-script words reveal">Mempelai</h2>
 
         <div class="couple-grid">
@@ -206,11 +194,11 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ AKAD NIKAH ============ -->
     <section class="section wine event" id="acara">
+        <?= wave_edge('top', 3) ?><?= wave_edge('bottom', 4) ?>
         <?= doodle('rings', 'dd-inline reveal') ?>
-        <p class="caps caps-sm reveal">Insya Allah akan dilaksanakan</p>
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
-        <dl class="event-meta reveal">
+        <dl class="event-meta sketch reveal">
             <div>
                 <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
                 <dd><?= e(tanggal_id($ev['start'])) ?></dd>
@@ -241,11 +229,10 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <!-- ============ LOKASI ============ -->
     <section class="section paper location" id="lokasi">
         <?= doodle('mosque', 'dd-inline reveal') ?>
-        <p class="caps caps-sm reveal">Lokasi</p>
-        <h2 class="script section-script words reveal">Menuju Masjid</h2>
+        <h2 class="script section-script words reveal">Lokasi</h2>
         <p class="venue-name reveal"><?= e($ev['venue']) ?></p>
 
-        <div class="map reveal">
+        <div class="map sketch reveal">
             <div id="map" class="map-canvas" role="region" aria-label="Peta lokasi <?= e($ev['venue']) ?>"
                  data-lat="<?= e((string) $ev['lat']) ?>" data-lng="<?= e((string) $ev['lng']) ?>"
                  data-label="<?= e($ev['venue']) ?>">
@@ -265,13 +252,11 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ RSVP & UCAPAN ============ -->
     <section class="section paper rsvp" id="rsvp">
-        <div class="note reveal">
+        <div class="note sketch reveal">
             <?= slot_img('floral-rsvp.png', 'floral floral-rsvp') ?>
             <div class="note-seal"><?= wax_seal($sealText, 'olive') ?></div>
             <?= doodle('envelope', 'dd dd-note-env') ?>
-            <p class="caps">Mohon</p>
             <h2 class="script section-script">Konfirmasi</h2>
-            <p class="muted">Kehadiran &amp; doa restu Anda sangat berarti bagi kami.</p>
 
             <?php if (!$dbReady): ?>
                 <p class="notice">Formulir konfirmasi sedang disiapkan. Silakan kembali beberapa saat lagi.</p>
@@ -333,12 +318,13 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                     </li>
                 <?php endforeach; ?>
             </ul>
-            <p class="muted wish-empty" id="wishEmpty" <?= $wishes ? 'hidden' : '' ?>>Belum ada ucapan. Jadilah yang pertama.</p>
+            <p class="muted wish-empty" id="wishEmpty" <?= $wishes ? 'hidden' : '' ?>>Belum ada ucapan.</p>
         </div>
     </section>
 
     <!-- ============ PENUTUP ============ -->
     <section class="section wine closing">
+        <?= wave_edge('top', 5) ?>
         <?= doodle('hearts', 'dd dd-corner-l') ?>
         <?= doodle('crescent', 'dd dd-corner-r') ?>
         <p class="arabic reveal" lang="ar" dir="rtl">بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</p>
@@ -347,18 +333,12 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <div class="closing-seal reveal"><?= wax_seal($sealText, 'olive') ?></div>
 
         <p class="arabic reveal" lang="ar" dir="rtl">وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
-        <p class="caps caps-sm reveal">Dengan cinta,</p>
         <p class="script closing-names words reveal"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></p>
-        <p class="caps caps-sm reveal"><?= e(strtoupper(tanggal_id($ev['start'], false))) ?></p>
-        <p class="closing-family reveal">beserta keluarga besar</p>
     </section>
 
-    <footer class="footer">
-        <p class="caps caps-xs"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?> · <?= e(date('Y', $startTs)) ?></p>
-    </footer>
 </main>
 
 <script src="assets/vendor/leaflet/leaflet.js" defer></script>
-<script src="assets/js/main.js?v=4" defer></script>
+<script src="assets/js/main.js?v=5" defer></script>
 </body>
 </html>

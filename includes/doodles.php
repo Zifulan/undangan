@@ -12,7 +12,10 @@ function doodle_defs(): string
 {
     return '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">'
         . '<filter id="doodle-rough"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="5"/>'
-        . '<feDisplacementMap in="SourceGraphic" scale="1.8"/></filter></svg>';
+        . '<feDisplacementMap in="SourceGraphic" scale="1.8"/></filter>'
+        // goyangan lebih lebar & halus untuk bingkai kotak
+        . '<filter id="sketch-rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".012 .02" numOctaves="2" seed="8"/>'
+        . '<feDisplacementMap in="SourceGraphic" scale="5"/></filter></svg>';
 }
 
 function doodle(string $name, string $class = ''): string
@@ -135,4 +138,87 @@ function doodle(string $name, string $class = ''): string
 
     return '<svg class="doodle doodle-' . e($name) . ' ' . e($class) . '" viewBox="' . $viewBox . '" aria-hidden="true" focusable="false">'
         . '<g filter="url(#doodle-rough)">' . $art[$name] . '</g></svg>';
+}
+
+/**
+ * Kalender bergaya gambar tangan (mulai Senin), tanggal acara ditandai hati.
+ */
+function doodle_calendar(int $ts): string
+{
+    $months = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli',
+               'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    $heads  = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+
+    $y      = (int) date('Y', $ts);
+    $m      = (int) date('n', $ts);
+    $day    = (int) date('j', $ts);
+    $first  = mktime(0, 0, 0, $m, 1, $y);
+    $offset = (int) date('N', $first) - 1;
+    $total  = (int) date('t', $first);
+
+    $cells = '';
+    foreach ($heads as $h) {
+        $cells .= '<span class="dcal-head">' . $h . '</span>';
+    }
+    for ($i = 0; $i < $offset; $i++) {
+        $cells .= '<span></span>';
+    }
+    for ($d = 1; $d <= $total; $d++) {
+        if ($d === $day) {
+            $cells .= '<span class="dcal-day is-event" aria-label="' . $d . ' ' . $months[$m] . ' — hari akad">'
+                . '<svg viewBox="0 0 40 36" aria-hidden="true"><path filter="url(#doodle-rough)" d="M20 34 C6 24 1 16 5 9 C9 3 17 4 20 11 C23 4 31 3 35 9 C39 16 34 24 20 34Z"/></svg>'
+                . '<b>' . $d . '</b></span>';
+        } else {
+            $cells .= '<span class="dcal-day">' . $d . '</span>';
+        }
+    }
+
+    $frame = '<svg class="dcal-frame" viewBox="0 0 300 340" preserveAspectRatio="none" aria-hidden="true">'
+        . '<g filter="url(#doodle-rough)">'
+        . '<path class="dcal-fill" d="M14 52 H286 V326 H14 Z"/>'
+        . '<path d="M14 52 H286 V326 H14 Z"/>'
+        . '<path class="l" d="M22 60 H278 V318 H22 Z"/>'
+        // mahkota bergulir di atas bingkai
+        . '<path d="M62 52 C60 38 72 31 82 37 C90 42 85 53 77 50 C71 47 74 40 79 41"/>'
+        . '<path d="M82 37 C110 20 190 20 218 37"/>'
+        . '<path d="M238 52 C240 38 228 31 218 37 C210 42 215 53 223 50 C229 47 226 40 221 41"/>'
+        . '<path d="M112 29 q-7 -10 2 -13 q6 3 0 9 M188 29 q7 -10 -2 -13 q-6 3 0 9"/>'
+        . '<path class="f" d="M150 33 c-5 -7 -14 -4 -9 3 c3 4 9 7 9 7 c0 0 6 -3 9 -7 c5 -7 -4 -10 -9 -3z"/>'
+        . '<path d="M14 52 c-7 0 -11 -7 -6 -11 c4 -4 10 0 6 4 M286 52 c7 0 11 -7 6 -11 c-4 -4 -10 0 -6 4"/>'
+        . '<path class="l" d="M136 326 l14 -6 l14 6"/>'
+        . '</g></svg>';
+
+    return '<div class="dcal" role="img" aria-label="Kalender ' . $months[$m] . ' ' . $y . ', akad tanggal ' . $day . '">'
+        . $frame
+        . '<div class="dcal-body">'
+        . '<p class="script dcal-month">' . $months[$m] . '</p>'
+        . '<p class="dcal-year">' . $y . '</p>'
+        . '<div class="dcal-grid">' . $cells . '</div>'
+        . '</div></div>';
+}
+
+/**
+ * Tepi bergelombang bergaya tangan untuk pergantian warna section.
+ * Dipasang di dalam section .wine (atas/bawah), menutupi tepi lurus section tetangga.
+ */
+function wave_edge(string $pos, int $seed = 1): string
+{
+    $w = 1200;
+    $pts = [];
+    for ($x = 0; $x <= $w; $x += 40) {
+        $y = 20 + 7 * sin($x / 97 + $seed * 1.7) + 4 * sin($x / 41 + $seed * .9) + 2 * sin($x / 13 + $seed);
+        $pts[] = [$x, round($y, 1)];
+    }
+    $d = 'M0 40 L0 ' . $pts[0][1];
+    for ($i = 1; $i < count($pts); $i++) {
+        $mx = ($pts[$i - 1][0] + $pts[$i][0]) / 2;
+        $my = ($pts[$i - 1][1] + $pts[$i][1]) / 2;
+        $d .= ' Q' . $pts[$i - 1][0] . ' ' . $pts[$i - 1][1] . ' ' . $mx . ' ' . $my;
+    }
+    $d .= ' L' . $w . ' ' . end($pts)[1] . ' L' . $w . ' 40 Z';
+
+    $svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40' preserveAspectRatio='none'><path d='" . $d . "'/></svg>";
+    $uri = 'data:image/svg+xml,' . rawurlencode($svg);
+
+    return '<div class="edge edge-' . e($pos) . '" style="--mask:url(&quot;' . $uri . '&quot;)" aria-hidden="true"></div>';
 }

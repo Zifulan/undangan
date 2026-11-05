@@ -856,3 +856,95 @@ p { margin: 0 0 1rem; }
     .dd-corner-l { left: 6%; top: 3rem; width: 100px; height: 100px; }
     .dd-hero-rings, .dd-hero-hearts { width: 100px; height: 100px; }
 }
+
+/* =========================================================
+   KESAN BUATAN TANGAN: tepi bergelombang, bingkai sketsa
+   ========================================================= */
+.wine { overflow: visible; z-index: 1; }
+
+.edge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 34px;
+    z-index: 2;
+    background-color: var(--wine);
+    background-image: var(--grain);
+    -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+    mask: var(--mask) center / 100% 100% no-repeat;
+    pointer-events: none;
+}
+.edge-top { top: -33px; }
+.edge-bottom { bottom: -33px; transform: scaleY(-1); }
+
+/* bingkai garis tangan (menggantikan border lurus) */
+.sketch { position: relative; border: 0 !important; }
+.sketch::before,
+.sketch::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid var(--sketch, var(--wine));
+    filter: url(#sketch-rough);
+    pointer-events: none;
+}
+.sketch::after { inset: 7px; border-width: 1px; opacity: .45; transform: rotate(-.3deg); }
+.wine .sketch { --sketch: var(--paper); }
+
+.event-meta { box-shadow: none; }
+.ayat { box-shadow: none; background: transparent; }
+.map { box-shadow: none; padding: 12px; }
+.note { box-shadow: 0 18px 40px rgba(46, 27, 31, .1); }
+.note .note-seal, .note .dd { z-index: 3; }
+
+/* =========================================================
+   KALENDER DOODLE
+   ========================================================= */
+.calendar-wrap { position: relative; width: min(300px, 86%); margin: 0 auto; }
+
+.dcal { position: relative; aspect-ratio: 300 / 340; color: #8E2430; }
+
+.dcal-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.dcal-frame .dcal-fill { fill: var(--ivory); stroke: none; }
+.dcal-frame .l { stroke-width: 1.1; opacity: .55; }
+.dcal-frame .f { fill: currentColor; stroke: none; }
+
+.dcal-body {
+    position: absolute;
+    inset: 21% 9% 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.dcal-month { margin: 0 !important; font-size: 2.5rem; color: var(--sage-dark); line-height: 1; }
+.dcal-year { margin: .1rem 0 .6rem !important; font-size: .7rem; letter-spacing: .3em; color: var(--ink-soft); }
+
+.dcal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: .15rem .1rem;
+    width: 100%;
+    text-align: center;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.75;
+}
+.dcal-head { font-size: .62rem; font-weight: 500; letter-spacing: .06em; color: var(--ink-soft); text-transform: lowercase; }
+
+.dcal-day.is-event { position: relative; color: var(--ivory); }
+.dcal-day.is-event svg { position: absolute; left: 50%; top: 50%; width: 2.1em; height: 1.9em; transform: translate(-50%, -48%); fill: #8E2430; overflow: visible; }
+.dcal-day.is-event b { position: relative; font-weight: 600; }
+
+.floral-date { left: -22%; bottom: -10%; }

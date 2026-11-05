@@ -105,8 +105,8 @@ function cartouche_frame(): string
 
     return '<svg class="cartouche-frame" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">'
         . '<path class="cf-fill" d="' . $outer . '"/>'
-        . '<path class="cf-line" d="' . $outer . '" vector-effect="non-scaling-stroke"/>'
-        . '<path class="cf-line cf-inner" d="' . $outer . '" transform="translate(150 200) scale(.94 .955) translate(-150 -200)" vector-effect="non-scaling-stroke"/>'
+        . '<path class="cf-line" filter="url(#doodle-rough)" d="' . $outer . '" vector-effect="non-scaling-stroke"/>'
+        . '<path class="cf-line cf-inner" filter="url(#doodle-rough)" d="' . $outer . '" transform="translate(150 200) scale(.94 .955) translate(-150 -200)" vector-effect="non-scaling-stroke"/>'
         . '</svg>';
 }
 
@@ -115,7 +115,7 @@ function arch_frame(): string
 {
     return '<svg class="arch-frame" viewBox="0 0 200 280" preserveAspectRatio="none" aria-hidden="true">'
         . '<path class="af-fill" d="M22 272 L22 104 A78 78 0 0 1 178 104 L178 272Z"/>'
-        . '<path class="af-line" d="M8 278 L8 102 A92 92 0 0 1 192 102 L192 278Z" vector-effect="non-scaling-stroke"/>'
-        . '<path class="af-line" d="M15 272 L15 103 A85 85 0 0 1 185 103 L185 272Z" vector-effect="non-scaling-stroke"/>'
+        . '<path class="af-line" filter="url(#doodle-rough)" d="M8 278 L8 102 A92 92 0 0 1 192 102 L192 278Z" vector-effect="non-scaling-stroke"/>'
+        . '<path class="af-line" filter="url(#doodle-rough)" d="M15 272 L15 103 A85 85 0 0 1 185 103 L185 272Z" vector-effect="non-scaling-stroke"/>'
         . '</svg>';
 }
