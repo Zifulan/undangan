@@ -571,7 +571,6 @@ p { margin: 0 0 1rem; }
 /* =========================================================
    RSVP
    ========================================================= */
-.rsvp { background-color: var(--paper); }
 
 .note {
     position: relative;
@@ -779,7 +778,6 @@ p { margin: 0 0 1rem; }
 
 .wine .doodle { color: var(--paper); --d-green: #B9C09F; --d-bg: var(--wine); --d-rose: #B9707E; }
 .paper .doodle { --d-bg: var(--ivory); }
-.rsvp .doodle { --d-bg: var(--paper); }
 
 /* penempatan doodle */
 .dd-inline { width: 92px; height: 92px; margin: 0 auto 1rem; }
@@ -1233,3 +1231,6 @@ p { margin: 0 0 1rem; }
 }
 .dcal-grid { line-height: 1.75; gap: .05rem .1rem; }
 .dcal-body { inset: 20% 9% 7%; }
+
+/* tanpa garis lurus antar-section ivory: Lokasi & Konfirmasi memakai warna yang sama */
+.location, .rsvp { background-color: var(--ivory); }
