@@ -120,6 +120,11 @@ function doodle(string $name, string $class = ''): string
                 <path d="M60 24 c-3 -5 -9 -2 -6 3 c1 3 6 5 6 5 c0 0 5 -2 6 -5 c3 -5 -3 -8 -6 -3z" class="p"/>
                 <path d="M46 26 l-5 -3 M74 26 l5 -3 M60 14 v-4" class="l"/>',
 
+            // Panah melengkung (untuk label nama di sampul)
+            'arrow' => '
+                <path d="M14 22 C42 10 70 22 66 44 C63 58 46 58 50 46 C54 34 78 40 88 62 C93 73 95 82 96 92"/>
+                <path d="M86 84 L96 94 L102 82"/>',
+
             // Bulan sabit & bintang
             'crescent' => '
                 <path d="M70 24 A36 36 0 1 0 94 84 A28 28 0 1 1 70 24Z"/>

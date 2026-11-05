@@ -52,6 +52,11 @@
         });
     }
 
+    // Doodle di sampul langsung digambar saat halaman dibuka.
+    setTimeout(function () {
+        document.querySelectorAll('#cover .doodle').forEach(function (el) { el.classList.add('is-drawn'); });
+    }, 700);
+
     /* ---------- Animasi muncul saat di-scroll ---------- */
     // Dimulai setelah amplop dibuka, agar animasi tidak terjadi di balik sampul.
     var startReveals = function () {

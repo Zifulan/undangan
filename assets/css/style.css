@@ -1106,3 +1106,81 @@ p { margin: 0 0 1rem; }
 }
 .draw .dcal-heart path { stroke-dasharray: none; stroke-dashoffset: 0; }
 .note.is-sent > .section-script { display: none; }
+
+/* =========================================================
+   SAMPUL: FOTO MASA SD
+   ========================================================= */
+.kids {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: min(340px, 92vw);
+    margin-top: .5rem;
+}
+
+.kid {
+    position: relative;
+    margin: 0;
+    width: 44%;
+    transition: transform .8s cubic-bezier(.55, 0, .3, 1), opacity .7s var(--ease);
+    animation: kid-in .9s cubic-bezier(.34, 1.3, .64, 1) both;
+}
+.kid img {
+    display: block;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 10px 22px rgba(46, 27, 31, .22), 0 2px 4px rgba(46, 27, 31, .15);
+}
+.kid-l { rotate: -7deg; z-index: 2; margin-right: -4%; animation-delay: .15s; }
+.kid-r { rotate: 6deg; margin-top: 1.4rem; animation-delay: .35s; }
+
+@keyframes kid-in {
+    from { opacity: 0; transform: translateY(-24px) scale(.94); }
+}
+
+/* label nama tulisan tangan + panah doodle */
+.kid-label {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    font-family: "Caveat", var(--font-script), cursive;
+    font-size: 1.7rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #8E2430;
+    white-space: nowrap;
+}
+.kid-l .kid-label { left: -14%; top: -2.6rem; rotate: 7deg; }
+.kid-r .kid-label { right: -16%; bottom: -2.4rem; rotate: -6deg; }
+.kid-arrow { width: 44px; height: 44px; }
+.kid-l .kid-arrow { order: 2; margin: .9rem 0 0 -.1rem; }
+.kid-r .kid-arrow { order: -1; transform: rotate(180deg); margin: 0 -.1rem .9rem 0; }
+
+.kid-hearts {
+    position: absolute;
+    left: 50%;
+    top: -1.6rem;
+    width: 58px;
+    height: 58px;
+    margin-left: -29px;
+    z-index: 3;
+}
+
+/* envelope tidak perlu jarak besar karena foto berada di atasnya */
+.kids + .envelope { margin-top: 1.25rem; width: min(300px, 80vw); }
+
+/* saat dibuka: foto bergeser keluar, memberi ruang kartu */
+.cover.is-opening .kid-l { transform: translate(-130%, -10%) rotate(-18deg); opacity: 0; }
+.cover.is-opening .kid-r { transform: translate(130%, -10%) rotate(18deg); opacity: 0; }
+.cover.is-opening .kid-hearts { opacity: 0; transition: opacity .4s; }
+
+.cover[data-has-bg] .kid-label { color: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+    .kid { animation: none; transition: none; }
+}
+@media (max-height: 700px) {
+    .kids { width: min(290px, 80vw); }
+    .cover-inner { gap: 1.25rem; }
+}
