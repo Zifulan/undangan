@@ -10,6 +10,7 @@ $ev    = $c['event'] + [
     'lng'      => 106.7371328,
     'maps_url' => 'https://maps.google.com/?cid=11657600879784974533',
     'waze_url' => 'https://waze.com/ul?ll=-6.2104465,106.7371328&navigate=yes',
+    'address'  => '',
     'city'     => 'Jakarta',
 ];
 $guest = trim(mb_substr((string) ($_GET['to'] ?? ''), 0, 80));
@@ -30,16 +31,13 @@ $gcal = 'https://calendar.google.com/calendar/render?' . http_build_query([
     'text'     => $ev['name'] . ' ' . $c['groom']['nickname'] . ' & ' . $c['bride']['nickname'],
     'dates'    => gmdate('Ymd\THis\Z', $startTs) . '/' . gmdate('Ymd\THis\Z', strtotime($ev['end'])),
     'details'  => 'Akad Nikah ' . $c['groom']['name'] . ' & ' . $c['bride']['name'],
-    'location' => $ev['venue'],
+    'location' => $ev['venue'] . ($ev['address'] !== '' ? ', ' . $ev['address'] : ''),
     'ctz'      => 'Asia/Jakarta',
 ]);
 
 $G = $c['groom'];
 $B = $c['bride'];
-$monogram  = mb_substr($G['nickname'], 0, 1) . mb_substr($B['nickname'], 0, 1);   // "FG"
 $sealText  = mb_substr($G['nickname'], 0, 1) . '&' . mb_substr($B['nickname'], 0, 1); // "F&G"
-$months    = [1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-$days      = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
 $pageTitle = 'Undangan ' . $ev['name'] . ' ' . $c['title'];
 $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
@@ -68,8 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=10">
+    <link rel="stylesheet" href="assets/css/style.css?v=11">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -181,7 +178,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ MEMPELAI ============ -->
     <section class="section wine couple" id="mempelai">
-        <?= wave_edge('top', 1) ?><?= wave_edge('bottom', 2) ?>
+        <?= wave_edge('top', 1) ?>
         <?= doodle('hearts', 'dd-inline dd-sm reveal') ?>
         <h2 class="script section-script words reveal">Mempelai</h2>
 
@@ -207,14 +204,10 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         </div>
     </section>
 
-    <!-- ============ BANNER MONOGRAM ============ -->
-    <section class="banner" aria-hidden="true"<?= slot_bg('bg-banner.jpg') ?>>
-        <span class="script banner-mono reveal"><?= e(mb_substr($G['nickname'], 0, 1)) ?><span>&amp;</span><?= e(mb_substr($B['nickname'], 0, 1)) ?></span>
-    </section>
 
     <!-- ============ AKAD NIKAH ============ -->
     <section class="section wine event" id="acara">
-        <?= wave_edge('top', 3) ?><?= wave_edge('bottom', 4) ?>
+        <?= wave_edge('bottom', 4) ?>
         <?= doodle('rings', 'dd-inline reveal') ?>
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
@@ -229,7 +222,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             </div>
             <div>
                 <dt class="caps caps-xs">Tempat</dt>
-                <dd><?= e($ev['venue']) ?></dd>
+                <dd><?= e($ev['venue']) ?><?php if ($ev['address'] !== ''): ?><small class="dd-address"><?= e($ev['address']) ?></small><?php endif; ?></dd>
             </div>
         </dl>
 
@@ -251,6 +244,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <?= doodle('mosque', 'dd-inline reveal') ?>
         <h2 class="script section-script words reveal">Lokasi</h2>
         <p class="venue-name reveal"><?= e($ev['venue']) ?></p>
+        <?php if ($ev['address'] !== ''): ?><p class="venue-address reveal"><?= e($ev['address']) ?></p><?php endif; ?>
 
         <div class="map sketch tilt-l reveal">
             <div id="map" class="map-canvas" role="region" aria-label="Peta lokasi <?= e($ev['venue']) ?>"
@@ -363,7 +357,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
 </main>
 
-<script src="assets/vendor/leaflet/leaflet.js" defer></script>
-<script src="assets/js/main.js?v=8" defer></script>
+<script src="assets/js/main.js?v=9" defer></script>
 </body>
 </html>

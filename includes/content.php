@@ -22,6 +22,7 @@ return [
         'end'       => '2026-12-12 10:00:00',   // perkiraan, untuk kalender
         'time_text' => '08.00 WIB – selesai',
         'venue'     => "Masjid Manarul 'Amal",
+        'address'   => 'Jl. Meruya Selatan No. 1, RT.1/RW.8, Meruya Selatan, Kembangan, Jakarta Barat 11650',
         // Koordinat lokasi (untuk peta di halaman)
         'lat'       => -6.2104465,
         'lng'       => 106.7371328,

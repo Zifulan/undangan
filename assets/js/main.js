@@ -158,7 +158,7 @@
         tiles.once('tileload', function () { mapEl.classList.add('is-ready'); });
     };
 
-    if (mapEl && window.L) {
+    var startMap = function () {
         try {
             initMap();
         } catch (err) {
@@ -166,6 +166,30 @@
             var broken = mapEl.querySelector('.map-leaflet');
             if (broken) broken.remove();
             if (window.console) console.warn('[peta]', err);
+        }
+    };
+
+    // Pustaka peta (Leaflet) baru dimuat saat tamu menggulir mendekati peta.
+    var loadMap = function () {
+        if (window.L) { startMap(); return; }
+        var css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = 'assets/vendor/leaflet/leaflet.css';
+        document.head.appendChild(css);
+        var js = document.createElement('script');
+        js.src = 'assets/vendor/leaflet/leaflet.js';
+        js.onload = startMap;          // bila gagal dimuat, kartu lokasi tetap tampil
+        document.head.appendChild(js);
+    };
+
+    if (mapEl) {
+        if ('IntersectionObserver' in window) {
+            var mapIo = new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) { mapIo.disconnect(); loadMap(); }
+            }, { rootMargin: '800px 0px' });
+            mapIo.observe(mapEl);
+        } else {
+            loadMap();
         }
     }
 

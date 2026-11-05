@@ -68,7 +68,6 @@ p { margin: 0 0 1rem; }
     line-height: 1.6;
 }
 
-.caps-sm { font-size: .74rem; letter-spacing: .26em; }
 .caps-xs { font-size: .66rem; letter-spacing: .26em; }
 
 .section-script {
@@ -265,7 +264,6 @@ p { margin: 0 0 1rem; }
         var(--grain);
 }
 
-
 .env-seal {
     position: absolute;
     left: 50%;
@@ -369,26 +367,12 @@ p { margin: 0 0 1rem; }
     margin: 0 auto 4rem;
 }
 
-.cartouche-date { width: min(250px, 72%); }
-.cartouche-date .cartouche-body { padding: 3.2rem 1.25rem 3.4rem; }
-.cartouche-date p { margin: 0; }
-
 .floral-date { left: -24%; bottom: -14%; }
-
-.date-month { font-size: 2.6rem; color: var(--wine); }
-.date-day {
-    font-size: 4.4rem;
-    font-weight: 500;
-    line-height: 1;
-    margin: .2rem 0 .5rem !important;
-}
-.date-city { font-size: 2rem; margin-top: .4rem !important; color: var(--sage-dark); }
 
 .opening-text { max-width: 30rem; margin: 0 auto; }
 .opening-text .arabic { color: var(--wine); }
 .opening-text .section-script { color: var(--wine); margin-bottom: 1.25rem; }
 .opening-text .caps { margin-bottom: .25rem; }
-.signature { font-size: 2.4rem; margin-top: 1.5rem !important; }
 
 .ayat {
     max-width: 34rem;
@@ -414,7 +398,6 @@ p { margin: 0 0 1rem; }
 /* =========================================================
    MEMPELAI
    ========================================================= */
-.couple .caps-sm { color: rgba(244, 239, 228, .75); }
 
 .couple-grid {
     display: grid;
@@ -465,37 +448,8 @@ p { margin: 0 0 1rem; }
 .arch-mono small { font-size: .5em; margin: 0 .05em; opacity: .85; }
 
 /* =========================================================
-   BANNER MONOGRAM
-   ========================================================= */
-.banner {
-    position: relative;
-    display: grid;
-    place-items: center;
-    min-height: 300px;
-    background:
-        radial-gradient(ellipse at 30% 20%, rgba(250, 246, 238, .35), transparent 55%),
-        radial-gradient(ellipse at 80% 90%, rgba(46, 27, 31, .25), transparent 60%),
-        linear-gradient(160deg, #B9BE9E 0%, var(--sage-deep) 50%, #59603F 100%);
-    overflow: hidden;
-}
-
-.banner::after { content: ""; position: absolute; inset: 0; background-image: var(--grain); opacity: .9; pointer-events: none; }
-
-.banner-mono {
-    position: relative;
-    z-index: 1;
-    font-size: clamp(6rem, 30vw, 9rem);
-    color: rgba(250, 246, 238, .9);
-    text-shadow: 0 4px 24px rgba(46, 27, 31, .3);
-    line-height: 1;
-}
-
-.banner-mono span { font-size: .45em; margin: 0 .05em; }
-
-/* =========================================================
    AKAD NIKAH
    ========================================================= */
-.event .caps-sm { color: rgba(244, 239, 228, .75); }
 
 .event-meta {
     display: grid;
@@ -754,17 +708,8 @@ p { margin: 0 0 1rem; }
 .closing-trans { max-width: 30rem; margin: 0 auto 2rem; color: rgba(244, 239, 228, .8); }
 .closing-trans .caps { color: rgba(244, 239, 228, .55); }
 .closing-seal { width: 76px; height: 76px; margin: 0 auto 2rem; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .35)); }
-.closing .caps-sm { color: rgba(244, 239, 228, .7); margin-bottom: .25rem; }
-.closing-names { font-size: clamp(3rem, 14vw, 4rem); margin: .25rem 0 .75rem !important; }
-.closing-family { font-style: italic; color: rgba(244, 239, 228, .7); margin-top: 1rem; }
 
-.footer {
-    padding: 1.5rem 1rem 2rem;
-    background: var(--wine-deep);
-    color: rgba(244, 239, 228, .45);
-    text-align: center;
-}
-.footer p { margin: 0; }
+.closing-names { font-size: clamp(3rem, 14vw, 4rem); margin: .25rem 0 .75rem !important; }
 
 /* =========================================================
    ANIMASI
@@ -799,12 +744,12 @@ p { margin: 0 0 1rem; }
 
     .opening-grid { grid-template-columns: 1fr 1.2fr; gap: 4rem; }
     .opening-text { text-align: left; margin: 0; }
-    .cartouche-date { width: 260px; }
+    
 
     .couple-grid { grid-template-columns: 1fr auto 1fr; gap: 3rem; }
     .arch { width: 200px; }
 
-    .banner { min-height: 420px; }
+    
 }
 
 /* =========================================================
@@ -1013,7 +958,6 @@ p { margin: 0 0 1rem; }
 .tilt-r { rotate: 1.6deg; }
 .tilt-s { rotate: -.7deg; }
 
-
 /* =========================================================
    3. UCAPAN SEBAGAI KERTAS TEMPEL
    ========================================================= */
@@ -1037,7 +981,6 @@ p { margin: 0 0 1rem; }
 .wish:nth-child(3n+1) { background-color: #F6E3E5; --tilt: -1.6deg; }
 .wish:nth-child(3n+2) { background-color: #E8EBDA; --tilt: 1.3deg; }
 .wish:nth-child(3n)   { background-color: #FBF6EA; --tilt: -.6deg; }
-
 
 .wish p {
     font-family: "Caveat", var(--font-script), cursive;
@@ -1257,3 +1200,36 @@ p { margin: 0 0 1rem; }
     .envelope, .cover-inner { transition: none; }
 }
 .guest-name { font-weight: 600; color: var(--wine); }
+
+/* =========================================================
+   PENYEMPURNAAN (evaluasi)
+   ========================================================= */
+/* angka "lurus" agar 1 tidak terbaca seperti I */
+.dcal-grid, .countdown span, .event-meta dd { font-variant-numeric: lining-nums tabular-nums; }
+
+/* teks kecil lebih mudah dibaca di HP */
+.caps-xs { font-size: .75rem; }
+.dcal-head { font-size: .75rem; }
+.dcal-year { font-size: .75rem; }
+
+/* Mempelai: beri jarak antara judul dan nama pertama */
+.couple .section-script { margin-bottom: 2.75rem; }
+.person-nick { font-size: 2.7rem; }
+
+/* Mempelai & Akad kini bersebelahan (sama-sama burgundy) */
+.couple + .event { padding-top: 1.5rem; }
+.couple { padding-bottom: 4rem; }
+
+/* alamat lokasi */
+.venue-address { max-width: 26rem; margin: -1.25rem auto 2rem; font-style: italic; color: var(--ink-soft); font-size: 1.02rem; line-height: 1.5; }
+.dd-address { display: block; margin-top: .3rem; font-size: .9rem; font-style: italic; line-height: 1.45; color: rgba(244, 239, 228, .72); }
+
+/* kartu nama lebih besar di layar lebar */
+@media (min-width: 760px) {
+    .cartouche-hero { width: 440px; }
+    .cartouche-hero .cartouche-body { padding: 5rem 2.5rem 5.2rem; }
+    .name-script { font-size: 5.4rem; }
+    .person-nick { font-size: 3rem; }
+}
+.dcal-grid { line-height: 1.75; gap: .05rem .1rem; }
+.dcal-body { inset: 20% 9% 7%; }
