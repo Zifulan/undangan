@@ -108,7 +108,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <p class="arabic arabic-bismillah reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
 
         <div class="cartouche cartouche-hero tilt-l reveal">
-            <span class="tape tape-rose tape-tr" aria-hidden="true"></span>
+            <span class="tape tape-rose tape-tl" aria-hidden="true"></span>
             <?= cartouche_frame() ?>
             <?= slot_img('floral-hero.png', 'floral floral-hero') ?>
             <?= doodle('rings', 'dd dd-hero-rings') ?>

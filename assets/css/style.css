@@ -1032,7 +1032,7 @@ p { margin: 0 0 1rem; }
 .tape-br { bottom: -10px; right: -18px; transform: rotate(-32deg); }
 .tape-top { top: -13px; left: 50%; margin-left: -46px; transform: rotate(-3deg); }
 
-.cartouche-hero .tape-tr { top: 4px; right: -10px; }
+.cartouche-hero .tape-tl { top: 6px; left: -14px; }
 
 /* =========================================================
    3. UCAPAN SEBAGAI KERTAS TEMPEL
