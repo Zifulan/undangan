@@ -157,8 +157,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <p class="arabic reveal" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
                 <h2 class="script section-script words reveal">Ikatan Suci Kami</h2>
                 <p class="reveal">
-                    Dengan memohon rahmat dan ridho Allah Subhanahu wa Ta'ala, kami bermaksud
-                    menyelenggarakan akad nikah putra-putri kami.
+                    Dengan memohon rahmat dan ridho Allah Subhanahu wa Ta'ala, kami mengundang
+                    Bapak/Ibu/Saudara/i untuk hadir dan mendoakan akad nikah kami.
                 </p>
             </div>
         </div>
