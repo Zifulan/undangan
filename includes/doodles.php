@@ -166,7 +166,15 @@ function doodle_calendar(int $ts): string
     for ($d = 1; $d <= $total; $d++) {
         if ($d === $day) {
             $cells .= '<span class="dcal-day is-event" aria-label="' . $d . ' ' . $months[$m] . ' — hari akad">'
-                . '<svg viewBox="0 0 40 36" aria-hidden="true"><path filter="url(#doodle-rough)" d="M20 34 C6 24 1 16 5 9 C9 3 17 4 20 11 C23 4 31 3 35 9 C39 16 34 24 20 34Z"/></svg>'
+                . '<svg class="dcal-heart" viewBox="0 0 60 56" aria-hidden="true"><g filter="url(#doodle-rough)">'
+                // hati utama (diisi) + garis sketsa yang sedikit bergeser
+                . '<path class="h-fill" d="M30 47 C14 36 8 27 12 19 C16 11 26 12 30 21 C34 12 44 11 48 19 C52 27 46 36 30 47Z"/>'
+                . '<path class="h-line" d="M31.5 45.5 C16 35 10.5 26.5 14 19.5 C18 12.5 27 13.5 31 21.5 C35 13 44.5 12.5 48.5 20 C52 27.5 46.5 35.5 31.5 45.5Z"/>'
+                // garis "berkilau" di atas
+                . '<path class="h-burst" d="M12 12 l3.5 3.5 M30 7 v4.5 M48 12 l-3.5 3.5"/>'
+                // hati kecil
+                . '<path class="h-mini" d="M53 42 c-2 -3 -6 -1 -4 2 c1 2 4 3.4 4 3.4 c0 0 3 -1.4 4 -3.4 c2 -3 -2 -5 -4 -2z"/>'
+                . '</g></svg>'
                 . '<b>' . $d . '</b></span>';
         } else {
             $cells .= '<span class="dcal-day">' . $d . '</span>';

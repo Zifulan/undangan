@@ -37,18 +37,33 @@
         });
     }
 
+    /* ---------- Doodle menggambar dirinya sendiri ---------- */
+    // Setiap garis diberi pathLength=1 agar bisa "digambar" dengan stroke-dashoffset.
+    var drawables = document.querySelectorAll('.doodle, .dcal');
+    if (!reduceMotion) {
+        drawables.forEach(function (svgWrap) {
+            var i = 0;
+            svgWrap.querySelectorAll('path, circle').forEach(function (el) {
+                if (el.closest('.dcal-heart')) return;         // hati tanggal: muncul dengan "pop"
+                el.setAttribute('pathLength', '1');
+                el.style.setProperty('--d', (i++ * 110) + 'ms');
+            });
+            svgWrap.classList.add('draw');
+        });
+    }
+
     /* ---------- Animasi muncul saat di-scroll ---------- */
     // Dimulai setelah amplop dibuka, agar animasi tidak terjadi di balik sampul.
     var startReveals = function () {
-        var reveals = document.querySelectorAll('.reveal, .words:not(.reveal)');
+        var reveals = document.querySelectorAll('.reveal, .words:not(.reveal), .doodle, .dcal');
         if (!('IntersectionObserver' in window)) {
-            reveals.forEach(function (el) { el.classList.add('is-visible'); });
+            reveals.forEach(function (el) { el.classList.add('is-visible', 'is-drawn'); });
             return;
         }
         var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
+                    entry.target.classList.add('is-visible', 'is-drawn');
                     io.unobserve(entry.target);
                 }
             });
@@ -176,6 +191,44 @@
         return d.innerHTML;
     };
 
+    /* Pesawat kertas: formulir terlipat, pesawat terbang, lalu ucapan terima kasih. */
+    var thanks = document.getElementById('rsvpThanks');
+    var again = document.getElementById('rsvpAgain');
+    var planeSvg = '<svg viewBox="0 0 64 56" aria-hidden="true"><g filter="url(#doodle-rough)" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">' +
+        '<path d="M6 28 L58 6 L42 50 L30 34 Z" fill="#FAF6EE"/><path d="M30 34 L58 6"/><path d="M30 34 L27 47 L35 40"/></g></svg>';
+
+    var sendOff = function (btn) {
+        var done = function () {
+            form.hidden = true;
+            form.classList.remove('is-folding');
+            thanks.hidden = false;
+            thanks.classList.add('is-in');
+            form.closest('.note').classList.add('is-sent');
+        };
+        if (reduceMotion) { done(); return; }
+
+        var r = btn.getBoundingClientRect();
+        var plane = document.createElement('div');
+        plane.className = 'plane';
+        plane.innerHTML = planeSvg;
+        plane.style.left = (r.left + r.width / 2 - 32) + 'px';
+        plane.style.top = (r.top - 28) + 'px';
+        document.body.appendChild(plane);
+        form.classList.add('is-folding');
+        setTimeout(function () { plane.remove(); }, 2000);
+        setTimeout(done, 700);
+    };
+
+    if (again) {
+        again.addEventListener('click', function () {
+            thanks.hidden = true;
+            thanks.classList.remove('is-in');
+            form.closest('.note').classList.remove('is-sent');
+            form.hidden = false;
+            form.elements.name.focus();
+        });
+    }
+
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -200,12 +253,14 @@
             .then(function (data) {
                 if (!data.ok) { setStatus(data.error || 'Gagal mengirim.', 'error'); return; }
 
-                setStatus('Terima kasih! Konfirmasi Anda telah kami terima.', 'success');
+                setStatus('', '');
                 form.elements.message.value = '';
+                sendOff(btn);
 
                 if (data.wish) {
                     var li = document.createElement('li');
                     li.className = 'wish is-new';
+                    li.style.setProperty('--tilt', (Math.random() * 5 - 2.5).toFixed(1) + 'deg');
                     li.innerHTML =
                         '<div class="wish-head"><strong>' + esc(data.wish.name) + '</strong>' +
                         '<span class="badge">' + esc(data.wish.attendance) + '</span></div>' +

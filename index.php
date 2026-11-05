@@ -65,9 +65,9 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=6">
+    <link rel="stylesheet" href="assets/css/style.css?v=7">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -107,7 +107,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <?= doodle('lights', 'dd-lights reveal') ?>
         <p class="arabic arabic-bismillah reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
 
-        <div class="cartouche cartouche-hero reveal">
+        <div class="cartouche cartouche-hero tilt-l reveal">
+            <span class="tape tape-rose tape-tr" aria-hidden="true"></span>
             <?= cartouche_frame() ?>
             <?= slot_img('floral-hero.png', 'floral floral-hero') ?>
             <?= doodle('rings', 'dd dd-hero-rings') ?>
@@ -129,7 +130,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <section class="section paper opening" id="pembuka">
         <?= doodle('crescent', 'dd dd-corner-r') ?>
         <div class="opening-grid">
-            <div class="calendar-wrap reveal">
+            <div class="calendar-wrap tilt-r reveal">
+                <span class="tape tape-sage tape-tl" aria-hidden="true"></span>
                 <?= doodle_calendar($startTs) ?>
                 <?= slot_img('floral-date.png', 'floral floral-date') ?>
             </div>
@@ -144,7 +146,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             </div>
         </div>
 
-        <figure class="ayat sketch reveal">
+        <figure class="ayat sketch tilt-s reveal">
+            <span class="tape tape-sage tape-top" aria-hidden="true"></span>
             <?= doodle('quran', 'dd-inline') ?>
             <p class="arabic arabic-ayat" lang="ar" dir="rtl">
                 وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ
@@ -198,7 +201,9 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <?= doodle('rings', 'dd-inline reveal') ?>
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
-        <dl class="event-meta sketch reveal">
+        <dl class="event-meta sketch tilt-r reveal">
+            <span class="tape tape-rose tape-tl" aria-hidden="true"></span>
+            <span class="tape tape-rose tape-br" aria-hidden="true"></span>
             <div>
                 <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
                 <dd><?= e(tanggal_id($ev['start'])) ?></dd>
@@ -232,7 +237,9 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <h2 class="script section-script words reveal">Lokasi</h2>
         <p class="venue-name reveal"><?= e($ev['venue']) ?></p>
 
-        <div class="map sketch reveal">
+        <div class="map sketch tilt-l reveal">
+            <span class="tape tape-sage tape-tl" aria-hidden="true"></span>
+            <span class="tape tape-sage tape-tr" aria-hidden="true"></span>
             <div id="map" class="map-canvas" role="region" aria-label="Peta lokasi <?= e($ev['venue']) ?>"
                  data-lat="<?= e((string) $ev['lat']) ?>" data-lng="<?= e((string) $ev['lng']) ?>"
                  data-label="<?= e($ev['venue']) ?>">
@@ -252,7 +259,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ RSVP & UCAPAN ============ -->
     <section class="section paper rsvp" id="rsvp">
-        <div class="note sketch reveal">
+        <div class="note sketch tilt-s reveal">
             <?= slot_img('floral-rsvp.png', 'floral floral-rsvp') ?>
             <div class="note-seal"><?= wax_seal($sealText, 'olive') ?></div>
             <?= doodle('envelope', 'dd dd-note-env') ?>
@@ -300,6 +307,11 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <button type="submit" class="btn btn-wine btn-block">Kirim</button>
                 <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
             </form>
+            <div class="rsvp-thanks" id="rsvpThanks" hidden>
+                <p class="script thanks-title">Terima kasih</p>
+                <p class="muted">Konfirmasi Anda sudah kami terima.</p>
+                <button type="button" class="link-btn" id="rsvpAgain">Kirim ucapan lagi</button>
+            </div>
             <?php endif; ?>
         </div>
 
@@ -339,6 +351,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 </main>
 
 <script src="assets/vendor/leaflet/leaflet.js" defer></script>
-<script src="assets/js/main.js?v=5" defer></script>
+<script src="assets/js/main.js?v=6" defer></script>
 </body>
 </html>
