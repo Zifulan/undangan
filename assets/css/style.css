@@ -806,3 +806,53 @@ p { margin: 0 0 1rem; }
 
     .banner { min-height: 420px; }
 }
+
+/* =========================================================
+   DOODLE (gambar garis tangan)
+   ========================================================= */
+.doodle {
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    color: #8E2430;
+    --d-green: var(--sage-dark);
+    --d-bg: var(--ivory);
+    --d-rose: var(--rose);
+    pointer-events: none;
+    overflow: visible;
+}
+
+.doodle .l { stroke-width: 1.2; opacity: .65; }
+.doodle .g { stroke: var(--d-green); }
+.doodle .bg { fill: var(--d-bg); }
+.doodle .f { fill: currentColor; stroke: none; }
+.doodle .p { fill: var(--d-rose); }
+.doodle .hole { fill: var(--d-bg); stroke: none; }
+
+.wine .doodle { color: var(--paper); --d-green: #B9C09F; --d-bg: var(--wine); --d-rose: #B9707E; }
+.paper .doodle { --d-bg: var(--ivory); }
+.rsvp .doodle { --d-bg: var(--paper); }
+
+/* penempatan doodle */
+.dd-inline { width: 92px; height: 92px; margin: 0 auto 1rem; }
+.dd-inline.dd-sm { width: 70px; height: 70px; }
+.ayat .dd-inline { margin-top: -1rem; }
+
+.dd-lights { width: min(78%, 420px); height: auto; margin: -2.5rem auto 1.25rem; }
+.closing { padding-top: 7rem; }
+
+.dd { position: absolute; z-index: 4; width: 84px; height: 84px; }
+.dd-hero-rings { left: -9%; bottom: -4%; transform: rotate(-8deg); }
+.dd-hero-hearts { right: -9%; top: -3%; transform: rotate(8deg); }
+.dd-corner-r { right: 8px; top: 14px; width: 72px; height: 72px; }
+.dd-corner-l { left: 8px; top: 14px; width: 72px; height: 72px; }
+.dd-note-env { left: -16px; bottom: -30px; width: 82px; height: 82px; transform: rotate(-10deg); }
+
+@media (min-width: 760px) {
+    .dd-corner-r { right: 6%; top: 3rem; width: 100px; height: 100px; }
+    .dd-corner-l { left: 6%; top: 3rem; width: 100px; height: 100px; }
+    .dd-hero-rings, .dd-hero-hearts { width: 100px; height: 100px; }
+}

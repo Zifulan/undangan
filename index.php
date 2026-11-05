@@ -67,10 +67,11 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=4">
+    <link rel="stylesheet" href="assets/css/style.css?v=5">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
+<?= doodle_defs() ?>
 
 <!-- ============ SAMPUL: AMPLOP & SEGEL ============ -->
 <section class="cover paper" id="cover" aria-label="Sampul undangan"<?= slot_bg('bg-cover.jpg') ?>>
@@ -103,11 +104,14 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ KARTU NAMA ============ -->
     <section class="section paper hero" id="beranda">
+        <?= doodle('lights', 'dd-lights reveal') ?>
         <p class="arabic arabic-bismillah reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
 
         <div class="cartouche cartouche-hero reveal">
             <?= cartouche_frame() ?>
             <?= slot_img('floral-hero.png', 'floral floral-hero') ?>
+            <?= doodle('rings', 'dd dd-hero-rings') ?>
+            <?= has_img('floral-hero.png') ? '' : doodle('hearts', 'dd dd-hero-hearts') ?>
             <div class="cartouche-body">
                 <p class="caps">Undangan<br>Akad Nikah</p>
                 <h1 class="couple-names">
@@ -123,6 +127,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ PEMBUKA & TANGGAL ============ -->
     <section class="section paper opening" id="pembuka">
+        <?= doodle('crescent', 'dd dd-corner-r') ?>
         <div class="opening-grid">
             <div class="cartouche cartouche-date reveal">
                 <?= cartouche_frame() ?>
@@ -152,6 +157,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         </div>
 
         <figure class="ayat reveal">
+            <?= doodle('quran', 'dd-inline') ?>
             <p class="arabic arabic-ayat" lang="ar" dir="rtl">
                 وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ
             </p>
@@ -167,6 +173,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ MEMPELAI ============ -->
     <section class="section wine couple" id="mempelai">
+        <?= doodle('hearts', 'dd-inline dd-sm reveal') ?>
         <p class="caps caps-sm reveal">Kedua</p>
         <h2 class="script section-script words reveal">Mempelai</h2>
 
@@ -199,6 +206,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ AKAD NIKAH ============ -->
     <section class="section wine event" id="acara">
+        <?= doodle('rings', 'dd-inline reveal') ?>
         <p class="caps caps-sm reveal">Insya Allah akan dilaksanakan</p>
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
@@ -232,6 +240,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ LOKASI ============ -->
     <section class="section paper location" id="lokasi">
+        <?= doodle('mosque', 'dd-inline reveal') ?>
         <p class="caps caps-sm reveal">Lokasi</p>
         <h2 class="script section-script words reveal">Menuju Masjid</h2>
         <p class="venue-name reveal"><?= e($ev['venue']) ?></p>
@@ -259,6 +268,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <div class="note reveal">
             <?= slot_img('floral-rsvp.png', 'floral floral-rsvp') ?>
             <div class="note-seal"><?= wax_seal($sealText, 'olive') ?></div>
+            <?= doodle('envelope', 'dd dd-note-env') ?>
             <p class="caps">Mohon</p>
             <h2 class="script section-script">Konfirmasi</h2>
             <p class="muted">Kehadiran &amp; doa restu Anda sangat berarti bagi kami.</p>
@@ -309,6 +319,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         </div>
 
         <div class="wishes reveal">
+            <?= doodle('bouquet', 'dd-inline') ?>
             <h3 class="script wishes-title">Ucapan &amp; Doa <span id="wishCount"><?= count($wishes) ?: '' ?></span></h3>
             <ul class="wish-list" id="wishList">
                 <?php foreach ($wishes as $w): ?>
@@ -328,6 +339,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ PENUTUP ============ -->
     <section class="section wine closing">
+        <?= doodle('hearts', 'dd dd-corner-l') ?>
+        <?= doodle('crescent', 'dd dd-corner-r') ?>
         <p class="arabic reveal" lang="ar" dir="rtl">بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</p>
         <p class="closing-trans reveal"><em>“Semoga Allah memberkahimu dalam suka maupun duka, dan mempersatukan kalian berdua dalam kebaikan.”</em><br><span class="caps caps-xs">HR. Abu Dawud &amp; Tirmidzi</span></p>
 
