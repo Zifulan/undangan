@@ -67,42 +67,45 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=8">
+    <link rel="stylesheet" href="assets/css/style.css?v=10">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
 <?= doodle_defs() ?>
 
 <!-- ============ SAMPUL: AMPLOP & SEGEL ============ -->
-<section class="cover paper" id="cover" aria-label="Sampul undangan"<?= slot_bg('bg-cover.jpg') ?>>
+<section class="cover paper framed" id="cover" aria-label="Sampul undangan"<?= slot_bg('bg-cover.jpg') ?>>
     <div class="cover-inner">
         <div class="recipient">
             <p class="caps">Kepada Yth.</p>
             <p class="recipient-name"><?= $guest !== '' ? e($guest) : 'Tamu Undangan' ?></p>
         </div>
 
-        <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
-        <div class="kids">
-            <figure class="kid kid-l">
-                <img src="<?= e(img_url('kid-fatah.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD" width="480" height="603" decoding="async">
-                <figcaption class="kid-label"><?= doodle('arrow', 'kid-arrow') ?><span><?= e($G['nickname']) ?></span></figcaption>
-            </figure>
-            <figure class="kid kid-r">
-                <img src="<?= e(img_url('kid-gege.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD" width="480" height="602" decoding="async">
-                <figcaption class="kid-label"><span><?= e($B['nickname']) ?></span><?= doodle('arrow', 'kid-arrow') ?></figcaption>
-            </figure>
-            <?= doodle('hearts', 'kid-hearts') ?>
-        </div>
-        <?php endif; ?>
-
         <div class="envelope" id="envelope">
+            <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
+            <div class="kids">
+                <figure class="kid kid-l">
+                    <img src="<?= e(img_url('kid-fatah.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD" width="480" height="603" decoding="async">
+                    <figcaption class="kid-label"><?= doodle('arrow', 'kid-arrow') ?><span><?= e($G['nickname']) ?></span></figcaption>
+                </figure>
+                <figure class="kid kid-r">
+                    <img src="<?= e(img_url('kid-gege.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD" width="480" height="602" decoding="async">
+                    <figcaption class="kid-label"><?= doodle('arrow', 'kid-arrow') ?><span><?= e($B['nickname']) ?></span></figcaption>
+                </figure>
+                <?= doodle('hearts', 'kid-hearts') ?>
+            </div>
+            <?php endif; ?>
             <div class="env-back"></div>
             <div class="env-card">
                 <p class="caps caps-xs">Undangan Akad Nikah</p>
                 <p class="script env-names"><?= e($G['nickname']) ?> <span>&amp;</span> <?= e($B['nickname']) ?></p>
                 <p class="caps caps-xs"><?= e(date('d . m . Y', $startTs)) ?></p>
             </div>
-            <div class="env-pocket"></div>
+            <svg class="env-pocket" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path class="pk" d="M0 0 L50 52 L100 0 L100 100 L0 100 Z"/>
+                <path class="pk-line" d="M0 100 L50 52 L100 100"/>
+                <path class="pk-edge" d="M0 0 L50 52 L100 0"/>
+            </svg>
             <div class="env-flap-wrap"><div class="env-flap"<?= slot_bg('envelope-liner.jpg') ?>></div></div>
             <?= slot_img('floral-envelope.png', 'floral floral-envelope') ?>
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
@@ -358,6 +361,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 </main>
 
 <script src="assets/vendor/leaflet/leaflet.js" defer></script>
-<script src="assets/js/main.js?v=7" defer></script>
+<script src="assets/js/main.js?v=8" defer></script>
 </body>
 </html>

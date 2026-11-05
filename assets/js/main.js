@@ -32,7 +32,7 @@
                 cover.classList.add('is-open');
                 body.classList.remove('is-locked');
                 window.scrollTo(0, 0);
-                setTimeout(function () { cover.setAttribute('hidden', ''); }, 1000);
+                setTimeout(function () { cover.setAttribute('hidden', ''); }, 950);
             }, OPEN_MS);
         });
     }
@@ -77,7 +77,7 @@
     };
 
     if (openBtn) {
-        openBtn.addEventListener('click', function () { setTimeout(startReveals, OPEN_MS + 200); }, { once: true });
+        openBtn.addEventListener('click', function () { setTimeout(startReveals, OPEN_MS + 850); }, { once: true });
     } else {
         startReveals();
     }
