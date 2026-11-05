@@ -158,7 +158,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <h2 class="script section-script words reveal">Ikatan Suci Kami</h2>
                 <p class="reveal">
                     Dengan memohon rahmat dan ridho Allah Subhanahu wa Ta'ala, kami mengundang
-                    Bapak/Ibu/Saudara/i untuk hadir dan mendoakan akad nikah kami.
+                    <?= $guest !== '' ? '<strong class="guest-name">' . e($guest) . '</strong>' : 'Bapak/Ibu/Saudara/i' ?>
+                    untuk hadir dan mendoakan akad nikah kami.
                 </p>
             </div>
         </div>

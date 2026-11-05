@@ -1256,3 +1256,4 @@ p { margin: 0 0 1rem; }
 @media (prefers-reduced-motion: reduce) {
     .envelope, .cover-inner { transition: none; }
 }
+.guest-name { font-weight: 600; color: var(--wine); }
