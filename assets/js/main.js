@@ -82,31 +82,6 @@
         startReveals();
     }
 
-    /* ---------- Monogram: pusatkan berdasarkan tinta huruf, bukan kotak huruf ---------- */
-    // Huruf sambung (mis. "F") punya ekor panjang, sehingga kotak teks yang di tengah
-    // tetap tampak miring. Ukur tinta tiap huruf lalu geser hingga tepat di tengah.
-    var centerMono = function () {
-        var ctx = document.createElement('canvas').getContext('2d');
-        document.querySelectorAll('.orchid-mono').forEach(function (mono) {
-            mono.style.setProperty('--mx', '0px');
-            var box = mono.getBoundingClientRect();
-            var inkL = Infinity, inkR = -Infinity;
-            mono.querySelectorAll('span').forEach(function (sp) {
-                var cs = getComputedStyle(sp);
-                ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
-                var m = ctx.measureText(sp.textContent);
-                var r = sp.getBoundingClientRect();
-                inkL = Math.min(inkL, r.left - m.actualBoundingBoxLeft);
-                inkR = Math.max(inkR, r.left + m.actualBoundingBoxRight);
-            });
-            if (!isFinite(inkL)) return;
-            var shift = (box.left + box.width / 2) - (inkL + inkR) / 2;
-            mono.style.setProperty('--mx', shift.toFixed(1) + 'px');
-        });
-    };
-    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(centerMono); } else { centerMono(); }
-    window.addEventListener('resize', centerMono);
-
     /* ---------- Hitung mundur ---------- */
     var cd = document.getElementById('countdown');
     if (cd) {

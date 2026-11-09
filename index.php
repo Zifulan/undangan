@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=12">
+    <link rel="stylesheet" href="assets/css/style.css?v=13">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -81,19 +81,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         </div>
 
         <div class="envelope" id="envelope">
-            <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
-            <div class="kids">
-                <figure class="kid kid-l">
-                    <img src="<?= e(img_url('kid-fatah.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD" width="480" height="603" decoding="async">
-                    <figcaption class="kid-label"><?= doodle('arrow', 'kid-arrow') ?><span><?= e($G['nickname']) ?></span></figcaption>
-                </figure>
-                <figure class="kid kid-r">
-                    <img src="<?= e(img_url('kid-gege.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD" width="480" height="602" decoding="async">
-                    <figcaption class="kid-label"><?= doodle('arrow', 'kid-arrow') ?><span><?= e($B['nickname']) ?></span></figcaption>
-                </figure>
-                <?= doodle('hearts', 'kid-hearts') ?>
-            </div>
-            <?php endif; ?>
             <div class="env-back"></div>
             <div class="env-card">
                 <p class="caps caps-xs">Undangan Akad Nikah</p>
@@ -194,7 +181,10 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                     <source srcset="<?= e(img_url('orchid-frame.webp')) ?>" type="image/webp">
                     <img src="<?= e(img_url('orchid-frame.png')) ?>" alt="" width="760" height="1175" loading="lazy" decoding="async">
                 </picture>
-                <span class="script orchid-mono"><span class="m-letter"><?= e(mb_substr($G['nickname'], 0, 1)) ?></span><span class="m-amp">&amp;</span><span class="m-letter"><?= e(mb_substr($B['nickname'], 0, 1)) ?></span></span>
+                <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
+                <img class="orchid-kid ok-l" src="<?= e(img_url('kid-fatah.jpg')) ?>" alt="" width="480" height="603" loading="lazy" decoding="async">
+                <img class="orchid-kid ok-r" src="<?= e(img_url('kid-gege.jpg')) ?>" alt="" width="480" height="602" loading="lazy" decoding="async">
+                <?php endif; ?>
             </div>
 
             <article class="person reveal">
@@ -358,6 +348,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
 </main>
 
-<script src="assets/js/main.js?v=10" defer></script>
+<script src="assets/js/main.js?v=11" defer></script>
 </body>
 </html>
