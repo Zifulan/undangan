@@ -22,13 +22,44 @@
     /* ---------- Buka undangan: segel → tutup amplop → kartu keluar ---------- */
     var cover = document.getElementById('cover');
     var openBtn = document.getElementById('openInvitation');
-    var OPEN_MS = reduceMotion ? 0 : 2300;
+    var OPEN_MS = reduceMotion ? 0 : 2400;
+    var GROW_MS = 800;
+    var REVEAL_AT = reduceMotion ? 0 : OPEN_MS + GROW_MS + 250;
+
+    // Kartu di amplop "diangkat" menjadi lembar penuh layar, lalu memudar ke halaman pertama.
+    var cardToPage = function () {
+        var card = cover.querySelector('.env-card');
+        if (!card) return false;
+        var r = card.getBoundingClientRect();
+        var sheet = document.createElement('div');
+        sheet.className = 'card-sheet';
+        sheet.setAttribute('aria-hidden', 'true');
+        sheet.innerHTML = card.innerHTML;
+        sheet.style.left = r.left + 'px';
+        sheet.style.top = r.top + 'px';
+        sheet.style.width = r.width + 'px';
+        sheet.style.height = r.height + 'px';
+        body.appendChild(sheet);
+        sheet.getBoundingClientRect();              // paksa layout sebelum transisi
+        cover.classList.add('via-card');
+        requestAnimationFrame(function () {
+            sheet.classList.add('is-growing');
+            sheet.style.left = '0px';
+            sheet.style.top = '0px';
+            sheet.style.width = window.innerWidth + 'px';
+            sheet.style.height = window.innerHeight + 'px';
+        });
+        setTimeout(function () { sheet.classList.add('is-gone'); }, GROW_MS);
+        setTimeout(function () { sheet.remove(); }, GROW_MS + 700);
+        return true;
+    };
 
     if (openBtn) {
         openBtn.addEventListener('click', function () {
             if (cover.classList.contains('is-opening')) return;
             cover.classList.add('is-opening');
             setTimeout(function () {
+                if (!reduceMotion) cardToPage();
                 cover.classList.add('is-open');
                 body.classList.remove('is-locked');
                 window.scrollTo(0, 0);
@@ -77,7 +108,7 @@
     };
 
     if (openBtn) {
-        openBtn.addEventListener('click', function () { setTimeout(startReveals, OPEN_MS + 850); }, { once: true });
+        openBtn.addEventListener('click', function () { setTimeout(startReveals, REVEAL_AT); }, { once: true });
     } else {
         startReveals();
     }

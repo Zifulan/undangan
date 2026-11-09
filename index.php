@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=16">
+    <link rel="stylesheet" href="assets/css/style.css?v=17">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -95,13 +95,21 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <div class="env-flap-wrap"><div class="env-flap"<?= slot_bg('envelope-liner.jpg') ?>></div></div>
             <?= slot_img('floral-envelope.png', 'floral floral-envelope') ?>
             <?php if (has_img('floral-bow.png')): ?>
-            <picture class="env-bow" aria-hidden="true">
-                <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
-                <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" decoding="async">
-            </picture>
+            <div class="env-bow" aria-hidden="true">
+                <picture class="bow-half bh-l">
+                    <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
+                    <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" decoding="async">
+                </picture>
+                <picture class="bow-half bh-r">
+                    <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
+                    <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" decoding="async">
+                </picture>
+            </div>
             <?php endif; ?>
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
-                <?= wax_seal($sealText, 'plum') ?>
+                <?= wax_seal($sealText, 'plum', 'seal-whole') ?>
+                <span class="seal-half sh-l" aria-hidden="true"><?= wax_seal($sealText, 'plum') ?></span>
+                <span class="seal-half sh-r" aria-hidden="true"><?= wax_seal($sealText, 'plum') ?></span>
             </button>
         </div>
 
@@ -358,6 +366,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
 </main>
 
-<script src="assets/js/main.js?v=11" defer></script>
+<script src="assets/js/main.js?v=12" defer></script>
 </body>
 </html>
