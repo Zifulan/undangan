@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=14">
+    <link rel="stylesheet" href="assets/css/style.css?v=15">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -162,16 +162,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <p class="person-parents"><?= $G['parents'] ?></p>
             </article>
 
-            <div class="orchid reveal" aria-hidden="true">
-                <picture>
-                    <source srcset="<?= e(img_url('orchid-frame.webp')) ?>" type="image/webp">
-                    <img src="<?= e(img_url('orchid-frame.png')) ?>" alt="" width="760" height="1175" loading="lazy" decoding="async">
-                </picture>
-                <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
-                <img class="orchid-kid ok-l" src="<?= e(img_url('kid-fatah.jpg')) ?>" alt="" width="480" height="603" loading="lazy" decoding="async">
-                <img class="orchid-kid ok-r" src="<?= e(img_url('kid-gege.jpg')) ?>" alt="" width="480" height="602" loading="lazy" decoding="async">
-                <?php endif; ?>
-            </div>
+            <p class="script couple-amp reveal" aria-hidden="true">&amp;</p>
 
             <article class="person reveal">
                 <h3 class="script person-nick"><?= e($B['nickname']) ?></h3>
