@@ -72,17 +72,6 @@ function doodle(string $name, string $class = ''): string
                 <path d="M100 82 c-3 -4 -8 -1 -5 3 c1 2 5 4 5 4 c0 0 4 -2 5 -4 c3 -4 -2 -7 -5 -3z" class="f"/>
                 <path d="M16 62 l-6 -2 M18 72 l-6 2 M100 54 l6 -2 M101 64 l6 1" class="l"/>',
 
-            // Untaian lampu hias
-            'lights' => '
-                <path d="M2 28 Q32 58 60 38 Q88 20 118 42"/>
-                <g class="g"><path d="M16 38 v5 M38 45 v5 M60 37 v5 M82 29 v5 M104 33 v5"/></g>
-                <path d="M13 43 Q9 52 16 57 Q23 52 19 43 Z" class="p"/>
-                <path d="M35 50 Q31 59 38 64 Q45 59 41 50 Z" class="bg"/>
-                <path d="M57 42 Q53 51 60 56 Q67 51 63 42 Z" class="p"/>
-                <path d="M79 34 Q75 43 82 48 Q89 43 85 34 Z" class="bg"/>
-                <path d="M101 38 Q97 47 104 52 Q111 47 107 38 Z" class="p"/>
-                <path d="M30 60 l-4 3 M46 60 l4 3 M38 69 v4 M74 44 l-4 3 M90 44 l4 3 M82 53 v4" class="l"/>',
-
             // Buket bunga mawar
             'bouquet' => '
                 <g class="g">
@@ -139,7 +128,7 @@ function doodle(string $name, string $class = ''): string
         return '';
     }
 
-    $viewBox = ['lights' => '0 18 120 62'][$name] ?? '0 0 120 120';
+    $viewBox = '0 0 120 120';
 
     return '<svg class="doodle doodle-' . e($name) . ' ' . e($class) . '" viewBox="' . $viewBox . '" aria-hidden="true" focusable="false">'
         . '<g filter="url(#doodle-rough)">' . $art[$name] . '</g></svg>';

@@ -291,9 +291,8 @@ p { margin: 0 0 1rem; }
 .floral-envelope { right: -14%; bottom: -18%; z-index: 7; width: 52%; }
 
 /* urutan animasi membuka */
-.cover.is-opening .env-seal { animation: none; opacity: 0; transform: scale(1.25); pointer-events: none; }
-.cover.is-opening .env-flap-wrap { animation: flap-open .9s var(--ease) .35s forwards; }
-.cover.is-opening .env-flap { animation: flap-face .9s var(--ease) .35s forwards; }
+.cover.is-opening .env-flap-wrap { animation: flap-open .7s var(--ease) .3s forwards; }
+.cover.is-opening .env-flap { animation: flap-face .7s var(--ease) .3s forwards; }
 .cover.is-opening .recipient { opacity: 0; transform: translateY(-10px); }
 .recipient { transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .cover.is-opening .env-card { transform: translateY(-58%); }
@@ -306,11 +305,6 @@ p { margin: 0 0 1rem; }
     100% { transform: scaleY(-1); z-index: 1; }
 }
 
-/* sisi dalam tutup amplop (lebih terang / lukisan bila tersedia) */
-@keyframes flap-face {
-    0%, 49% { background-color: #B2B895; }
-    50%, 100% { background-color: #C8CCB0; background-image: var(--slot-bg, var(--grain)); background-size: cover; }
-}
 
 /* segel lilin (SVG) */
 .wax-seal .seal-mono {
@@ -748,12 +742,10 @@ p { margin: 0 0 1rem; }
 .dd-inline.dd-sm { width: 70px; height: 70px; }
 .ayat .dd-inline { margin-top: -1rem; }
 
-.dd-lights { width: min(78%, 420px); height: auto; margin: -2.5rem auto 1.25rem; }
 .closing { padding-top: 7rem; }
 
 .dd { position: absolute; z-index: 4; width: 84px; height: 84px; }
 .dd-hero-rings { left: -9%; bottom: -4%; transform: rotate(-8deg); }
-.dd-hero-hearts { right: -9%; top: -3%; transform: rotate(8deg); }
 .dd-corner-r { right: 8px; top: 14px; width: 72px; height: 72px; }
 .dd-corner-l { left: 8px; top: 14px; width: 72px; height: 72px; }
 .dd-note-env { left: -16px; bottom: -30px; width: 82px; height: 82px; transform: rotate(-10deg); }
@@ -761,7 +753,7 @@ p { margin: 0 0 1rem; }
 @media (min-width: 760px) {
     .dd-corner-r { right: 6%; top: 3rem; width: 100px; height: 100px; }
     .dd-corner-l { left: 6%; top: 3rem; width: 100px; height: 100px; }
-    .dd-hero-rings, .dd-hero-hearts { width: 100px; height: 100px; }
+    .dd-hero-rings { width: 100px; height: 100px; }
 }
 
 /* =========================================================
@@ -1073,7 +1065,6 @@ p { margin: 0 0 1rem; }
 .env-pocket .pk-edge { fill: none; stroke: rgba(46, 27, 31, .16); stroke-width: 1; vector-effect: non-scaling-stroke; }
 
 .cover.is-opening .env-card { transform: translateY(-62%); }
-.envelope { transition: transform .9s var(--ease) .3s; }
 
 /* penutup: amplop "mendekat" lalu sampul memudar bersih, tanpa tumpang tindih */
 .cover { transition: opacity .6s var(--ease) .3s, visibility 0s linear .9s; }
@@ -1219,8 +1210,6 @@ p { margin: 0 0 1rem; }
         background-size: 11px 11px, auto;
     }
 }
-.cover.is-opening .env-flap-wrap { animation-duration: .7s; animation-delay: .3s; }
-.cover.is-opening .env-flap { animation-duration: .7s; animation-delay: .3s; }
 
 /* kartu tumbuh memenuhi layar, lalu memudar menjadi halaman pertama */
 .card-sheet {
@@ -1251,3 +1240,7 @@ p { margin: 0 0 1rem; }
 @media (prefers-reduced-motion: reduce) {
     .bow-half, .seal-half { transition: none; animation: none !important; }
 }
+
+/* penutup: untaian berpita kembali "terikat" di bawah nama */
+.closing-bow { display: block; width: min(330px, 86%); margin: .5rem auto 0; }
+.closing-bow img { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .25)); }

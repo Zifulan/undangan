@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=18">
+    <link rel="stylesheet" href="assets/css/style.css?v=19">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -92,7 +92,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <path class="pk-line" d="M0 100 L50 52 L100 100"/>
                 <path class="pk-edge" d="M0 0 L50 52 L100 0"/>
             </svg>
-            <div class="env-flap-wrap"><div class="env-flap"<?= slot_bg('envelope-liner.jpg') ?>></div></div>
+            <div class="env-flap-wrap"><div class="env-flap"></div></div>
             <?= slot_img('floral-envelope.png', 'floral floral-envelope') ?>
             <?php if (has_img('floral-bow.png')): ?>
             <div class="env-bow" aria-hidden="true">
@@ -140,7 +140,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <?= cartouche_frame() ?>
             <?= slot_img('floral-hero.png', 'floral floral-hero') ?>
             <?= doodle('rings', 'dd dd-hero-rings') ?>
-            <?= has_img('floral-hero.png') ? '' : doodle('hearts', 'dd dd-hero-hearts') ?>
             <div class="cartouche-body">
                 <p class="caps">Undangan<br>Akad Nikah</p>
                 <h1 class="couple-names">
@@ -362,6 +361,12 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
         <p class="arabic reveal" lang="ar" dir="rtl">وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
         <p class="script closing-names words reveal"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></p>
+        <?php if (has_img('floral-bow.png')): ?>
+        <picture class="closing-bow reveal" aria-hidden="true">
+            <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
+            <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" loading="lazy" decoding="async">
+        </picture>
+        <?php endif; ?>
     </section>
 
 </main>

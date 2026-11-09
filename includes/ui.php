@@ -12,7 +12,6 @@ declare(strict_types=1);
  *   floral-rsvp.png     bunga di pojok kartu RSVP (PNG transparan, ±600px)
  *   floral-envelope.png bunga di pojok amplop sampul (PNG transparan, ±600px)
  *   bg-cover.jpg        lukisan latar sampul (potret, ±1080×1920)
- *   envelope-liner.jpg  lukisan di bagian dalam tutup amplop (±800×600)
  */
 
 function has_img(string $file): bool
