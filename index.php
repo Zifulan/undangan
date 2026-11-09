@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=15">
+    <link rel="stylesheet" href="assets/css/style.css?v=16">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -94,6 +94,12 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             </svg>
             <div class="env-flap-wrap"><div class="env-flap"<?= slot_bg('envelope-liner.jpg') ?>></div></div>
             <?= slot_img('floral-envelope.png', 'floral floral-envelope') ?>
+            <?php if (has_img('floral-bow.png')): ?>
+            <picture class="env-bow" aria-hidden="true">
+                <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
+                <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" decoding="async">
+            </picture>
+            <?php endif; ?>
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
                 <?= wax_seal($sealText, 'plum') ?>
             </button>
@@ -107,8 +113,20 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ KARTU NAMA ============ -->
     <section class="section paper hero" id="beranda">
-        <?= doodle('lights', 'dd-lights reveal') ?>
         <p class="arabic arabic-bismillah reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+
+        <div class="bloom">
+            <?php if (has_img('floral-frame.png')): ?>
+            <picture class="bloom-frame reveal" aria-hidden="true">
+                <source srcset="<?= e(img_url('floral-frame.webp')) ?>" type="image/webp">
+                <img src="<?= e(img_url('floral-frame.png')) ?>" alt="" width="675" height="904" decoding="async">
+            </picture>
+            <?php endif; ?>
+            <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
+            <img class="bloom-kid bk-l reveal" src="<?= e(img_url('kid-fatah.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD" width="480" height="603" decoding="async">
+            <img class="bloom-kid bk-r reveal" src="<?= e(img_url('kid-gege.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD" width="480" height="602" decoding="async">
+            <?php endif; ?>
+        </div>
 
         <div class="cartouche cartouche-hero tilt-l reveal">
             <?= cartouche_frame() ?>
