@@ -233,6 +233,13 @@
     var list = document.getElementById('wishList');
     var empty = document.getElementById('wishEmpty');
     var count = document.getElementById('wishCount');
+    var more = document.getElementById('wishMore');
+    if (more) {
+        more.addEventListener('click', function () {
+            more.closest('.wishes').classList.add('is-all');
+            more.hidden = true;
+        });
+    }
 
     form.addEventListener('change', function (e) {
         if (e.target.name === 'attendance') {
@@ -327,6 +334,7 @@
                         '<p>' + esc(data.wish.message).replace(/\n/g, '<br>') + '</p>' +
                         '<time>' + esc(data.wish.when) + '</time>';
                     list.insertBefore(li, list.firstChild);
+                    if (more && list.children.length > 6 && !list.closest('.wishes').classList.contains('is-all')) more.hidden = false;
                     list.scrollTop = 0;
                     empty.hidden = true;
                     count.textContent = list.children.length;

@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=20">
+    <link rel="stylesheet" href="assets/css/style.css?v=21">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -338,6 +338,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <?php endforeach; ?>
             </ul>
             <p class="muted wish-empty" id="wishEmpty" <?= $wishes ? 'hidden' : '' ?>>Belum ada ucapan.</p>
+            <button type="button" class="link-btn wish-more" id="wishMore"<?= count($wishes) > 6 ? '' : ' hidden' ?>>Lihat semua ucapan</button>
         </div>
     </section>
 
@@ -378,6 +379,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
 </main>
 
-<script src="assets/js/main.js?v=13" defer></script>
+<script src="assets/js/main.js?v=14" defer></script>
 </body>
 </html>

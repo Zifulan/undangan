@@ -1255,3 +1255,9 @@ p { margin: 0 0 1rem; }
     box-shadow: 0 18px 36px rgba(0, 0, 0, .35), 0 3px 8px rgba(0, 0, 0, .25);
 }
 @media (min-width: 760px) { .portrait { width: 300px; } }
+
+/* Ucapan: tanpa kotak gulir di dalam halaman (menahan scroll di ponsel).
+   Tampilkan 6 terbaru, sisanya lewat tombol "Lihat semua ucapan". */
+.wish-list { max-height: none; overflow: visible; overscroll-behavior: auto; }
+.wishes:not(.is-all) .wish:nth-child(n+7) { display: none; }
+.wish-more { display: block; margin: 1.25rem auto 0; }
