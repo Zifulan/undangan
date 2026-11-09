@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=21">
+    <link rel="stylesheet" href="assets/css/style.css?v=22">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -157,11 +157,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <section class="section paper opening" id="pembuka">
         <?= doodle('crescent', 'dd dd-corner-r') ?>
         <div class="opening-grid">
-            <div class="calendar-wrap tilt-r reveal">
-                <?= doodle_calendar($startTs) ?>
-                <?= slot_img('floral-date.png', 'floral floral-date') ?>
-            </div>
-
             <div class="opening-text">
                 <p class="arabic reveal" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
                 <h2 class="script section-script words reveal">Ikatan Suci Kami</h2>
@@ -211,20 +206,24 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <?= doodle('rings', 'dd-inline reveal') ?>
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
-        <dl class="event-meta sketch tilt-r reveal">
-            <div>
-                <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
-                <dd><?= e(tanggal_id($ev['start'])) ?></dd>
-            </div>
-            <div>
-                <dt class="caps caps-xs">Waktu</dt>
-                <dd><?= e($ev['time_text']) ?></dd>
-            </div>
-            <div>
-                <dt class="caps caps-xs">Tempat</dt>
-                <dd><?= e($ev['venue']) ?><?php if ($ev['address'] !== ''): ?><small class="dd-address"><?= e($ev['address']) ?></small><?php endif; ?></dd>
-            </div>
-        </dl>
+        <div class="event-grid">
+            <div class="calendar-wrap reveal"><?= doodle_calendar($startTs) ?></div>
+
+            <dl class="event-meta sketch tilt-r reveal">
+                <div>
+                    <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
+                    <dd><?= e(tanggal_id($ev['start'])) ?></dd>
+                </div>
+                <div>
+                    <dt class="caps caps-xs">Waktu</dt>
+                    <dd><?= e($ev['time_text']) ?></dd>
+                </div>
+                <div>
+                    <dt class="caps caps-xs">Tempat</dt>
+                    <dd><?= e($ev['venue']) ?><?php if ($ev['address'] !== ''): ?><small class="dd-address"><?= e($ev['address']) ?></small><?php endif; ?></dd>
+                </div>
+            </dl>
+        </div>
 
         <div class="countdown reveal" id="countdown" data-target="<?= e($startIso) ?>" aria-live="polite">
             <div><span data-unit="days">0</span><small>Hari</small></div>
@@ -364,8 +363,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
         <p class="arabic reveal" lang="ar" dir="rtl">بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</p>
         <p class="closing-trans reveal"><em>“Semoga Allah memberkahimu dalam suka maupun duka, dan mempersatukan kalian berdua dalam kebaikan.”</em><br><span class="caps caps-xs">HR. Abu Dawud &amp; Tirmidzi</span></p>
-
-        <div class="closing-seal reveal"><?= wax_seal($sealText, 'olive') ?></div>
 
         <p class="arabic reveal" lang="ar" dir="rtl">وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
         <p class="script closing-names words reveal"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></p>

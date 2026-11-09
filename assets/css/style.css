@@ -361,7 +361,6 @@ p { margin: 0 0 1rem; }
     margin: 0 auto 4rem;
 }
 
-.floral-date { left: -24%; bottom: -14%; }
 
 .opening-text { max-width: 30rem; margin: 0 auto; }
 .opening-text .arabic { color: var(--wine); }
@@ -799,48 +798,8 @@ p { margin: 0 0 1rem; }
 /* =========================================================
    KALENDER DOODLE
    ========================================================= */
-.calendar-wrap { position: relative; width: min(300px, 86%); margin: 0 auto; }
 
-.dcal { position: relative; aspect-ratio: 300 / 340; color: #8E2430; }
 
-.dcal-frame {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-.dcal-frame .dcal-fill { fill: var(--ivory); stroke: none; }
-.dcal-frame .l { stroke-width: 1.1; opacity: .55; }
-.dcal-frame .f { fill: currentColor; stroke: none; }
-
-.dcal-body {
-    position: absolute;
-    inset: 21% 9% 5%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.dcal-month { margin: 0 !important; font-size: 2.5rem; color: var(--sage-dark); line-height: 1; }
-.dcal-year { margin: .1rem 0 .6rem !important; font-size: .7rem; letter-spacing: .3em; color: var(--ink-soft); }
-
-.dcal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: .15rem .1rem;
-    width: 100%;
-    text-align: center;
-    font-size: .95rem;
-    font-weight: 600;
-    color: var(--ink);
-    line-height: 1.9;
-}
-.dcal-head { font-size: .62rem; font-weight: 500; letter-spacing: .06em; color: var(--ink-soft); text-transform: lowercase; }
 
 .dcal-day.is-event { position: relative; color: var(--ivory); }
 .dcal-day.is-event { z-index: 1; }
@@ -870,7 +829,6 @@ p { margin: 0 0 1rem; }
 }
 @media (prefers-reduced-motion: reduce) { .dcal-day.is-event svg { animation: none; } }
 
-.floral-date { left: -22%; bottom: -10%; }
 
 /* =========================================================
    1. DOODLE MENGGAMBAR DIRINYA SENDIRI
@@ -1084,8 +1042,6 @@ p { margin: 0 0 1rem; }
 
 /* teks kecil lebih mudah dibaca di HP */
 .caps-xs { font-size: .75rem; }
-.dcal-head { font-size: .75rem; }
-.dcal-year { font-size: .75rem; }
 
 /* Mempelai: beri jarak antara judul dan nama pertama */
 .couple .section-script { margin-bottom: 2.75rem; }
@@ -1106,8 +1062,6 @@ p { margin: 0 0 1rem; }
     .name-script { font-size: 5.4rem; }
     .person-nick { font-size: 3rem; }
 }
-.dcal-grid { line-height: 1.75; gap: .05rem .1rem; }
-.dcal-body { inset: 20% 9% 7%; }
 
 /* tanpa garis lurus antar-section ivory: Lokasi & Konfirmasi memakai warna yang sama */
 .location, .rsvp { background-color: var(--ivory); }
@@ -1261,3 +1215,77 @@ p { margin: 0 0 1rem; }
 .wish-list { max-height: none; overflow: visible; overscroll-behavior: auto; }
 .wishes:not(.is-all) .wish:nth-child(n+7) { display: none; }
 .wish-more { display: block; margin: 1.25rem auto 0; }
+
+/* =========================================================
+   KALENDER MEJA (di Akad Nikah): cincin spiral, garis sketsa, catatan
+   ========================================================= */
+.event-grid { display: grid; gap: 3rem; justify-items: center; align-items: center; max-width: 820px; margin: 0 auto; }
+.calendar-wrap { width: min(300px, 86%); }
+.event .event-meta { width: min(380px, 100%); }
+
+.dcal {
+    position: relative;
+    padding: 2.4rem 1.1rem 1.2rem;
+    background: var(--ivory);
+    background-image: var(--grain);
+    color: var(--ink);
+    text-align: center;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, .28);
+}
+.event .dcal.sketch { --sketch: var(--wine); }
+.dcal-rings {
+    position: absolute;
+    left: 0;
+    top: -18px;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    fill: none;
+    stroke: var(--sage-dark);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+}
+.dcal-rings .hole { fill: var(--wine); stroke: none; }
+
+.dcal-month { margin: 0 !important; font-size: 2.6rem; line-height: 1; color: var(--wine); }
+.dcal-year { margin: .2rem 0 .9rem !important; font-size: .78rem; letter-spacing: .3em; color: var(--ink-soft); }
+.dcal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: .1rem 0;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 2;
+    color: var(--ink);
+}
+.dcal-head {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: lowercase;
+    color: var(--sage-dark);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: .2rem;
+}
+.dcal-note {
+    align-self: center;
+    font-family: "Caveat", var(--font-script), cursive;
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #8E2430;
+    rotate: -6deg;
+}
+
+@media (min-width: 760px) {
+    .event-grid { grid-template-columns: auto auto; justify-content: center; gap: 4.5rem; }
+    .calendar-wrap { width: 320px; }
+}
+
+/* Pembuka kini hanya teks */
+.opening-grid { margin-bottom: 0; }
+@media (min-width: 760px) {
+    .opening-grid { grid-template-columns: 1fr; }
+    .opening-text { text-align: center; margin: 0 auto; }
+}
+.opening { padding-top: 4.5rem; }

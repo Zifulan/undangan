@@ -175,28 +175,26 @@ function doodle_calendar(int $ts): string
         }
     }
 
-    $frame = '<svg class="dcal-frame" viewBox="0 0 300 340" preserveAspectRatio="none" aria-hidden="true">'
-        . '<g filter="url(#doodle-rough)">'
-        . '<path class="dcal-fill" d="M14 52 H286 V326 H14 Z"/>'
-        . '<path d="M14 52 H286 V326 H14 Z"/>'
-        . '<path class="l" d="M22 60 H278 V318 H22 Z"/>'
-        // mahkota bergulir di atas bingkai
-        . '<path d="M62 52 C60 38 72 31 82 37 C90 42 85 53 77 50 C71 47 74 40 79 41"/>'
-        . '<path d="M82 37 C110 20 190 20 218 37"/>'
-        . '<path d="M238 52 C240 38 228 31 218 37 C210 42 215 53 223 50 C229 47 226 40 221 41"/>'
-        . '<path d="M112 29 q-7 -10 2 -13 q6 3 0 9 M188 29 q7 -10 -2 -13 q-6 3 0 9"/>'
-        . '<path class="f" d="M150 33 c-5 -7 -14 -4 -9 3 c3 4 9 7 9 7 c0 0 6 -3 9 -7 c5 -7 -4 -10 -9 -3z"/>'
-        . '<path d="M14 52 c-7 0 -11 -7 -6 -11 c4 -4 10 0 6 4 M286 52 c7 0 11 -7 6 -11 c-4 -4 -10 0 -6 4"/>'
-        . '<path class="l" d="M136 326 l14 -6 l14 6"/>'
-        . '</g></svg>';
+    // sisa sel di baris terakhir: diisi catatan tulisan tangan bila cukup lebar
+    $rest = (7 - (($offset + $total) % 7)) % 7;
+    if ($rest >= 3) {
+        $cells .= '<span class="dcal-note" style="grid-column: span ' . $rest . '">hari kami &#9825;</span>';
+    }
 
-    return '<div class="dcal" role="img" aria-label="Kalender ' . $months[$m] . ' ' . $y . ', akad tanggal ' . $day . '">'
-        . $frame
-        . '<div class="dcal-body">'
+    // cincin spiral di tepi atas (kalender meja)
+    $rings = '';
+    for ($i = 0; $i < 8; $i++) {
+        $x = 31 + $i * 34;
+        $rings .= '<circle class="hole" cx="' . $x . '" cy="31" r="2.6"/>'
+            . '<path d="M' . ($x + 1) . ' 30 C' . ($x - 7) . ' 26 ' . ($x - 7) . ' 6 ' . ($x + 1) . ' 5 C' . ($x + 8) . ' 5 ' . ($x + 7) . ' 16 ' . ($x + 4) . ' 22"/>';
+    }
+
+    return '<div class="dcal sketch" role="img" aria-label="Kalender ' . $months[$m] . ' ' . $y . ', akad tanggal ' . $day . '">'
+        . '<svg class="dcal-rings" viewBox="0 0 300 36" aria-hidden="true"><g filter="url(#doodle-rough)">' . $rings . '</g></svg>'
         . '<p class="script dcal-month">' . $months[$m] . '</p>'
         . '<p class="dcal-year">' . $y . '</p>'
         . '<div class="dcal-grid">' . $cells . '</div>'
-        . '</div></div>';
+        . '</div>';
 }
 
 /**
