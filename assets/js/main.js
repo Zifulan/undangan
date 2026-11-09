@@ -22,9 +22,9 @@
     /* ---------- Buka undangan: segel → tutup amplop → kartu keluar ---------- */
     var cover = document.getElementById('cover');
     var openBtn = document.getElementById('openInvitation');
-    var OPEN_MS = reduceMotion ? 0 : 2400;
-    var GROW_MS = 800;
-    var REVEAL_AT = reduceMotion ? 0 : OPEN_MS + GROW_MS + 250;
+    var OPEN_MS = reduceMotion ? 0 : 1650;
+    var GROW_MS = 650;
+    var REVEAL_AT = reduceMotion ? 0 : OPEN_MS + 300;   // halaman mulai tampil saat kartu masih membesar
 
     // Kartu di amplop "diangkat" menjadi lembar penuh layar, lalu memudar ke halaman pertama.
     var cardToPage = function () {
