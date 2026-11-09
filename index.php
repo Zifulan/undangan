@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=13">
+    <link rel="stylesheet" href="assets/css/style.css?v=14">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
 </head>
 <body class="is-locked">
@@ -147,20 +147,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 </p>
             </div>
         </div>
-
-        <figure class="ayat sketch tilt-s reveal">
-            <?= doodle('quran', 'dd-inline') ?>
-            <p class="arabic arabic-ayat" lang="ar" dir="rtl">
-                وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ
-            </p>
-            <blockquote>
-                “Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan
-                untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan
-                Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu
-                benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.”
-            </blockquote>
-            <figcaption class="caps caps-xs">QS. Ar-Rum : 21</figcaption>
-        </figure>
     </section>
 
     <!-- ============ MEMPELAI ============ -->
@@ -337,6 +323,21 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <?= wave_edge('top', 5) ?>
         <?= doodle('hearts', 'dd dd-corner-l') ?>
         <?= doodle('crescent', 'dd dd-corner-r') ?>
+
+        <figure class="ayat sketch tilt-s reveal">
+            <?= doodle('quran', 'dd-inline') ?>
+            <p class="arabic arabic-ayat" lang="ar" dir="rtl">
+                وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ
+            </p>
+            <blockquote>
+                “Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan
+                untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan
+                Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu
+                benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.”
+            </blockquote>
+            <figcaption class="caps caps-xs">QS. Ar-Rum : 21</figcaption>
+        </figure>
+
         <p class="arabic reveal" lang="ar" dir="rtl">بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ</p>
         <p class="closing-trans reveal"><em>“Semoga Allah memberkahimu dalam suka maupun duka, dan mempersatukan kalian berdua dalam kebaikan.”</em><br><span class="caps caps-xs">HR. Abu Dawud &amp; Tirmidzi</span></p>
 

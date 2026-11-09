@@ -1150,3 +1150,9 @@ p { margin: 0 0 1rem; }
 @media (min-width: 760px) {
     .orchid { width: 270px; }
 }
+
+/* QS Ar-Rum 21 di penutup (latar anggur), sebelum doa */
+.closing .ayat { margin-bottom: 3.5rem; }
+.closing .arabic-ayat { color: var(--paper); }
+.closing .ayat blockquote { color: rgba(244, 239, 228, .8); }
+.closing .ayat figcaption { color: var(--rose); }
