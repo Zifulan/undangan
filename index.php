@@ -83,7 +83,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=32">
+    <link rel="stylesheet" href="assets/css/style.css?v=33">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="<?= $editing ? 'is-editing' : 'is-locked' ?>">
@@ -142,6 +142,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ PEMBUKA & TANGGAL ============ -->
     <section class="section paper opening" id="pembuka">
+        <?= flowers_layer('pembuka') ?>
         <?= doodle('crescent', 'dd dd-corner-r') ?>
         <div class="opening-grid">
             <div class="opening-text">
@@ -158,6 +159,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ MEMPELAI ============ -->
     <section class="section wine couple" id="mempelai">
+        <?= flowers_layer('mempelai') ?>
         <?= wave_edge('top', 1) ?>
         <?= doodle('hearts', 'dd-inline dd-sm reveal') ?>
         <h2 class="script section-script words reveal">Mempelai</h2>
@@ -189,6 +191,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ AKAD NIKAH ============ -->
     <section class="section wine event" id="acara">
+        <?= flowers_layer('acara') ?>
         <?= wave_edge('bottom', 4) ?>
         <?= doodle('rings', 'dd-inline reveal') ?>
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
@@ -228,6 +231,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ LOKASI ============ -->
     <section class="section paper location" id="lokasi">
+        <?= flowers_layer('lokasi') ?>
         <?= doodle('mosque', 'dd-inline reveal') ?>
         <h2 class="script section-script words reveal">Lokasi</h2>
         <p class="venue-name reveal"><?= e($ev['venue']) ?></p>
@@ -253,6 +257,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ RSVP & UCAPAN ============ -->
     <section class="section paper rsvp" id="rsvp">
+        <?= flowers_layer('rsvp') ?>
         <div class="note sketch tilt-s reveal">
             <?= slot_img('floral-rsvp.png', 'floral floral-rsvp') ?>
             <div class="note-seal"><?= wax_seal_img($sealText, 'olive') ?></div>
@@ -331,6 +336,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
     <!-- ============ PENUTUP ============ -->
     <section class="section wine closing">
+        <?= flowers_layer('penutup') ?>
         <?= wave_edge('top', 5) ?>
         <?= doodle('hearts', 'dd dd-corner-l') ?>
         <?= doodle('crescent', 'dd dd-corner-r') ?>
@@ -369,9 +375,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <div class="fx-status" id="fxStatus"></div>
     <div class="fx-row fx-top">
         <select id="fxArea" aria-label="Bagian">
-            <option value="envelope">Amplop</option>
-            <option value="calendar">Kalender</option>
-            <option value="event">Kartu acara</option>
+            <?php foreach (FLOWER_AREA_LABELS as $k => $label): ?><option value="<?= e($k) ?>"><?= e($label) ?></option><?php endforeach; ?>
         </select>
         <button type="button" id="fxUndo">Urungkan</button>
         <button type="button" class="fx-primary" id="fxSave">Simpan</button>
@@ -389,14 +393,16 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <button type="button" id="fxDone">Selesai</button>
     </div>
     <div class="fx-row fx-chips" id="fxChips"></div>
+    <div class="fx-row fx-tabs" id="fxTabs"></div>
     <div class="fx-row fx-strip" id="fxStrip" aria-label="Tambah bunga"></div>
+    <input type="file" id="fxFile" accept="image/png,image/jpeg,image/webp" hidden>
 </div>
 <script>
 window.FLOWER_EDITOR = <?= json_encode([
     'api'    => 'api/flowers.php',
     'csrf'   => csrf_token(),
-    'assets' => array_map(fn($a) => $a[2], FLOWER_ASSETS),
-    'thumbs' => array_combine(array_keys(FLOWER_ASSETS), array_map(fn($k) => img_url('bq/' . $k . '.png'), array_keys(FLOWER_ASSETS))),
+    'upload' => 'api/flowers-upload.php',
+    'assets' => array_map(fn($a) => ['label' => $a['label'], 'group' => $a['group'], 'thumb' => img_url($a['src'] . '.png')], flower_assets()),
 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
 </script>
 <script src="<?= e('assets/js/flower-editor.js?v=' . filemtime(APP_ROOT . '/assets/js/flower-editor.js')) ?>" defer></script>

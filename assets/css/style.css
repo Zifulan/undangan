@@ -1741,3 +1741,13 @@ p { margin: 0 0 1rem; }
 .fx-add span { font-size: .68rem; }
 .fx-status { flex: none; min-width: 0; padding: 0 .2rem; }
 .fx-top select { flex: 1; min-width: 0; }
+
+/* bunga per section: 'back' di belakang isi section, 'front' di atasnya */
+.section { isolation: isolate; }
+.section > .fx-set .fx-back { z-index: -1; }
+.section > .fx-set .fx-front { z-index: 4; }
+.fx-tab { font-size: .78rem; padding: .25rem .7rem !important; min-height: 30px !important; }
+.fx-tab.is-on { background: #F5C7C7 !important; color: var(--wine) !important; }
+.fx-add { position: relative; }
+.fx-upload b { display: grid; place-items: center; width: 40px; height: 52px; font-size: 1.6rem; }
+.fx-del-up { position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; border-radius: 50%; background: #B23A3A; color: #fff; font: 700 14px/20px sans-serif; text-align: center; font-style: normal; }

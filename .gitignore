@@ -2,3 +2,4 @@
 .DS_Store
 /data/flowers.json
 /data/*.tmp
+/assets/img/up/

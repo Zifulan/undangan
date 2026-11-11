@@ -106,7 +106,7 @@
             var b = document.createElement('button');
             b.type = 'button';
             b.className = 'fx-chip' + (el === selected ? ' is-on' : '') + (el.classList.contains('fx-back') ? ' is-back' : '');
-            b.textContent = (i + 1) + '. ' + (CFG.assets[el.dataset.a] || el.dataset.a);
+            b.textContent = (i + 1) + '. ' + ((CFG.assets[el.dataset.a] || {}).label || el.dataset.a);
             b.addEventListener('click', function () { select(el); });
             chips.appendChild(b);
         });
@@ -186,35 +186,111 @@
     btn('fxUndo', undo);
     btn('fxDone', function () { select(null); });
 
-    /* tambah bunga dari daftar */
-    Object.keys(CFG.assets).forEach(function (key) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'fx-add';
-        b.innerHTML = '<img src="' + CFG.thumbs[key] + '" alt=""><span>' + CFG.assets[key] + '</span>';
-        b.addEventListener('click', function () {
-            var set = activeSet();
-            if (!set) return;
-            snapshot(set);
-            var pic = document.createElement('picture');
-            pic.className = 'fx fx-front';
-            pic.dataset.a = key;
-            pic.setAttribute('aria-hidden', 'true');
-            pic.innerHTML = '<img src="' + CFG.thumbs[key] + '" alt="" draggable="false">';
-            put(pic, { x: 50, y: 50, w: set.dataset.area === 'envelope' ? 35 : 40, r: 0, f: false, z: 'front' });
-            set.appendChild(pic);
-            select(pic);
-            set.closest('.envelope, .calendar-wrap, .event-meta').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    /* ---------- daftar bunga (bertab) + unggah ---------- */
+    var tabs = document.getElementById('fxTabs');
+    var fileInput = document.getElementById('fxFile');
+    var GROUPS = ['Buket', 'Rangkaian', 'Satuan', 'Unggahan'];
+    var currentGroup = 'Buket';
+
+    var addItem = function (key) {
+        var set = activeSet();
+        if (!set) return;
+        snapshot(set);
+        var pic = document.createElement('picture');
+        pic.className = 'fx fx-front';
+        pic.dataset.a = key;
+        pic.setAttribute('aria-hidden', 'true');
+        pic.innerHTML = '<img src="' + CFG.assets[key].thumb + '" alt="" draggable="false">';
+        // taruh di tengah layar bila area terlihat, selain itu di tengah area
+        var r = set.getBoundingClientRect();
+        var vy = window.innerHeight * .4;
+        var y = (r.top < vy && r.bottom > vy) ? (vy - r.top) / r.height * 100 : 50;
+        var big = set.dataset.area === 'envelope' || set.dataset.area === 'calendar' || set.dataset.area === 'event';
+        put(pic, { x: 50, y: y, w: big ? 35 : 28, r: 0, f: false, z: 'front' });
+        set.appendChild(pic);
+        select(pic);
+        if (!(r.top < vy && r.bottom > vy)) set.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    var renderStrip = function () {
+        tabs.innerHTML = '';
+        GROUPS.forEach(function (g) {
+            var t = document.createElement('button');
+            t.type = 'button';
+            t.className = 'fx-tab' + (g === currentGroup ? ' is-on' : '');
+            t.textContent = g;
+            t.addEventListener('click', function () { currentGroup = g; renderStrip(); });
+            tabs.appendChild(t);
         });
-        strip.appendChild(b);
+        strip.innerHTML = '';
+        if (currentGroup === 'Unggahan') {
+            var up = document.createElement('button');
+            up.type = 'button';
+            up.className = 'fx-add fx-upload';
+            up.innerHTML = '<b>＋</b><span>Unggah</span>';
+            up.addEventListener('click', function () { fileInput.click(); });
+            strip.appendChild(up);
+        }
+        Object.keys(CFG.assets).forEach(function (key) {
+            var as = CFG.assets[key];
+            if (as.group !== currentGroup) return;
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'fx-add';
+            b.innerHTML = '<img src="' + as.thumb + '" alt=""><span></span>';
+            b.querySelector('span').textContent = as.label;
+            b.addEventListener('click', function () { addItem(key); });
+            if (as.group === 'Unggahan') {
+                var x = document.createElement('i');
+                x.className = 'fx-del-up';
+                x.textContent = '×';
+                x.title = 'Hapus dari daftar';
+                x.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    if (!confirm('Hapus "' + as.label + '" dari daftar bunga? Bunga ini juga akan hilang dari halaman.')) return;
+                    var fd = new FormData();
+                    fd.append('csrf', CFG.csrf); fd.append('action', 'delete'); fd.append('key', key);
+                    fetch(CFG.upload, { method: 'POST', body: fd, credentials: 'same-origin' })
+                        .then(function (r) { return r.json(); })
+                        .then(function (d) {
+                            if (!d.ok) { status(d.error || 'Gagal menghapus', 'err'); return; }
+                            delete CFG.assets[key];
+                            document.querySelectorAll('.fx[data-a="' + key + '"]').forEach(function (el) { el.remove(); });
+                            select(null); renderStrip(); status('Bunga dihapus', 'ok');
+                        });
+                });
+                b.appendChild(x);
+            }
+            strip.appendChild(b);
+        });
+    };
+
+    fileInput.addEventListener('change', function () {
+        var f = fileInput.files[0];
+        fileInput.value = '';
+        if (!f) return;
+        status('Mengunggah & merapikan gambar…');
+        var fd = new FormData();
+        fd.append('csrf', CFG.csrf); fd.append('file', f);
+        fetch(CFG.upload, { method: 'POST', body: fd, credentials: 'same-origin' })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+                if (!d.ok) { status(d.error || 'Gagal mengunggah', 'err'); return; }
+                CFG.assets[d.key] = { label: d.label, group: 'Unggahan', thumb: d.thumb };
+                currentGroup = 'Unggahan'; renderStrip();
+                addItem(d.key);
+                status('Bunga ditambahkan — jangan lupa Simpan', 'warn');
+            })
+            .catch(function () { status('Gagal mengunggah (koneksi)', 'err'); });
     });
+    renderStrip();
 
     areaSel.addEventListener('change', function () {
         select(null);
         updateDeviceNote();
         renderChips();
         var set = activeSet();
-        if (set) set.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (set) (set.closest('.envelope, .calendar-wrap, .event-meta') || set.parentElement).scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     /* ---------- simpan ---------- */
