@@ -155,7 +155,7 @@ const ENVELOPE_FLOWERS = [
     ['fl-anthurium',         'f3'],
     ['fl-hibiscus',          'f4'],
     ['fl-hibiscus-sm',       'f5'],
-    ['fl-anthurium',         'f6'],
+    ['fl-bouquet-peach',     'f6'],
     // kanan
     ['fl-lily',              'f7 fl-stems'], ['fl-lily', 'f7 fl-heads'],
     ['fl-anthurium',         'f8'],

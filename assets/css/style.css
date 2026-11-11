@@ -1561,3 +1561,6 @@ p { margin: 0 0 1rem; }
 .stage .envelope { margin-top: 14rem; }
 @media (min-width: 760px) { .stage .envelope { margin-top: 17rem; } }
 .stage .envelope { margin-top: 12.5rem; } @media (min-width: 760px) { .stage .envelope { margin-top: 15.5rem; } }
+/* buket peach (pilihan Gege) di kiri bawah, menggantikan anthurium */
+.f6 { left: -34%; top: 46%; width: 34%; rotate: -14deg; z-index: 6; }
+.f6 { left: -22%; top: 54%; width: 31%; rotate: -10deg; z-index: 8; }
