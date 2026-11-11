@@ -1566,3 +1566,24 @@ p { margin: 0 0 1rem; }
 .f6 { left: -22%; top: 54%; width: 31%; rotate: -10deg; z-index: 8; }
 .f6 { left: -13%; top: 63%; width: 36%; rotate: -28deg; transform-origin: 50% 60%; z-index: 8; }
 .f6 { left: -17%; top: 66%; width: 36%; rotate: 20deg; transform-origin: 50% 40%; }
+
+/* segel lilin dari foto (semua segel memakai ini) */
+.seal-img { position: relative; display: block; width: 100%; height: 100%; container-type: inline-size; }
+.seal-img picture, .seal-img img { display: block; width: 100%; height: 100%; }
+.seal-txt {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding-bottom: 4%;
+    font-family: var(--font-script);
+    font-size: 30cqw;
+    line-height: 1;
+    white-space: nowrap;
+    /* monogram tertekan: bayangan gelap di kiri-atas, kilau di kanan-bawah */
+    text-shadow: -.6px -.8px .6px rgba(0, 0, 0, .55), .7px .9px .5px rgba(255, 255, 255, .28);
+}
+.seal-wine .seal-txt { color: #7E2C42; }
+.seal-olive .seal-txt { color: #6E6A38; }
+.stage .env-seal { filter: drop-shadow(0 6px 7px rgba(0, 0, 0, .45)); }
+.note-seal .seal-img { filter: drop-shadow(0 4px 5px rgba(46, 27, 31, .35)); }

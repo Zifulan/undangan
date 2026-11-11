@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=26">
+    <link rel="stylesheet" href="assets/css/style.css?v=27">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="is-locked">
@@ -116,7 +116,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             </svg>
             <div class="env-flap-wrap"><div class="env-flap"></div></div>
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
-                <?= wax_seal_deluxe($sealText) ?>
+                <?= wax_seal_img($sealText, 'wine') ?>
             </button>
         </div>
 
@@ -239,7 +239,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <section class="section paper rsvp" id="rsvp">
         <div class="note sketch tilt-s reveal">
             <?= slot_img('floral-rsvp.png', 'floral floral-rsvp') ?>
-            <div class="note-seal"><?= wax_seal($sealText, 'olive') ?></div>
+            <div class="note-seal"><?= wax_seal_img($sealText, 'olive') ?></div>
             <?= doodle('envelope', 'dd dd-note-env') ?>
             <h2 class="script section-script">Konfirmasi</h2>
 
