@@ -181,7 +181,7 @@ if ($authed) {
                 <p class="hint">Tulis nama tamu, satu per baris. Setiap tamu mendapat link pribadi berkode acak, jadi nama tidak terlihat di link.</p>
                 <form method="post">
                     <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-                    <textarea name="add_guests" placeholder="Budi Santoso&#10;Keluarga Bapak Ahmad" required></textarea>
+                    <textarea name="add_guests" placeholder="Prabowo Teddy&#10;Keluarga Prabowo Teddy" required></textarea>
                     <p style="margin:.6rem 0 1rem"><button class="btn" type="submit">Buat link</button></p>
                 </form>
                 <?php if ($guestList): ?>
