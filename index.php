@@ -111,8 +111,9 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <div class="keepsake">
                 <span class="name-tag tag-l script"><?= e($G['nickname']) ?></span>
                 <div class="idphotos">
-                    <img class="idp idp-l" src="<?= e(img_url('kid-fatah-id.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="574" decoding="async">
-                    <img class="idp idp-r" src="<?= e(img_url('kid-gege-id.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="570" decoding="async">
+                    <svg class="idp-heart" viewBox="0 0 40 36" aria-hidden="true"><path d="M20 33 C6 24 2 16 4 10 C6 4 15 3 20 11 C25 3 34 4 36 10 C38 16 34 24 20 33Z"/></svg>
+                    <span class="idp-card idp-l"><img class="idp" src="<?= e(img_url('kid-fatah-id.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="574" decoding="async"><i class="pc pc-tl"></i><i class="pc pc-tr"></i><i class="pc pc-bl"></i><i class="pc pc-br"></i></span>
+                    <span class="idp-card idp-r"><img class="idp" src="<?= e(img_url('kid-gege-id.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="570" decoding="async"><i class="pc pc-tl"></i><i class="pc pc-tr"></i><i class="pc pc-bl"></i><i class="pc pc-br"></i></span>
                 </div>
                 <span class="name-tag tag-r script"><?= e($B['nickname']) ?></span>
             </div>

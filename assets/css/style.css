@@ -1365,3 +1365,43 @@ p { margin: 0 0 1rem; }
 .name-tag { top: 2%; }
 .tag-l { left: -27%; }
 .tag-r { right: -27%; }
+
+/* foto pas SD: bingkai krem, sudut album anggur, hati kecil di antara keduanya */
+.idphotos { isolation: isolate; }
+.idp-card {
+    position: relative;
+    display: block;
+    width: 44%;
+    padding: 6px 6px 7px;
+    background: #FBF5E8;
+    background-image: var(--grain);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, .42), 0 2px 4px rgba(0, 0, 0, .3), inset 0 0 0 1px rgba(74, 28, 36, .12);
+}
+.idp-card .idp { width: 100%; padding: 0; background: none; box-shadow: none; rotate: 0deg; translate: none; }
+.idp-card.idp-l { rotate: -6deg; translate: 4% 0; }
+.idp-card.idp-r { rotate: 5deg; translate: -4% 6%; }
+.pc { position: absolute; width: 18%; aspect-ratio: 1; background: var(--wine); filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .4)); }
+.pc-tl { left: -3px;  top: -3px;    clip-path: polygon(0 0, 100% 0, 0 100%); }
+.pc-tr { right: -3px; top: -3px;    clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.pc-bl { left: -3px;  bottom: -3px; clip-path: polygon(0 0, 100% 100%, 0 100%); }
+.pc-br { right: -3px; bottom: -3px; clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+.idp-heart {
+    position: absolute; z-index: 3; left: 50%; top: 38%; width: 15%; translate: -50% 0; rotate: -8deg;
+    fill: #8E2430; stroke: #F6E1E3; stroke-width: 2.4; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .45));
+}
+
+/* Ikatan Suci Kami: latar merah muda, menyambung halus dari lukisan */
+.opening.paper { background-color: #F5C7C7; background-image: var(--grain); }
+.cover.stage::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 30vh;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(245, 199, 199, 0), rgba(245, 199, 199, .35) 45%, #F5C7C7);
+    pointer-events: none;
+}
+.cover.stage::before { inset: -12px -12px 0; }
+.stage .scroll-cue { color: var(--wine); }
+.opening .dd-corner-r { color: var(--wine); }
+.opening.paper { background-image: none; }
