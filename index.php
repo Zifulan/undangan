@@ -15,6 +15,12 @@ $ev    = $c['event'] + [
 ];
 $guest = trim(mb_substr((string) ($_GET['to'] ?? ''), 0, 80));
 
+// Mode atur bunga: hanya untuk admin yang sudah login (admin.php).
+$editing = !empty($_GET['atur']) && !empty($_SESSION['admin']);
+if ($editing) {
+    header('Cache-Control: no-store');
+}
+
 $wishes  = [];
 $dbReady = false;
 try {
@@ -66,16 +72,16 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=30">
+    <link rel="stylesheet" href="assets/css/style.css?v=32">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
-<body class="is-locked">
+<body class="<?= $editing ? 'is-editing' : 'is-locked' ?>">
 <?= doodle_defs() ?>
 
 <main id="main">
 
 <!-- ============ PEMBUKA: AMPLOP (tertutup → terbuka, tetap di halaman) ============ -->
-<section class="cover stage" id="cover" aria-label="Undangan">
+<section class="cover stage<?= $editing ? ' is-opening is-open' : '' ?>" id="cover" aria-label="Undangan">
     <div class="cover-inner">
         <div class="stage-top">
             <div class="recipient">
@@ -86,7 +92,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         </div>
 
         <div class="envelope" id="envelope">
-            <picture class="env-flowers ef-back" aria-hidden="true"><source srcset="<?= e(img_url('env-flowers-back.webp')) ?>" type="image/webp"><img src="<?= e(img_url('env-flowers-back.png')) ?>" alt="" width="1200" height="900" decoding="async"></picture>
+            <?= flowers_layer('envelope') ?>
             <div class="env-back"></div>
             <div class="env-card">
                 <span class="cc cc-tl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-tr"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-bl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-br"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
@@ -116,7 +122,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
                 <?= wax_seal_img($sealText, 'wine') ?>
             </button>
-            <picture class="env-flowers ef-front" aria-hidden="true"><source srcset="<?= e(img_url('env-flowers-front.webp')) ?>" type="image/webp"><img src="<?= e(img_url('env-flowers-front.png')) ?>" alt="" width="1200" height="900" decoding="async"></picture>
         </div>
 
         <p class="cover-hint">Ketuk segel</p>
@@ -178,10 +183,10 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
         <div class="event-grid">
-            <div class="calendar-wrap reveal"><picture class="spray sp-cal-tr" aria-hidden="true"><source srcset="<?= e(img_url('spray-a.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-a.png')) ?>" alt="" loading="lazy" decoding="async"></picture><?= doodle_calendar($startTs) ?></div>
+            <div class="calendar-wrap reveal"><?= flowers_layer('calendar') ?><?= doodle_calendar($startTs) ?></div>
 
             <dl class="event-meta sketch tilt-r reveal">
-                <picture class="spray sp-ev-br" aria-hidden="true"><source srcset="<?= e(img_url('spray-b.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-b.png')) ?>" alt="" loading="lazy" decoding="async"></picture><span class="em-c em-tl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-tr" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-bl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-br" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
+                <?= flowers_layer('event') ?><span class="em-c em-tl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-tr" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-bl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-br" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
                 <div>
                     <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
                     <dd><?= e(tanggal_id($ev['start'])) ?></dd>
@@ -348,6 +353,43 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
 </main>
 
+<?php if ($editing): ?>
+<div class="fx-bar" id="fxBar">
+    <div class="fx-status" id="fxStatus"></div>
+    <div class="fx-row fx-top">
+        <select id="fxArea" aria-label="Bagian">
+            <option value="envelope">Amplop</option>
+            <option value="calendar">Kalender</option>
+            <option value="event">Kartu acara</option>
+        </select>
+        <button type="button" id="fxUndo">Urungkan</button>
+        <button type="button" class="fx-primary" id="fxSave">Simpan</button>
+        <a class="fx-exit" href="admin.php">Keluar</a>
+    </div>
+    <div class="fx-row fx-tools">
+        <button type="button" id="fxBigger" title="Perbesar">＋</button>
+        <button type="button" id="fxSmaller" title="Perkecil">－</button>
+        <button type="button" id="fxRotL" title="Putar kiri">⟲</button>
+        <button type="button" id="fxRotR" title="Putar kanan">⟳</button>
+        <button type="button" id="fxFlip">Cermin</button>
+        <button type="button" id="fxLayer">Depan/Belakang</button>
+        <button type="button" id="fxUp">Paling atas</button>
+        <button type="button" class="fx-danger" id="fxDel">Hapus</button>
+        <button type="button" id="fxDone">Selesai</button>
+    </div>
+    <div class="fx-row fx-chips" id="fxChips"></div>
+    <div class="fx-row fx-strip" id="fxStrip" aria-label="Tambah bunga"></div>
+</div>
+<script>
+window.FLOWER_EDITOR = <?= json_encode([
+    'api'    => 'api/flowers.php',
+    'csrf'   => csrf_token(),
+    'assets' => array_map(fn($a) => $a[2], FLOWER_ASSETS),
+    'thumbs' => array_combine(array_keys(FLOWER_ASSETS), array_map(fn($k) => img_url('bq/' . $k . '.png'), array_keys(FLOWER_ASSETS))),
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+</script>
+<script src="<?= e('assets/js/flower-editor.js?v=' . filemtime(APP_ROOT . '/assets/js/flower-editor.js')) ?>" defer></script>
+<?php endif; ?>
 <script src="assets/js/main.js?v=15" defer></script>
 </body>
 </html>

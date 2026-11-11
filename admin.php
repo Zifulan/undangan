@@ -125,6 +125,7 @@ if ($authed) {
         <header>
             <h1>RSVP · <?= e($CONTENT['title']) ?></h1>
             <div>
+                <a class="btn" href="index.php?atur=1">Atur Bunga</a>
                 <a class="btn" href="admin.php?export=1">Ekspor CSV</a>
                 <a class="btn ghost" href="admin.php?logout=1">Keluar</a>
             </div>
