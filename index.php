@@ -319,7 +319,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <h3 class="script wishes-title">Ucapan &amp; Doa <span id="wishCount"><?= count($wishes) ?: '' ?></span></h3>
             <ul class="wish-list" id="wishList">
                 <?php foreach ($wishes as $w): ?>
-                    <li class="wish">
+                    <li class="wish<?= !empty($w['pinned']) ? ' is-pinned' : '' ?>">
                         <div class="wish-head">
                             <strong><?= e($w['name']) ?></strong>
                             <span class="badge"><?= e(attendance_label($w['attendance'])) ?></span>

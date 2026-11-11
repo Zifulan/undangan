@@ -49,10 +49,12 @@ if ($authed) {
         // Tambah tamu (satu nama per baris)
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['add_guests'])) {
             if (csrf_valid($_POST['csrf'] ?? null)) {
+                $group = trim(preg_replace('/\s+/u', ' ', (string) ($_POST['group'] ?? '')));
+                $group = $group !== '' ? mb_substr($group, 0, 50) : null;
                 foreach (preg_split('/\R/u', (string) $_POST['add_guests']) as $line) {
                     $name = trim(preg_replace('/\s+/u', ' ', $line));
                     if ($name !== '') {
-                        guest_create(mb_substr($name, 0, 100));
+                        guest_create(mb_substr($name, 0, 100), $group);
                     }
                 }
             }
@@ -66,6 +68,43 @@ if ($authed) {
                 guest_delete((int) $_POST['delete_guest']);
             }
             header('Location: admin.php#tamu');
+            exit;
+        }
+
+        // Ubah grup tamu
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['set_group'])) {
+            if (csrf_valid($_POST['csrf'] ?? null)) {
+                $g = trim(preg_replace('/\s+/u', ' ', (string) ($_POST['group'] ?? '')));
+                guest_set_group((int) $_POST['set_group'], $g !== '' ? mb_substr($g, 0, 50) : null);
+            }
+            header('Location: admin.php#tamu');
+            exit;
+        }
+
+        // Gaya pesan bawaan per grup
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['group_style'])) {
+            if (csrf_valid($_POST['csrf'] ?? null)) {
+                $set = admin_settings();
+                $g = (string) $_POST['group_style'];
+                $st = (string) ($_POST['style'] ?? '');
+                if (in_array($st, ['hangat', 'formal', 'santai'], true)) {
+                    $set['group_styles'][$g] = $st;
+                } else {
+                    unset($set['group_styles'][$g]);
+                }
+                admin_settings_save($set);
+            }
+            header('Location: admin.php#tamu');
+            exit;
+        }
+
+        // Sembunyikan / sematkan ucapan
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['wish_toggle'])) {
+            $field = ($_POST['field'] ?? '') === 'pinned' ? 'pinned' : 'hidden';
+            if (csrf_valid($_POST['csrf'] ?? null)) {
+                db()->prepare("UPDATE rsvp SET `$field` = 1 - `$field` WHERE id = :id")->execute([':id' => (int) $_POST['wish_toggle']]);
+            }
+            header('Location: admin.php#ucapan');
             exit;
         }
 
@@ -86,6 +125,14 @@ if ($authed) {
 
         $rows  = db()->query('SELECT * FROM rsvp ORDER BY created_at DESC, id DESC')->fetchAll();
         $guestList = guests_all();
+        $groups = [];
+        foreach ($guestList as $g) {
+            $k = $g['group_name'] ?? '';
+            $groups[$k] = ($groups[$k] ?? 0) + 1;
+        }
+        ksort($groups);
+        $groupNames = array_values(array_filter(array_keys($groups), fn($k) => $k !== ''));
+        $groupStyles = admin_settings()['group_styles'] ?? [];
         $ev = $CONTENT['event'];
         $waVars = [
             '{tanggal}' => tanggal_id($ev['start']),
@@ -158,6 +205,41 @@ if ($authed) {
         .wa-style { display:flex; flex-wrap:wrap; gap:.4rem 1rem; align-items:center; margin:0 0 .8rem; font-size:.9rem; }
         .wa-style label { cursor:pointer; }
         .wa-preview { white-space:pre-wrap; background:#E7F6EC; border:1px solid #BFE3CC; border-radius:10px; padding:.8rem 1rem; font:14px/1.45 system-ui,sans-serif; max-width:460px; margin:0 0 1rem; }
+        .add-row { display:flex; flex-wrap:wrap; gap:.6rem; align-items:flex-end; justify-content:space-between; margin:.6rem 0 1rem; }
+        .add-row label { display:flex; flex-direction:column; gap:.25rem; font-size:.85rem; flex:1; min-width:200px; }
+        .add-row input { padding:.5rem .6rem; border:1px solid var(--line); font:inherit; }
+        .gfilter { display:flex; flex-wrap:wrap; gap:.4rem; margin:0 0 .9rem; }
+        .chip-wrap { display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:999px; background:#fff; }
+        .chip { border:1px solid var(--line); border-radius:999px; background:#fff; padding:.35rem .75rem; font:inherit; font-size:.82rem; cursor:pointer; color:var(--espresso); }
+        .chip-wrap .chip { border:0; }
+        .chip b { font-weight:600; color:var(--ink); }
+        .chip.is-on { background:var(--espresso); color:var(--ivory); border-color:var(--espresso); }
+        .chip.is-on b { color:var(--ivory); }
+        .gstyle select { border:0; border-left:1px solid var(--line); background:transparent; font-size:.75rem; padding:.3rem .4rem; color:var(--ink); }
+        .gset select { padding:.3rem .4rem; border:1px solid var(--line); background:#fff; font-size:.82rem; max-width:180px; }
+        td.send { white-space:nowrap; }
+        td.act form { display:inline; }
+        td.act .mini { margin:0 .2rem .3rem 0; }
+        tr.is-hidden td { opacity:.55; }
+        .pin, .hid { display:inline-block; margin-left:.35rem; font-size:.72rem; padding:.05rem .4rem; border-radius:999px; background:#F6E9C9; }
+        .hid { background:#EEE; }
+        tr.gone { display:none; }
+        @media (max-width: 700px) {
+            .wrap { padding:16px 12px 40px; }
+            header h1 { font-size:1.25rem; }
+            .table-wrap { border:0; background:transparent; overflow:visible; }
+            table.cards { min-width:0; }
+            table.cards thead { display:none; }
+            table.cards, table.cards tbody, table.cards tr, table.cards td { display:block; width:100%; }
+            table.cards tr { background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin-bottom:10px; }
+            table.cards td { border:0; padding:4px 0; }
+            table.cards td[data-label]::before { content:attr(data-label); display:block; font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink); }
+            table.cards td.act { padding-top:8px; }
+            td.send { white-space:normal; display:flex !important; flex-wrap:wrap; gap:.35rem; }
+            td.send::before { width:100%; }
+            .glist code { font-size:.75rem; word-break:break-all; }
+            td.msg { max-width:none; }
+        }
     </style>
 </head>
 <body>
@@ -191,37 +273,76 @@ if ($authed) {
             <section class="guests" id="tamu">
                 <h2>Link Undangan</h2>
                 <p class="hint">Tulis nama tamu, satu per baris. Setiap tamu mendapat link pribadi berkode acak, jadi nama tidak terlihat di link.</p>
-                <form method="post">
+                <form method="post" class="add-form">
                     <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
                     <textarea name="add_guests" placeholder="Prabowo Teddy&#10;Keluarga Prabowo Teddy" required></textarea>
-                    <p style="margin:.6rem 0 1rem"><button class="btn" type="submit">Buat link</button></p>
+                    <div class="add-row">
+                        <label>Grup <small>(opsional)</small>
+                            <input name="group" list="groupList" placeholder="mis. Keluarga Fatah" maxlength="50">
+                        </label>
+                        <button class="btn" type="submit">Buat link</button>
+                    </div>
+                    <datalist id="groupList"><?php foreach ($groupNames as $gn): ?><option value="<?= e($gn) ?>"><?php endforeach; ?></datalist>
                 </form>
                 <?php if ($guestList): ?>
                 <p class="wa-style">Gaya pesan:
+                    <label><input type="radio" name="wa_style" value="grup" checked> Sesuai grup</label>
                     <?php foreach ($waLabels as $k => $label): ?>
-                        <label><input type="radio" name="wa_style" value="<?= e($k) ?>"<?= $k === 'hangat' ? ' checked' : '' ?>> <?= e($label) ?></label>
+                        <label><input type="radio" name="wa_style" value="<?= e($k) ?>"> <?= e($label) ?></label>
                     <?php endforeach; ?>
                     <button class="mini" type="button" id="waPreviewBtn">Lihat contoh</button>
                 </p>
                 <pre class="wa-preview" id="waPreview" hidden></pre>
+
+                <div class="gfilter" id="gfilter">
+                    <button type="button" class="chip is-on" data-filter="*">Semua <b><?= count($guestList) ?></b></button>
+                    <?php foreach ($groups as $gn => $n): ?>
+                        <span class="chip-wrap">
+                            <button type="button" class="chip" data-filter="<?= e($gn) ?>"><?= $gn === '' ? 'Tanpa grup' : e($gn) ?> <b><?= $n ?></b></button>
+                            <?php if ($gn !== ''): ?>
+                            <form method="post" class="gstyle" title="Gaya pesan untuk grup ini">
+                                <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                                <input type="hidden" name="group_style" value="<?= e($gn) ?>">
+                                <select name="style" onchange="this.form.submit()">
+                                    <option value="">gaya: —</option>
+                                    <?php foreach ($waLabels as $k => $label): ?><option value="<?= e($k) ?>"<?= ($groupStyles[$gn] ?? '') === $k ? ' selected' : '' ?>>gaya: <?= e($label) ?></option><?php endforeach; ?>
+                                </select>
+                            </form>
+                            <?php endif; ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+
                 <div class="table-wrap">
-                    <table class="glist">
-                        <thead><tr><th>Nama</th><th>Link</th><th>Kirim</th><th></th></tr></thead>
+                    <table class="glist cards">
+                        <thead><tr><th>Nama</th><th>Grup</th><th>Link</th><th>Kirim</th><th></th></tr></thead>
                         <tbody>
                         <?php foreach ($guestList as $g):
+                            $gn   = (string) ($g['group_name'] ?? '');
                             $link = $siteUrl . '/?u=' . $g['code'];
                             $vars = ['{nama}' => $g['name'], '{link}' => $link] + $waVars;
                             $msgs = array_map(fn($t) => strtr((string) $t, $vars), $waTemplates);
                         ?>
-                            <tr>
-                                <td><?= e($g['name']) ?><?php if (!empty($replied[mb_strtolower($g['name'])])): ?><br><span class="tag-ok">✓ sudah konfirmasi</span><?php endif; ?></td>
-                                <td><code><?= e($link) ?></code></td>
-                                <td style="white-space:nowrap">
+                            <tr data-group="<?= e($gn) ?>" data-gstyle="<?= e($groupStyles[$gn] ?? '') ?>">
+                                <td data-label="Nama"><b><?= e($g['name']) ?></b><?php if (!empty($replied[mb_strtolower($g['name'])])): ?><br><span class="tag-ok">✓ sudah konfirmasi</span><?php endif; ?></td>
+                                <td data-label="Grup">
+                                    <form method="post" class="gset">
+                                        <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                                        <input type="hidden" name="set_group" value="<?= (int) $g['id'] ?>">
+                                        <select name="group" onchange="if(this.value==='__new'){var n=prompt('Nama grup baru:');if(!n){this.value=this.dataset.cur;return;}this.options[this.selectedIndex].value=n;}this.form.submit()" data-cur="<?= e($gn) ?>">
+                                            <option value=""<?= $gn === '' ? ' selected' : '' ?>>Tanpa grup</option>
+                                            <?php foreach ($groupNames as $opt): ?><option value="<?= e($opt) ?>"<?= $gn === $opt ? ' selected' : '' ?>><?= e($opt) ?></option><?php endforeach; ?>
+                                            <option value="__new">+ Grup baru…</option>
+                                        </select>
+                                    </form>
+                                </td>
+                                <td data-label="Link"><code><?= e($link) ?></code></td>
+                                <td data-label="Kirim" class="send">
                                     <button class="mini" type="button" data-copy="<?= e($link) ?>">Salin link</button>
                                     <button class="mini wa-copy" type="button"<?php foreach ($msgs as $k => $m): ?> data-msg-<?= e($k) ?>="<?= e($m) ?>"<?php endforeach; ?>>Salin pesan</button>
                                     <a class="mini wa" target="_blank" rel="noopener"<?php foreach ($msgs as $k => $m): ?> data-href-<?= e($k) ?>="https://wa.me/?text=<?= e(rawurlencode($m)) ?>"<?php endforeach; ?>>Kirim WA</a>
                                 </td>
-                                <td>
+                                <td class="act">
                                     <form method="post" onsubmit="return confirm('Hapus link untuk tamu ini? Link lama tidak akan menampilkan namanya lagi.')">
                                         <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
                                         <button class="del" name="delete_guest" value="<?= (int) $g['id'] ?>">Hapus</button>
@@ -243,29 +364,43 @@ if ($authed) {
                 <div class="stat"><b><?= $stats['ragu'] ?></b><span>Masih ragu</span></div>
             </div>
 
-            <div class="table-wrap">
+            <div class="table-wrap" id="ucapan">
                 <?php if (!$rows): ?>
                     <p class="empty">Belum ada respons.</p>
                 <?php else: ?>
-                <table>
+                <table class="cards">
                     <thead>
                         <tr><th>Nama</th><th>Kehadiran</th><th>Tamu</th><th>Ucapan</th><th>Waktu</th><th></th></tr>
                     </thead>
                     <tbody>
                     <?php foreach ($rows as $r): ?>
-                        <tr>
-                            <td>
-                                <?= e($r['name']) ?>
+                        <tr class="<?= !empty($r['hidden']) ? 'is-hidden' : '' ?>">
+                            <td data-label="Nama">
+                                <b><?= e($r['name']) ?></b>
+                                <?php if (!empty($r['pinned'])): ?><span class="pin">📌 disematkan</span><?php endif; ?>
+                                <?php if (!empty($r['hidden'])): ?><span class="hid">disembunyikan</span><?php endif; ?>
                                 <?php if ($r['invited_as'] && $r['invited_as'] !== $r['name']): ?>
                                     <br><small>link: <?= e($r['invited_as']) ?></small>
                                 <?php endif; ?>
                             </td>
-                            <td><?= e(attendance_label($r['attendance'])) ?></td>
-                            <td><?= (int) $r['guests'] ?: '–' ?></td>
-                            <td class="msg"><?= e($r['message'] ?? '') ?></td>
-                            <td><small><?= e(date('d/m/Y H:i', strtotime($r['created_at']))) ?></small></td>
-                            <td>
-                                <form method="post" onsubmit="return confirm('Hapus entri dari <?= e(addslashes($r['name'])) ?>?')">
+                            <td data-label="Kehadiran"><?= e(attendance_label($r['attendance'])) ?></td>
+                            <td data-label="Tamu"><?= (int) $r['guests'] ?: '–' ?></td>
+                            <td data-label="Ucapan" class="msg"><?= e($r['message'] ?? '') ?></td>
+                            <td data-label="Waktu"><small><?= e(date('d/m/Y H:i', strtotime($r['created_at']))) ?></small></td>
+                            <td class="act">
+                                <?php if (trim((string) $r['message']) !== ''): ?>
+                                <form method="post">
+                                    <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                                    <input type="hidden" name="field" value="hidden">
+                                    <button class="mini" name="wish_toggle" value="<?= (int) $r['id'] ?>"><?= !empty($r['hidden']) ? 'Tampilkan' : 'Sembunyikan' ?></button>
+                                </form>
+                                <form method="post">
+                                    <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                                    <input type="hidden" name="field" value="pinned">
+                                    <button class="mini" name="wish_toggle" value="<?= (int) $r['id'] ?>"><?= !empty($r['pinned']) ? 'Lepas sematan' : 'Sematkan' ?></button>
+                                </form>
+                                <?php endif; ?>
+                                <form method="post" onsubmit="return confirm('Hapus entri ini?')">
                                     <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
                                     <button class="del" name="delete" value="<?= (int) $r['id'] ?>">Hapus</button>
                                 </form>
@@ -283,15 +418,30 @@ if ($authed) {
 <script>
 var styleOf = function () { var r = document.querySelector('input[name=wa_style]:checked'); return r ? r.value : 'hangat'; };
 var applyStyle = function () {
-    var st = styleOf();
-    try { localStorage.setItem('waStyle', st); } catch (e) {}
-    document.querySelectorAll('.wa-copy').forEach(function (b) { b.setAttribute('data-copy', b.getAttribute('data-msg-' + st) || ''); });
-    document.querySelectorAll('a.wa').forEach(function (a) { a.href = a.getAttribute('data-href-' + st) || '#'; });
+    var pick = styleOf();
+    var rowStyle = function (el) {
+        if (pick !== 'grup') return pick;
+        var tr = el.closest('tr'); return (tr && tr.dataset.gstyle) || 'hangat';
+    };
+    document.querySelectorAll('.wa-copy').forEach(function (b) { b.setAttribute('data-copy', b.getAttribute('data-msg-' + rowStyle(b)) || ''); });
+    document.querySelectorAll('a.wa').forEach(function (a) { a.href = a.getAttribute('data-href-' + rowStyle(a)) || '#'; });
     var pv = document.getElementById('waPreview'), first = document.querySelector('.wa-copy');
     if (pv && first) pv.textContent = first.getAttribute('data-copy');
 };
-try { var saved = localStorage.getItem('waStyle'); var r = saved && document.querySelector('input[name=wa_style][value="' + saved + '"]'); if (r) r.checked = true; } catch (e) {}
-document.querySelectorAll('input[name=wa_style]').forEach(function (r) { r.addEventListener('change', applyStyle); });
+try { var saved = localStorage.getItem('waStyleChoice'); var sr = saved && document.querySelector('input[name=wa_style][value="' + saved + '"]'); if (sr) sr.checked = true; } catch (e) {}
+document.querySelectorAll('input[name=wa_style]').forEach(function (r) {
+    r.addEventListener('change', function () {
+        try { localStorage.setItem('waStyleChoice', styleOf()); } catch (e) {}
+        applyStyle();
+    });
+});
+document.querySelectorAll('#gfilter .chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+        document.querySelectorAll('#gfilter .chip').forEach(function (x) { x.classList.toggle('is-on', x === c); });
+        var f = c.dataset.filter;
+        document.querySelectorAll('.glist tbody tr').forEach(function (tr) { tr.classList.toggle('gone', f !== '*' && tr.dataset.group !== f); });
+    });
+});
 var pvBtn = document.getElementById('waPreviewBtn');
 if (pvBtn) pvBtn.addEventListener('click', function () { var pv = document.getElementById('waPreview'); pv.hidden = !pv.hidden; });
 applyStyle();

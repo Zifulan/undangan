@@ -55,6 +55,10 @@ function ensure_schema(PDO $pdo): void
             INDEX idx_created (created_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
+    // Kolom tambahan (ditambahkan otomatis bila belum ada; aman untuk MySQL & MariaDB).
+    ensure_column($pdo, 'rsvp', 'hidden', 'TINYINT(1) NOT NULL DEFAULT 0');
+    ensure_column($pdo, 'rsvp', 'pinned', 'TINYINT(1) NOT NULL DEFAULT 0');
+
     // Daftar tamu untuk link pribadi: nama disimpan di sini, link hanya memuat kode acak.
     $pdo->exec(
         "CREATE TABLE IF NOT EXISTS guests (
@@ -65,6 +69,20 @@ function ensure_schema(PDO $pdo): void
             UNIQUE KEY uniq_code (code)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
+    ensure_column($pdo, 'guests', 'group_name', 'VARCHAR(50) NULL');
+}
+
+/** Tambah kolom bila belum ada (tanpa migrasi manual). */
+function ensure_column(PDO $pdo, string $table, string $column, string $definition): void
+{
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM information_schema.COLUMNS
+          WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = :t AND COLUMN_NAME = :c'
+    );
+    $stmt->execute([':t' => $table, ':c' => $column]);
+    if ((int) $stmt->fetchColumn() === 0) {
+        $pdo->exec("ALTER TABLE `$table` ADD COLUMN `$column` $definition");
+    }
 }
 
 /* ---------- Tamu & link pribadi ---------- */
@@ -88,17 +106,17 @@ function guest_by_code(string $code): ?string
 }
 
 /** Tambah tamu; mengembalikan kode barunya. */
-function guest_create(string $name): string
+function guest_create(string $name, ?string $group = null): string
 {
     $alphabet = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
-    $stmt = db()->prepare('INSERT INTO guests (code, name) VALUES (:c, :n)');
+    $stmt = db()->prepare('INSERT INTO guests (code, name, group_name) VALUES (:c, :n, :g)');
     for ($try = 0; $try < 8; $try++) {
         $code = '';
         for ($i = 0; $i < 6; $i++) {
             $code .= $alphabet[random_int(0, strlen($alphabet) - 1)];
         }
         try {
-            $stmt->execute([':c' => $code, ':n' => $name]);
+            $stmt->execute([':c' => $code, ':n' => $name, ':g' => $group]);
             return $code;
         } catch (PDOException $ex) {
             if (($ex->errorInfo[1] ?? 0) !== 1062) { // selain kode kembar
@@ -111,7 +129,7 @@ function guest_create(string $name): string
 
 function guests_all(): array
 {
-    return db()->query('SELECT id, code, name, created_at FROM guests ORDER BY created_at DESC, id DESC')->fetchAll();
+    return db()->query('SELECT id, code, name, group_name, created_at FROM guests ORDER BY created_at DESC, id DESC')->fetchAll();
 }
 
 function guest_delete(int $id): void
@@ -123,13 +141,35 @@ function guest_delete(int $id): void
 function latest_wishes(int $limit = 50): array
 {
     $stmt = db()->prepare(
-        "SELECT name, attendance, message, created_at
+        "SELECT name, attendance, message, created_at, pinned
            FROM rsvp
-          WHERE message IS NOT NULL AND message <> ''
-          ORDER BY created_at DESC, id DESC
+          WHERE message IS NOT NULL AND message <> '' AND hidden = 0
+          ORDER BY pinned DESC, created_at DESC, id DESC
           LIMIT :lim"
     );
     $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetchAll();
+}
+
+function guest_set_group(int $id, ?string $group): void
+{
+    db()->prepare('UPDATE guests SET group_name = :g WHERE id = :id')->execute([':g' => $group, ':id' => $id]);
+}
+
+/** Pengaturan kecil admin (gaya pesan per grup) di data/settings.json. */
+function admin_settings(): array
+{
+    $file = APP_ROOT . '/data/settings.json';
+    $d = is_file($file) ? json_decode((string) file_get_contents($file), true) : null;
+    return is_array($d) ? $d : [];
+}
+
+function admin_settings_save(array $settings): bool
+{
+    $dir = APP_ROOT . '/data';
+    if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
+        return false;
+    }
+    return @file_put_contents($dir . '/settings.json', json_encode($settings, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX) !== false;
 }
