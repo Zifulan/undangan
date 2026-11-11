@@ -86,6 +86,15 @@ if ($authed) {
 
         $rows  = db()->query('SELECT * FROM rsvp ORDER BY created_at DESC, id DESC')->fetchAll();
         $guestList = guests_all();
+        $ev = $CONTENT['event'];
+        $waVars = [
+            '{tanggal}' => tanggal_id($ev['start']),
+            '{jam}'     => date('H.i', strtotime($ev['start'])) . ' WIB',
+            '{tempat}'  => $ev['venue'],
+            '{alamat}'  => $ev['address'] ?? '',
+        ];
+        $waTemplates = $CONTENT['wa_messages'] ?? ['hangat' => $CONTENT['wa_message'] ?? '{link}'];
+        $waLabels = array_intersect_key(['hangat' => 'Hangat', 'formal' => 'Formal', 'santai' => 'Santai'], $waTemplates);
         $siteUrl   = rtrim((string) ($CONTENT['site_url'] ?? base_url()), '/');
         $replied   = [];
         foreach ($rows as $r) {
@@ -146,6 +155,9 @@ if ($authed) {
         .tag-ok { color:#1F7A4D; font-size:.78rem; }
         .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:var(--espresso); color:var(--ivory); padding:.5rem 1rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .2s; pointer-events:none; }
         .toast.on { opacity:1; }
+        .wa-style { display:flex; flex-wrap:wrap; gap:.4rem 1rem; align-items:center; margin:0 0 .8rem; font-size:.9rem; }
+        .wa-style label { cursor:pointer; }
+        .wa-preview { white-space:pre-wrap; background:#E7F6EC; border:1px solid #BFE3CC; border-radius:10px; padding:.8rem 1rem; font:14px/1.45 system-ui,sans-serif; max-width:460px; margin:0 0 1rem; }
     </style>
 </head>
 <body>
@@ -185,21 +197,29 @@ if ($authed) {
                     <p style="margin:.6rem 0 1rem"><button class="btn" type="submit">Buat link</button></p>
                 </form>
                 <?php if ($guestList): ?>
+                <p class="wa-style">Gaya pesan:
+                    <?php foreach ($waLabels as $k => $label): ?>
+                        <label><input type="radio" name="wa_style" value="<?= e($k) ?>"<?= $k === 'hangat' ? ' checked' : '' ?>> <?= e($label) ?></label>
+                    <?php endforeach; ?>
+                    <button class="mini" type="button" id="waPreviewBtn">Lihat contoh</button>
+                </p>
+                <pre class="wa-preview" id="waPreview" hidden></pre>
                 <div class="table-wrap">
                     <table class="glist">
                         <thead><tr><th>Nama</th><th>Link</th><th>Kirim</th><th></th></tr></thead>
                         <tbody>
                         <?php foreach ($guestList as $g):
                             $link = $siteUrl . '/?u=' . $g['code'];
-                            $msg  = strtr((string) $CONTENT['wa_message'], ['{nama}' => $g['name'], '{link}' => $link]);
+                            $vars = ['{nama}' => $g['name'], '{link}' => $link] + $waVars;
+                            $msgs = array_map(fn($t) => strtr((string) $t, $vars), $waTemplates);
                         ?>
                             <tr>
                                 <td><?= e($g['name']) ?><?php if (!empty($replied[mb_strtolower($g['name'])])): ?><br><span class="tag-ok">✓ sudah konfirmasi</span><?php endif; ?></td>
                                 <td><code><?= e($link) ?></code></td>
                                 <td style="white-space:nowrap">
                                     <button class="mini" type="button" data-copy="<?= e($link) ?>">Salin link</button>
-                                    <button class="mini" type="button" data-copy="<?= e($msg) ?>">Salin pesan</button>
-                                    <a class="mini wa" href="https://wa.me/?text=<?= e(rawurlencode($msg)) ?>" target="_blank" rel="noopener">Kirim WA</a>
+                                    <button class="mini wa-copy" type="button"<?php foreach ($msgs as $k => $m): ?> data-msg-<?= e($k) ?>="<?= e($m) ?>"<?php endforeach; ?>>Salin pesan</button>
+                                    <a class="mini wa" target="_blank" rel="noopener"<?php foreach ($msgs as $k => $m): ?> data-href-<?= e($k) ?>="https://wa.me/?text=<?= e(rawurlencode($m)) ?>"<?php endforeach; ?>>Kirim WA</a>
                                 </td>
                                 <td>
                                     <form method="post" onsubmit="return confirm('Hapus link untuk tamu ini? Link lama tidak akan menampilkan namanya lagi.')">
@@ -261,6 +281,20 @@ if ($authed) {
 <?php endif; ?>
 <div class="toast" id="toast">Tersalin ✓</div>
 <script>
+var styleOf = function () { var r = document.querySelector('input[name=wa_style]:checked'); return r ? r.value : 'hangat'; };
+var applyStyle = function () {
+    var st = styleOf();
+    try { localStorage.setItem('waStyle', st); } catch (e) {}
+    document.querySelectorAll('.wa-copy').forEach(function (b) { b.setAttribute('data-copy', b.getAttribute('data-msg-' + st) || ''); });
+    document.querySelectorAll('a.wa').forEach(function (a) { a.href = a.getAttribute('data-href-' + st) || '#'; });
+    var pv = document.getElementById('waPreview'), first = document.querySelector('.wa-copy');
+    if (pv && first) pv.textContent = first.getAttribute('data-copy');
+};
+try { var saved = localStorage.getItem('waStyle'); var r = saved && document.querySelector('input[name=wa_style][value="' + saved + '"]'); if (r) r.checked = true; } catch (e) {}
+document.querySelectorAll('input[name=wa_style]').forEach(function (r) { r.addEventListener('change', applyStyle); });
+var pvBtn = document.getElementById('waPreviewBtn');
+if (pvBtn) pvBtn.addEventListener('click', function () { var pv = document.getElementById('waPreview'); pv.hidden = !pv.hidden; });
+applyStyle();
 document.querySelectorAll('[data-copy]').forEach(function (b) {
     b.addEventListener('click', function () {
         var t = b.getAttribute('data-copy'), toast = document.getElementById('toast');

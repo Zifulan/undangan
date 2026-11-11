@@ -8,12 +8,32 @@ return [
     // Alamat situs (untuk link tamu & pratinjau WhatsApp).
     'site_url' => 'https://undangan.zif.my.id',
 
-    // Pesan WhatsApp dari halaman admin. {nama} dan {link} diganti otomatis.
-    'wa_message' => "Assalamu'alaikum {nama},\n\n"
-        . "Dengan memohon rahmat dan ridho Allah SWT, kami mengundang {nama} untuk hadir dan mendoakan akad nikah kami.\n\n"
-        . "Undangan lengkap:\n{link}\n\n"
-        . "Merupakan suatu kebahagiaan bagi kami apabila {nama} berkenan hadir dan memberikan doa restu.\n\n"
-        . "Wassalamu'alaikum,\nFatah & Gege",
+    // Pesan WhatsApp di halaman admin (pilih gayanya di sana). Kode yang diganti otomatis:
+    // {nama} {link} {tanggal} (Sabtu, 12 Desember 2026) {jam} (08.00 WIB) {tempat} {alamat}
+    'wa_messages' => [
+        'hangat' => "Assalamu'alaikum {nama} 🤍\n\n"
+            . "Insya Allah kami akan melangsungkan akad nikah pada:\n"
+            . "*{tanggal}*\n"
+            . "{jam} · {tempat}, Meruya Selatan\n\n"
+            . "Kami ingin sekali {nama} hadir dan ikut mendoakan. Undangan & konfirmasi kehadiran:\n"
+            . "{link}\n\n"
+            . "Wassalamu'alaikum,\n*Fatah & Gege*",
+        'formal' => "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n"
+            . "Kepada Yth. {nama},\n\n"
+            . "Dengan memohon rahmat dan ridho Allah SWT, kami mengundang untuk hadir dan mendoakan akad nikah kami:\n\n"
+            . "*{tanggal}*\n"
+            . "Pukul {jam}\n"
+            . "{tempat}, {alamat}\n\n"
+            . "Undangan lengkap & konfirmasi kehadiran:\n"
+            . "{link}\n\n"
+            . "Atas kehadiran dan doa restunya, kami ucapkan terima kasih.\n\n"
+            . "Wassalamu'alaikum Warahmatullahi Wabarakatuh\n*Fatah & Gege*",
+        'santai' => "Hai {nama}! 👋\n\n"
+            . "Kita nikah nih 😄 Akadnya *{tanggal}*, jam 8 pagi di {tempat}.\n\n"
+            . "Dateng ya, sekalian doain kita 🤍\n"
+            . "Detail & RSVP di sini: {link}\n\n"
+            . "— Fatah & Gege",
+    ],
 
     'groom' => [
         'nickname' => 'Fatah',
