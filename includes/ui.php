@@ -122,7 +122,7 @@ function heart_locket(string $left, string $right, string $label): string
             . '<path d="' . $heart . '" fill="url(#lkRim)" stroke="#6F6A66" stroke-width="1.2"/>'
             . '<path d="' . $heart . '" fill="none" stroke="#F4F2EE" stroke-opacity=".7" stroke-width="1" transform="translate(50 50) scale(.9) translate(-50 -50)"/>'
             . '<path d="' . $heart . '" fill="#2A2224" transform="translate(50 50) scale(.82) translate(-50 -50)"/>'
-            . '<image href="' . e($img) . '" x="13" y="9" width="74" height="93" preserveAspectRatio="xMidYMin slice" clip-path="url(#' . $id . ')"/>'
+            . '<image href="' . e($img) . '" x="14" y="12" width="72" height="77" preserveAspectRatio="xMidYMid slice" clip-path="url(#' . $id . ')"/>'
             . '<path d="' . $heart . '" fill="url(#lkGlass)" transform="translate(50 50) scale(.8) translate(-50 -50)"/>'
             . '</g>';
     };

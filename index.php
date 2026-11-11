@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=23">
+    <link rel="stylesheet" href="assets/css/style.css?v=24">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="is-locked">
@@ -91,9 +91,11 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <picture class="fl fl-a2 fl-back" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium.png')) ?>" alt="" width="338" height="620" decoding="async"></picture>
             <div class="env-back"></div>
             <div class="env-card">
-                <p class="caps caps-xs">Undangan Akad Nikah</p>
+                <span class="cc cc-tl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-tr"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-bl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-br"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
+                <p class="caps caps-xs card-kicker">Undangan Akad Nikah</p>
                 <h1 class="script env-names"><?= e($G['nickname']) ?> <span>&amp;</span> <?= e($B['nickname']) ?></h1>
-                <p class="caps caps-xs"><?= e(date('d . m . Y', $startTs)) ?></p>
+                <svg class="card-rule" viewBox="0 0 160 14" aria-hidden="true"><path d="M4 7 H62 M98 7 H156"/><path class="r-heart" d="M80 12 c-6 -4 -9 -6 -9 -9 c0 -2.4 3.4 -3.4 5 -1 l4 3 l4 -3 c1.6 -2.4 5 -1.4 5 1 c0 3 -3 5 -9 9z"/><circle cx="66" cy="7" r="1.6"/><circle cx="94" cy="7" r="1.6"/></svg>
+                <p class="caps caps-xs card-date"><?= e(date('d . m . Y', $startTs)) ?></p>
             </div>
             <svg class="env-pocket" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                 <path class="pk" d="M0 0 L50 52 L100 0 L100 100 L0 100 Z"/>
@@ -108,11 +110,15 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <picture class="fl fl-or fl-front" aria-hidden="true"><source srcset="<?= e(img_url('fl-orchid.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-orchid.png')) ?>" alt="" width="498" height="451" decoding="async"></picture>
 
             <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
+            <svg class="chain" viewBox="0 0 100 70.4" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M-6 57 C8 63 22 63.5 31.7 59.6"/>
+                <path d="M31.7 59.6 C50 55.5 78 57 106 58"/>
+            </svg>
             <div class="keepsake">
             <picture class="fl fl-os" aria-hidden="true"><source srcset="<?= e(img_url('fl-orchid-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-orchid-sm.png')) ?>" alt="" width="354" height="605" decoding="async"></picture>
             <picture class="fl fl-hs" aria-hidden="true"><source srcset="<?= e(img_url('fl-hibiscus-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-hibiscus-sm.png')) ?>" alt="" width="395" height="489" decoding="async"></picture>
                 <span class="name-tag tag-l script"><?= e($G['nickname']) ?></span>
-                <?= heart_locket(img_url('kid-fatah.jpg'), img_url('kid-gege.jpg'), 'Foto ' . $G['nickname'] . ' dan ' . $B['nickname'] . ' semasa SD') ?>
+                <?= heart_locket(img_url(has_img('kid-fatah-locket.jpg') ? 'kid-fatah-locket.jpg' : 'kid-fatah.jpg'), img_url(has_img('kid-gege-locket.jpg') ? 'kid-gege-locket.jpg' : 'kid-gege.jpg'), 'Foto ' . $G['nickname'] . ' dan ' . $B['nickname'] . ' semasa SD') ?>
                 <span class="name-tag tag-r script"><?= e($B['nickname']) ?></span>
             </div>
             <?php endif; ?>

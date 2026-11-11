@@ -1228,3 +1228,75 @@ p { margin: 0 0 1rem; }
 /* penutup: rangkaian kecil bunga yang sama */
 .closing-spray { display: block; width: min(260px, 70%); margin: .75rem auto 0; }
 .closing-spray img { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .35)); }
+
+/* =========================================================
+   REVISI PEMBUKA: kartu lebih berhias, bunga menimpa amplop,
+   liontin "tergeletak" di atas amplop dengan rantai
+   ========================================================= */
+/* kartu undangan */
+.stage .env-card {
+    padding-top: 10%;
+    background-color: #FBF7EF;
+    box-shadow:
+        inset 0 0 0 5px #FBF7EF, inset 0 0 0 6px rgba(74, 28, 36, .55),
+        inset 0 0 0 9px #FBF7EF, inset 0 0 0 9.6px rgba(74, 28, 36, .3),
+        0 -4px 14px rgba(0, 0, 0, .12);
+}
+.cc { position: absolute; width: 13%; max-width: 40px; aspect-ratio: 1; color: var(--wine); opacity: .75; }
+.cc svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; }
+.cc-tl { left: 4px; top: 4px; }
+.cc-tr { right: 4px; top: 4px; transform: scaleX(-1); }
+.cc-bl { left: 4px; bottom: 4px; transform: scaleY(-1); }
+.cc-br { right: 4px; bottom: 4px; transform: scale(-1); }
+.card-kicker { letter-spacing: .32em; color: var(--sage-dark); }
+.stage .env-names { font-size: clamp(2.1rem, 9vw, 2.5rem); margin: .2rem 0 0 !important; }
+.stage .env-names span { color: var(--rose); }
+.card-rule { display: block; width: 58%; height: auto; margin: .15rem 0 .35rem; fill: none; stroke: var(--wine); stroke-width: 1; stroke-linecap: round; overflow: visible; }
+.card-rule circle { fill: var(--wine); stroke: none; }
+.card-rule .r-heart { fill: #8E2430; stroke: none; }
+.card-date { color: var(--wine); font-weight: 600; letter-spacing: .3em; }
+
+/* semua bunga di depan amplop, menimpa tepinya */
+.fl-back { z-index: 7; }
+.fl-a1 { left: -30%; top: -64%; width: 46%; rotate: -14deg; }
+.fl-li { right: -30%; top: -30%; width: 50%; rotate: 16deg; }
+.fl-a2 { left: -16%; top: 26%; width: 22%; rotate: -24deg; }
+.fl-hb { left: -24%; bottom: -26%; width: 40%; }
+.fl-or { right: -22%; bottom: -22%; width: 38%; }
+
+/* liontin bersandar di bagian bawah amplop, dengan rantai perak */
+.keepsake { top: 80%; z-index: 9; width: 70%; }
+.chain {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    fill: none;
+    stroke: #D9D5CE;
+    stroke-width: 2.2;
+    stroke-dasharray: 2.2 1.6;
+    stroke-linecap: round;
+    filter: drop-shadow(0 1.5px 1px rgba(0, 0, 0, .45));
+}
+.chain path { vector-effect: non-scaling-stroke; }
+.fl-os { left: -20%; top: 30%; width: 24%; rotate: -30deg; z-index: 3; }
+.fl-hs { right: -20%; top: 18%; width: 28%; rotate: 24deg; z-index: 3; }
+.name-tag { top: 76%; z-index: 4; }
+.tag-l { left: -6%; }
+.tag-r { right: -6%; }
+.stage .cover-hint { margin-top: 9.5rem; }
+.chain { stroke: #E4E0D8; stroke-width: 2.6; stroke-dasharray: .01 1.15; }
+.card-kicker { letter-spacing: .22em; font-size: .68rem; }
+.stage .envelope { width: min(310px, 76vw); margin-top: 6.5rem; }
+.cover.stage { padding-top: 4.5rem; padding-bottom: 4.5rem; }
+@media (min-width: 760px) {
+    .stage .envelope { width: 400px; margin-top: 7.5rem; }
+    .card-kicker { font-size: .78rem; }
+}
+.chain path { vector-effect: none; }
+.chain { stroke-width: .75; stroke-dasharray: .02 .62; stroke: #ECE8E1; }
+.chain { z-index: 6; }
+.cover.stage { padding-top: 7rem; }
