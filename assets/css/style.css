@@ -288,7 +288,6 @@ p { margin: 0 0 1rem; }
 
 @keyframes seal-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 
-.floral-envelope { right: -14%; bottom: -18%; z-index: 7; width: 52%; }
 
 /* urutan animasi membuka */
 .cover.is-opening .env-flap-wrap { animation: flap-open .7s var(--ease) .3s forwards; }
@@ -311,42 +310,6 @@ p { margin: 0 0 1rem; }
     font-family: var(--font-script);
     font-size: 30px;
 }
-
-/* =========================================================
-   BINGKAI KARTU (cartouche)
-   ========================================================= */
-.cartouche {
-    position: relative;
-    margin: 0 auto;
-    filter: drop-shadow(0 14px 22px rgba(46, 27, 31, .13));
-}
-
-.cartouche-frame { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.cf-fill { fill: var(--ivory); }
-.cf-line { fill: none; stroke: var(--ink); stroke-width: 1.1; }
-.cf-inner { stroke: var(--sage-deep); stroke-width: 1; }
-
-.cartouche-body { position: relative; z-index: 2; }
-
-/* =========================================================
-   HERO — kartu nama
-   ========================================================= */
-.hero { padding-top: 4.5rem; }
-
-.arabic-bismillah { font-size: clamp(1.6rem, 7vw, 2rem); color: var(--wine); margin-bottom: 2.25rem; }
-
-.cartouche-hero { width: min(360px, 92%); }
-.cartouche-hero .cartouche-body { padding: 4.2rem 2rem 4.4rem; }
-.cartouche-hero .caps { margin-bottom: 1.4rem; font-size: .76rem; }
-
-.floral-hero { right: -16%; top: -12%; }
-
-.couple-names { margin: 0; font-weight: 400; }
-.couple-names > span { display: block; }
-
-.name-script { font-size: clamp(3.6rem, 17vw, 4.6rem); color: var(--ink); line-height: 1; }
-.caps-name { font-size: .78rem; letter-spacing: .3em; margin: .55rem 0 0; color: var(--ink); }
-.name-and { font-size: 2.1rem; color: var(--sage-dark); margin: 1rem 0 .6rem; }
 
 /* =========================================================
    PEMBUKA & TANGGAL
@@ -744,7 +707,6 @@ p { margin: 0 0 1rem; }
 .closing { padding-top: 7rem; }
 
 .dd { position: absolute; z-index: 4; width: 84px; height: 84px; }
-.dd-hero-rings { left: -9%; bottom: -4%; transform: rotate(-8deg); }
 .dd-corner-r { right: 8px; top: 14px; width: 72px; height: 72px; }
 .dd-corner-l { left: 8px; top: 14px; width: 72px; height: 72px; }
 .dd-note-env { left: -16px; bottom: -30px; width: 82px; height: 82px; transform: rotate(-10deg); }
@@ -752,7 +714,6 @@ p { margin: 0 0 1rem; }
 @media (min-width: 760px) {
     .dd-corner-r { right: 6%; top: 3rem; width: 100px; height: 100px; }
     .dd-corner-l { left: 6%; top: 3rem; width: 100px; height: 100px; }
-    .dd-hero-rings { width: 100px; height: 100px; }
 }
 
 /* =========================================================
@@ -965,10 +926,6 @@ p { margin: 0 0 1rem; }
 /* =========================================================
    SAMPUL: KOLASE FOTO MASA SD & AMPLOP
    ========================================================= */
-:root { --doodle-pattern: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='280'%20height='280'%20fill='none'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cg%20stroke='%238E2430'%20stroke-opacity='.16'%20stroke-width='1.3'%3E%3Cpath%20d='M40%2066c-11-8-15-14-11-19c3-4%209-3%2011%203c2-6%208-7%2011-3c4%205%200%2011-11%2019z'/%3E%3Cpath%20d='M236%20136a15%2015%200%201%200%209%2024a12%2012%200%201%201-9-24z'/%3E%3Ccircle%20cx='92'%20cy='196'%20r='10'/%3E%3Cpath%20d='M88%20184l4-6l4%206'/%3E%3Cpath%20d='M150%20262v10M145%20267h10'/%3E%3C/g%3E%3Cg%20stroke='%235E6650'%20stroke-opacity='.2'%20stroke-width='1.2'%3E%3Cpath%20d='M182%2030l2%207l7%202l-7%202l-2%207l-2-7l-7-2l7-2z'/%3E%3Cpath%20d='M24%20150v9M19.5%20154.5h9'/%3E%3Cpath%20d='M120%20110c6-10%2016-12%2022-6c-8%202-14%206-22%206z'/%3E%3C/g%3E%3Cg%20fill='%238E2430'%20fill-opacity='.14'%3E%3Ccircle%20cx='140'%20cy='60'%20r='1.8'/%3E%3Ccircle%20cx='34'%20cy='238'%20r='1.6'/%3E%3Ccircle%20cx='258'%20cy='252'%20r='1.7'/%3E%3Cpath%20d='M206%20222c-3-4-8-2-6%202c1%202%206%204%206%204c0%200%205-2%206-4c2-4-3-6-6-2z'/%3E%3C/g%3E%3C/svg%3E"); }
-
-.cover.paper { background-image: var(--grain), var(--doodle-pattern); background-size: auto, 280px 280px; }
-
 /* nama tamu dalam huruf sambung */
 .recipient-name {
     font-family: var(--font-script);
@@ -978,27 +935,12 @@ p { margin: 0 0 1rem; }
     color: var(--wine);
 }
 
-/* bingkai garis tangan di tepi layar */
-.cover.framed::before,
-.cover.framed::after {
-    content: "";
-    position: absolute;
-    inset: 14px;
-    border: 1.5px solid var(--wine);
-    opacity: .55;
-    filter: url(#sketch-rough);
-    pointer-events: none;
-}
-.cover.framed::after { inset: 21px; border-width: 1px; opacity: .3; }
-
 /* layar lebar */
 @media (min-width: 760px) and (min-height: 720px) {
     .envelope { width: 440px; }
     .env-seal { width: 96px; height: 96px; margin: -48px 0 0 -48px; }
     .env-names { font-size: 2.6rem; }
     .recipient-name { font-size: 3.2rem; }
-    .cover.framed::before { inset: 22px; }
-    .cover.framed::after { inset: 30px; }
 }
 
 /* layar pendek */
@@ -1024,14 +966,6 @@ p { margin: 0 0 1rem; }
 
 .cover.is-opening .env-card { transform: translateY(-62%); }
 
-/* penutup: amplop "mendekat" lalu sampul memudar bersih, tanpa tumpang tindih */
-.cover { transition: opacity .6s var(--ease) .3s, visibility 0s linear .9s; }
-.cover-inner { transition: transform .8s var(--ease), opacity .5s var(--ease); }
-.cover.is-open .cover-inner { transform: scale(1.15); opacity: 0; }
-
-@media (prefers-reduced-motion: reduce) {
-    .envelope, .cover-inner { transition: none; }
-}
 .guest-name { font-weight: 600; color: var(--wine); }
 
 /* =========================================================
@@ -1057,9 +991,6 @@ p { margin: 0 0 1rem; }
 
 /* kartu nama lebih besar di layar lebar */
 @media (min-width: 760px) {
-    .cartouche-hero { width: 440px; }
-    .cartouche-hero .cartouche-body { padding: 5rem 2.5rem 5.2rem; }
-    .name-script { font-size: 5.4rem; }
     .person-nick { font-size: 3rem; }
 }
 
@@ -1075,140 +1006,6 @@ p { margin: 0 0 1rem; }
 
 /* Mempelai: tanda & di antara kedua mempelai */
 .couple-amp { margin: 0; font-size: 3.4rem; line-height: 1; color: var(--rose); }
-
-/* =========================================================
-   BUNGA: pita di amplop, bingkai bunga liar di halaman pertama
-   ========================================================= */
-/* untaian bunga berpita, simpulnya tepat di balik segel */
-.env-bow {
-    position: absolute;
-    left: 50%;
-    top: 58%;
-    z-index: 5;
-    width: 104%;
-    translate: -51.6% -56%;
-    pointer-events: none;
-    filter: drop-shadow(0 3px 4px rgba(46, 27, 31, .18));
-}
-
-/* halaman pertama: foto SD dalam lengkung bunga liar, di antara Bismillah & kartu nama */
-.hero { overflow: hidden; }
-.hero .arabic-bismillah { margin-bottom: .5rem; }
-.bloom {
-    position: relative;
-    left: 50%;
-    width: min(470px, calc(100vw - 16px));
-    aspect-ratio: 675 / 904;
-    translate: -50% 0;
-    margin: 0 0 -6%;
-}
-.bloom-frame, .bloom-frame img { display: block; width: 100%; height: 100%; }
-.bloom-frame { position: absolute; inset: 0; pointer-events: none; }
-
-.bloom-kid {
-    position: absolute;
-    top: 30%;
-    z-index: 2;
-    width: 29%;
-    height: auto;
-    border-radius: 2px;
-    box-shadow: 0 8px 16px rgba(46, 27, 31, .22), 0 1px 3px rgba(46, 27, 31, .18);
-}
-.bk-l { left: 21.5%; rotate: -7deg; }
-.bk-r { right: 21.5%; top: 33%; rotate: 6deg; }
-
-/* =========================================================
-   ANIMASI AMPLOP v2: segel retak → pita terurai → tutup terbuka
-   (berlapis lapisan mawar) → kartu keluar → kartu menjadi halaman
-   ========================================================= */
-/* pita: dua belahan dari gambar yang sama, terbelah di simpulnya (51.6%) */
-.bow-half { display: block; }
-.bow-half img { display: block; width: 100%; height: auto; }
-.bh-r { position: absolute; inset: 0; }
-.bh-l { clip-path: inset(-10% 48.4% -10% -10%); transform-origin: 51.6% 56%; }
-.bh-r { clip-path: inset(-10% -10% -10% 51.6%); transform-origin: 51.6% 56%; }
-.bow-half { transition: transform .7s cubic-bezier(.5, 0, .3, 1) .1s, opacity .45s var(--ease) .3s; }
-.cover.is-opening .bh-l { transform: translateX(-38%) rotate(-10deg); opacity: 0; }
-.cover.is-opening .bh-r { transform: translateX(38%) rotate(10deg); opacity: 0; }
-
-/* segel: utuh saat diam; saat dibuka diganti dua belahan yang retak & jatuh */
-.env-seal .seal-whole { display: block; }
-.seal-half { position: absolute; inset: 0; opacity: 0; }
-.seal-half svg { width: 100%; height: 100%; display: block; }
-.sh-l { clip-path: polygon(0 0, 54% 0, 47% 18%, 56% 36%, 46% 55%, 55% 74%, 49% 100%, 0 100%); }
-.sh-r { clip-path: polygon(54% 0, 100% 0, 100% 100%, 49% 100%, 55% 74%, 46% 55%, 56% 36%, 47% 18%); }
-.cover.is-opening .env-seal { animation: none; opacity: 1; transform: none; pointer-events: none; }
-.cover.is-opening .seal-whole { visibility: hidden; }
-.cover.is-opening .seal-half { opacity: 1; }
-.cover.is-opening .sh-l { animation: seal-break-l .6s cubic-bezier(.45, 0, .7, .4) forwards; }
-.cover.is-opening .sh-r { animation: seal-break-r .6s cubic-bezier(.45, 0, .7, .4) forwards; }
-@keyframes seal-break-l {
-    0%   { transform: none; opacity: 1; }
-    18%  { transform: translate(-3px, -1px) rotate(-5deg); opacity: 1; }
-    70%  { opacity: 1; }
-    100% { transform: translate(-30px, 70px) rotate(-38deg); opacity: 0; }
-}
-@keyframes seal-break-r {
-    0%   { transform: none; opacity: 1; }
-    18%  { transform: translate(3px, -1px) rotate(5deg); opacity: 1; }
-    70%  { opacity: 1; }
-    100% { transform: translate(30px, 76px) rotate(34deg); opacity: 0; }
-}
-
-/* tutup amplop: sisi dalam berlapis kertas mawar bertitik */
-@keyframes flap-face {
-    0%, 49% { background-color: #B2B895; }
-    50%, 100% {
-        background-color: #EBD3D4;
-        background-image: radial-gradient(rgba(142, 36, 48, .16) 1px, transparent 1.6px), var(--grain);
-        background-size: 11px 11px, auto;
-    }
-}
-
-/* kartu tumbuh memenuhi layar, lalu memudar menjadi halaman pertama */
-.card-sheet {
-    position: fixed;
-    z-index: 60;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 1.6rem;
-    background-color: var(--ivory);
-    background-image: var(--grain);
-    box-shadow: inset 0 0 0 6px var(--ivory), inset 0 0 0 7px var(--line), 0 10px 30px rgba(46, 27, 31, .18);
-    color: var(--ink);
-    text-align: center;
-    pointer-events: none;
-    transition:
-        left .65s cubic-bezier(.65, 0, .35, 1), top .65s cubic-bezier(.65, 0, .35, 1),
-        width .65s cubic-bezier(.65, 0, .35, 1), height .65s cubic-bezier(.65, 0, .35, 1),
-        background-color .65s var(--ease), box-shadow .65s var(--ease), opacity .45s var(--ease);
-}
-.card-sheet p { margin: 0; transition: opacity .3s var(--ease) .1s; }
-.card-sheet.is-growing { background-color: var(--paper); box-shadow: inset 0 0 0 6px var(--paper), inset 0 0 0 7px rgba(0, 0, 0, 0), 0 24px 60px rgba(46, 27, 31, .16); }
-.card-sheet.is-growing p { opacity: 0; }
-.card-sheet.is-gone { opacity: 0; }
-.cover.via-card.is-open .cover-inner { transform: scale(.96); opacity: 0; transition: opacity .5s var(--ease), transform .8s var(--ease); }
-.cover.via-card.is-open { transition: opacity .55s linear .15s, visibility 0s linear .7s; }
-
-@media (prefers-reduced-motion: reduce) {
-    .bow-half, .seal-half { transition: none; animation: none !important; }
-}
-
-/* penutup: untaian berpita kembali "terikat" di bawah nama */
-.closing-bow { display: block; width: min(330px, 86%); margin: .5rem auto 0; }
-.closing-bow img { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .25)); }
-
-/* Mempelai: ilustrasi pasangan di antara kedua nama */
-.portrait { display: block; width: min(280px, 74vw); margin: .5rem auto; rotate: -1.5deg; }
-.portrait img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 3px;
-    box-shadow: 0 18px 36px rgba(0, 0, 0, .35), 0 3px 8px rgba(0, 0, 0, .25);
-}
-@media (min-width: 760px) { .portrait { width: 300px; } }
 
 /* Ucapan: tanpa kotak gulir di dalam halaman (menahan scroll di ponsel).
    Tampilkan 6 terbaru, sisanya lewat tombol "Lihat semua ucapan". */
@@ -1289,3 +1086,145 @@ p { margin: 0 0 1rem; }
     .opening-text { text-align: center; margin: 0 auto; }
 }
 .opening { padding-top: 4.5rem; }
+
+/* =========================================================
+   PANGGUNG PEMBUKA: amplop di atas lukisan bunga; setelah dibuka
+   amplop tetap menjadi bagian atas halaman (tanpa segel retak)
+   ========================================================= */
+.cover.stage {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 3rem 1rem 3.5rem;
+    color: var(--ivory);
+    background: #2A1418;
+    isolation: isolate;
+    overflow: hidden;
+    transition: none;
+}
+.cover.stage::before {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    z-index: -1;
+    background:
+        linear-gradient(180deg, rgba(30, 12, 16, .55), rgba(30, 12, 16, .35) 40%, rgba(30, 12, 16, .7)),
+        url("../img/bg-floral.jpg") center / cover no-repeat;
+    background:
+        linear-gradient(180deg, rgba(30, 12, 16, .55), rgba(30, 12, 16, .35) 40%, rgba(30, 12, 16, .7)),
+        image-set(url("../img/bg-floral.webp") type("image/webp"), url("../img/bg-floral.jpg") type("image/jpeg")) center / cover no-repeat;
+    filter: blur(2px) saturate(.9);
+}
+.cover.stage.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+.cover.stage .cover-inner { gap: 1.5rem; transform: none !important; opacity: 1 !important; }
+
+/* nama tamu ↔ Bismillah menempati tempat yang sama */
+.stage-top { display: grid; place-items: center; min-height: 5.5rem; }
+.stage-top > * { grid-area: 1 / 1; }
+.stage .recipient .caps { color: var(--ivory); opacity: .8; }
+.stage .recipient-name { color: var(--ivory); text-shadow: 0 2px 12px rgba(0, 0, 0, .4); }
+.stage .arabic-bismillah {
+    margin: 0;
+    font-size: clamp(1.7rem, 7.5vw, 2.2rem);
+    color: var(--ivory);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, .45);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .8s var(--ease) .9s, transform .8s var(--ease) .9s;
+}
+.cover.is-opening .arabic-bismillah { opacity: 1; transform: none; }
+
+/* amplop: warna khaki-zaitun */
+.stage .envelope { width: min(290px, 70vw); margin-top: 5.5rem; isolation: isolate; }
+.stage .env-back { background-color: #978C5A; box-shadow: 0 24px 44px rgba(0, 0, 0, .35), 0 4px 10px rgba(0, 0, 0, .2); }
+.stage .env-pocket .pk { fill: #B9AE78; }
+.stage .env-flap { background-color: #C6BC88; }
+.stage .env-card { box-shadow: inset 0 0 0 6px var(--ivory), inset 0 0 0 7px var(--line), 0 -4px 14px rgba(0, 0, 0, .12); }
+.stage .env-names { font-weight: 400; }
+@keyframes flap-face {
+    0%, 49% { background-color: #C6BC88; }
+    50%, 100% {
+        background-color: #EBD3D4;
+        background-image: radial-gradient(rgba(142, 36, 48, .16) 1px, transparent 1.6px), var(--grain);
+        background-size: 11px 11px, auto;
+    }
+}
+
+/* segel tetap utuh: tutup terbuka di belakangnya, segel tinggal di ujung "V" */
+.cover.is-opening .env-seal { animation: none; opacity: 1; transform: none; pointer-events: none; cursor: default; }
+.cover.is-opening .env-card { transform: translateY(-64%); }
+
+/* bunga di sekitar amplop */
+.fl { position: absolute; display: block; pointer-events: none; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .35)); }
+.fl img { display: block; width: 100%; height: auto; }
+.fl-back { z-index: -1; }
+.fl-front { z-index: 7; }
+.fl-a1 { left: -34%; top: -78%; width: 50%; rotate: -12deg; }
+.fl-li { right: -36%; top: -46%; width: 56%; rotate: 14deg; }
+.fl-a2 { left: -24%; top: 18%; width: 24%; rotate: -34deg; }
+.fl-hb { left: -30%; bottom: -36%; width: 44%; rotate: -10deg; }
+.fl-or { right: -27%; bottom: -30%; width: 42%; rotate: 8deg; }
+
+/* liontin berisi foto SD + label nama */
+.keepsake {
+    position: absolute;
+    left: 50%;
+    top: 92%;
+    z-index: 8;
+    width: 74%;
+    translate: -50% 0;
+}
+.locket { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .4)); }
+.fl-os { left: -26%; top: 40%; width: 26%; rotate: -36deg; z-index: -1; }
+.fl-hs { right: -24%; top: 34%; width: 30%; rotate: 28deg; z-index: -1; }
+.name-tag {
+    position: absolute;
+    top: 72%;
+    z-index: 2;
+    padding: .15rem .9rem .3rem;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: var(--wine);
+    background: #F6E1E3;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 2px #F6E1E3, inset 0 0 0 3px rgba(74, 28, 36, .35), 0 6px 12px rgba(0, 0, 0, .3);
+}
+.tag-l { left: -12%; rotate: -8deg; }
+.tag-r { right: -12%; rotate: 7deg; }
+
+/* petunjuk */
+.stage .cover-hint { margin-top: 8.5rem; color: var(--ivory); }
+.scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.2rem;
+    margin: 0;
+    translate: -50% 0;
+    font-family: "Caveat", var(--font-script), cursive;
+    font-size: 1.3rem;
+    color: var(--ivory);
+    opacity: 0;
+    transition: opacity .6s var(--ease);
+}
+.scroll-cue::after { content: ""; display: block; width: 10px; height: 10px; margin: .2rem auto 0; border: solid currentColor; border-width: 0 2px 2px 0; rotate: 45deg; }
+.cover.is-open .scroll-cue { opacity: .85; animation: cue 1.8s var(--ease) infinite; }
+.cover.is-opening .cover-hint { animation: none; opacity: 0; visibility: hidden; transition: opacity .3s, visibility 0s .3s; }
+@keyframes cue { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+@media (min-width: 760px) {
+    .stage .envelope { width: 400px; margin-top: 7.5rem; }
+    .stage .env-names { font-size: 2.6rem; }
+    .name-tag { font-size: 1.9rem; }
+    .stage .cover-hint { margin-top: 10rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .stage .arabic-bismillah, .cover.is-open .scroll-cue { transition: none; animation: none; }
+}
+
+/* penutup: rangkaian kecil bunga yang sama */
+.closing-spray { display: block; width: min(260px, 70%); margin: .75rem auto 0; }
+.closing-spray img { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .35)); }

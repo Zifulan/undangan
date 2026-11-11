@@ -66,25 +66,33 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=22">
-    <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}.cover{display:none}body.is-locked{overflow:auto;height:auto}</style></noscript>
+    <link rel="stylesheet" href="assets/css/style.css?v=23">
+    <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="is-locked">
 <?= doodle_defs() ?>
 
-<!-- ============ SAMPUL: AMPLOP & SEGEL ============ -->
-<section class="cover paper framed" id="cover" aria-label="Sampul undangan"<?= slot_bg('bg-cover.jpg') ?>>
+<main id="main">
+
+<!-- ============ PEMBUKA: AMPLOP (tertutup → terbuka, tetap di halaman) ============ -->
+<section class="cover stage" id="cover" aria-label="Undangan">
     <div class="cover-inner">
-        <div class="recipient">
-            <p class="caps">Kepada Yth.</p>
-            <p class="recipient-name"><?= $guest !== '' ? e($guest) : 'Tamu Undangan' ?></p>
+        <div class="stage-top">
+            <div class="recipient">
+                <p class="caps">Kepada Yth.</p>
+                <p class="recipient-name"><?= $guest !== '' ? e($guest) : 'Tamu Undangan' ?></p>
+            </div>
+            <p class="arabic arabic-bismillah" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
         </div>
 
         <div class="envelope" id="envelope">
+            <picture class="fl fl-a1 fl-back" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium-cluster.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium-cluster.png')) ?>" alt="" width="526" height="620" decoding="async"></picture>
+            <picture class="fl fl-li fl-back" aria-hidden="true"><source srcset="<?= e(img_url('fl-lily.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-lily.png')) ?>" alt="" width="558" height="618" decoding="async"></picture>
+            <picture class="fl fl-a2 fl-back" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium.png')) ?>" alt="" width="338" height="620" decoding="async"></picture>
             <div class="env-back"></div>
             <div class="env-card">
                 <p class="caps caps-xs">Undangan Akad Nikah</p>
-                <p class="script env-names"><?= e($G['nickname']) ?> <span>&amp;</span> <?= e($B['nickname']) ?></p>
+                <h1 class="script env-names"><?= e($G['nickname']) ?> <span>&amp;</span> <?= e($B['nickname']) ?></h1>
                 <p class="caps caps-xs"><?= e(date('d . m . Y', $startTs)) ?></p>
             </div>
             <svg class="env-pocket" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -93,65 +101,27 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <path class="pk-edge" d="M0 0 L50 52 L100 0"/>
             </svg>
             <div class="env-flap-wrap"><div class="env-flap"></div></div>
-            <?= slot_img('floral-envelope.png', 'floral floral-envelope') ?>
-            <?php if (has_img('floral-bow.png')): ?>
-            <div class="env-bow" aria-hidden="true">
-                <picture class="bow-half bh-l">
-                    <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
-                    <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" decoding="async">
-                </picture>
-                <picture class="bow-half bh-r">
-                    <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
-                    <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" decoding="async">
-                </picture>
+            <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
+                <?= wax_seal($sealText, 'plum') ?>
+            </button>
+            <picture class="fl fl-hb fl-front" aria-hidden="true"><source srcset="<?= e(img_url('fl-hibiscus.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-hibiscus.png')) ?>" alt="" width="452" height="465" decoding="async"></picture>
+            <picture class="fl fl-or fl-front" aria-hidden="true"><source srcset="<?= e(img_url('fl-orchid.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-orchid.png')) ?>" alt="" width="498" height="451" decoding="async"></picture>
+
+            <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
+            <div class="keepsake">
+            <picture class="fl fl-os" aria-hidden="true"><source srcset="<?= e(img_url('fl-orchid-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-orchid-sm.png')) ?>" alt="" width="354" height="605" decoding="async"></picture>
+            <picture class="fl fl-hs" aria-hidden="true"><source srcset="<?= e(img_url('fl-hibiscus-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-hibiscus-sm.png')) ?>" alt="" width="395" height="489" decoding="async"></picture>
+                <span class="name-tag tag-l script"><?= e($G['nickname']) ?></span>
+                <?= heart_locket(img_url('kid-fatah.jpg'), img_url('kid-gege.jpg'), 'Foto ' . $G['nickname'] . ' dan ' . $B['nickname'] . ' semasa SD') ?>
+                <span class="name-tag tag-r script"><?= e($B['nickname']) ?></span>
             </div>
             <?php endif; ?>
-            <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
-                <?= wax_seal($sealText, 'plum', 'seal-whole') ?>
-                <span class="seal-half sh-l" aria-hidden="true"><?= wax_seal($sealText, 'plum') ?></span>
-                <span class="seal-half sh-r" aria-hidden="true"><?= wax_seal($sealText, 'plum') ?></span>
-            </button>
         </div>
 
         <p class="cover-hint">Ketuk segel</p>
+        <p class="scroll-cue" aria-hidden="true">gulir ke bawah</p>
     </div>
 </section>
-
-<main id="main">
-
-    <!-- ============ KARTU NAMA ============ -->
-    <section class="section paper hero" id="beranda">
-        <p class="arabic arabic-bismillah reveal" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-
-        <div class="bloom">
-            <?php if (has_img('floral-frame.png')): ?>
-            <picture class="bloom-frame reveal" aria-hidden="true">
-                <source srcset="<?= e(img_url('floral-frame.webp')) ?>" type="image/webp">
-                <img src="<?= e(img_url('floral-frame.png')) ?>" alt="" width="675" height="904" decoding="async">
-            </picture>
-            <?php endif; ?>
-            <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
-            <img class="bloom-kid bk-l reveal" src="<?= e(img_url('kid-fatah.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD" width="480" height="603" decoding="async">
-            <img class="bloom-kid bk-r reveal" src="<?= e(img_url('kid-gege.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD" width="480" height="602" decoding="async">
-            <?php endif; ?>
-        </div>
-
-        <div class="cartouche cartouche-hero tilt-l reveal">
-            <?= cartouche_frame() ?>
-            <?= slot_img('floral-hero.png', 'floral floral-hero') ?>
-            <?= doodle('rings', 'dd dd-hero-rings') ?>
-            <div class="cartouche-body">
-                <p class="caps">Undangan<br>Akad Nikah</p>
-                <h1 class="couple-names">
-                    <span class="script name-script words"><?= e($G['nickname']) ?></span>
-                    <span class="caps caps-name"><?= e($G['name']) ?></span>
-                    <span class="script name-and">dan</span>
-                    <span class="script name-script words"><?= e($B['nickname']) ?></span>
-                    <span class="caps caps-name"><?= e($B['name']) ?></span>
-                </h1>
-            </div>
-        </div>
-    </section>
 
     <!-- ============ PEMBUKA & TANGGAL ============ -->
     <section class="section paper opening" id="pembuka">
@@ -366,16 +336,16 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
 
         <p class="arabic reveal" lang="ar" dir="rtl">وَالسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
         <p class="script closing-names words reveal"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></p>
-        <?php if (has_img('floral-bow.png')): ?>
-        <picture class="closing-bow reveal" aria-hidden="true">
-            <source srcset="<?= e(img_url('floral-bow.webp')) ?>" type="image/webp">
-            <img src="<?= e(img_url('floral-bow.png')) ?>" alt="" width="628" height="254" loading="lazy" decoding="async">
+        <?php if (has_img('fl-spray.png')): ?>
+        <picture class="closing-spray reveal" aria-hidden="true">
+            <source srcset="<?= e(img_url('fl-spray.webp')) ?>" type="image/webp">
+            <img src="<?= e(img_url('fl-spray.png')) ?>" alt="" width="620" height="336" loading="lazy" decoding="async">
         </picture>
         <?php endif; ?>
     </section>
 
 </main>
 
-<script src="assets/js/main.js?v=14" defer></script>
+<script src="assets/js/main.js?v=15" defer></script>
 </body>
 </html>

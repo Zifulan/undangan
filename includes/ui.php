@@ -108,3 +108,39 @@ function cartouche_frame(): string
         . '</svg>';
 }
 
+
+/**
+ * Liontin hati yang terbuka (dua sisi), masing-masing berisi satu foto.
+ * Foto dipotong mengikuti bentuk hati; bingkai perak digambar dengan gradien.
+ */
+function heart_locket(string $left, string $right, string $label): string
+{
+    $heart = 'M50 92 C20 70 4 52 7 32 C10 13 34 6 50 25 C66 6 90 13 93 32 C96 52 80 70 50 92Z';
+    $side = function (string $img, string $id, float $x, float $rot) use ($heart): string {
+        return '<g transform="translate(' . $x . ' 8) rotate(' . $rot . ' 50 50)">'
+            . '<clipPath id="' . $id . '"><path d="' . $heart . '" transform="translate(50 50) scale(.8) translate(-50 -50)"/></clipPath>'
+            . '<path d="' . $heart . '" fill="url(#lkRim)" stroke="#6F6A66" stroke-width="1.2"/>'
+            . '<path d="' . $heart . '" fill="none" stroke="#F4F2EE" stroke-opacity=".7" stroke-width="1" transform="translate(50 50) scale(.9) translate(-50 -50)"/>'
+            . '<path d="' . $heart . '" fill="#2A2224" transform="translate(50 50) scale(.82) translate(-50 -50)"/>'
+            . '<image href="' . e($img) . '" x="13" y="9" width="74" height="93" preserveAspectRatio="xMidYMin slice" clip-path="url(#' . $id . ')"/>'
+            . '<path d="' . $heart . '" fill="url(#lkGlass)" transform="translate(50 50) scale(.8) translate(-50 -50)"/>'
+            . '</g>';
+    };
+
+    return '<svg class="locket" viewBox="0 0 214 112" role="img" aria-label="' . e($label) . '">'
+        . '<defs>'
+        . '<linearGradient id="lkRim" x1="0" y1="0" x2="1" y2="1">'
+        . '<stop offset="0" stop-color="#F3F1EC"/><stop offset=".35" stop-color="#B9B5AE"/>'
+        . '<stop offset=".6" stop-color="#E9E6E0"/><stop offset="1" stop-color="#8C8781"/></linearGradient>'
+        . '<linearGradient id="lkGlass" x1="0" y1="0" x2="1" y2="1">'
+        . '<stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+        . '</defs>'
+        // engsel di tengah
+        . '<rect x="101" y="44" width="12" height="20" rx="3" fill="url(#lkRim)" stroke="#6F6A66" stroke-width="1"/>'
+        . '<path d="M101 50 h12 M101 58 h12" stroke="#6F6A66" stroke-width=".8"/>'
+        // gantungan di atas sisi kiri
+        . '<circle cx="54" cy="9" r="6" fill="none" stroke="url(#lkRim)" stroke-width="3"/>'
+        . $side($left, 'lkL', 4, -6)
+        . $side($right, 'lkR', 110, 6)
+        . '</svg>';
+}

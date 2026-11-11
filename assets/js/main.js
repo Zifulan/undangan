@@ -22,48 +22,18 @@
     /* ---------- Buka undangan: segel → tutup amplop → kartu keluar ---------- */
     var cover = document.getElementById('cover');
     var openBtn = document.getElementById('openInvitation');
-    var OPEN_MS = reduceMotion ? 0 : 1650;
-    var GROW_MS = 650;
-    var REVEAL_AT = reduceMotion ? 0 : OPEN_MS + 300;   // halaman mulai tampil saat kartu masih membesar
+    var OPEN_MS = reduceMotion ? 0 : 1600;
+    var REVEAL_AT = OPEN_MS;
 
-    // Kartu di amplop "diangkat" menjadi lembar penuh layar, lalu memudar ke halaman pertama.
-    var cardToPage = function () {
-        var card = cover.querySelector('.env-card');
-        if (!card) return false;
-        var r = card.getBoundingClientRect();
-        var sheet = document.createElement('div');
-        sheet.className = 'card-sheet';
-        sheet.setAttribute('aria-hidden', 'true');
-        sheet.innerHTML = card.innerHTML;
-        sheet.style.left = r.left + 'px';
-        sheet.style.top = r.top + 'px';
-        sheet.style.width = r.width + 'px';
-        sheet.style.height = r.height + 'px';
-        body.appendChild(sheet);
-        sheet.getBoundingClientRect();              // paksa layout sebelum transisi
-        cover.classList.add('via-card');
-        requestAnimationFrame(function () {
-            sheet.classList.add('is-growing');
-            sheet.style.left = '0px';
-            sheet.style.top = '0px';
-            sheet.style.width = window.innerWidth + 'px';
-            sheet.style.height = window.innerHeight + 'px';
-        });
-        setTimeout(function () { sheet.classList.add('is-gone'); }, GROW_MS);
-        setTimeout(function () { sheet.remove(); }, GROW_MS + 700);
-        return true;
-    };
-
+    // Amplop dibuka di tempat dan tetap menjadi bagian atas halaman.
     if (openBtn) {
         openBtn.addEventListener('click', function () {
             if (cover.classList.contains('is-opening')) return;
             cover.classList.add('is-opening');
+            openBtn.setAttribute('aria-disabled', 'true');
             setTimeout(function () {
-                if (!reduceMotion) cardToPage();
                 cover.classList.add('is-open');
                 body.classList.remove('is-locked');
-                window.scrollTo(0, 0);
-                setTimeout(function () { cover.setAttribute('hidden', ''); }, 950);
             }, OPEN_MS);
         });
     }
