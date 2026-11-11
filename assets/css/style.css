@@ -1326,3 +1326,27 @@ p { margin: 0 0 1rem; }
 .fl-or { right: -20%; bottom: -14%; width: 36%; rotate: 6deg; }
 .fl-os { left: -15%; top: 26%; width: 21%; rotate: -16deg; }
 .fl-hs { right: -14%; top: 22%; width: 22%; rotate: 14deg; }
+
+/* Bunga v4: rangkaian padat ala referensi (kelas f1–f15, lihat ENVELOPE_FLOWERS) */
+.fl { z-index: 7; }
+.fl.fl-stems { z-index: -1; }
+.f1.fl-heads img { clip-path: inset(0 0 46% 0); }
+.f7.fl-heads img, .f9.fl-heads img { clip-path: inset(0 0 22% 0); }
+.f1  { left: -28%; top: -50%; width: 44%; rotate: -26deg; }
+.f2  { left: -34%; top: -2%;  width: 36%; rotate: -14deg; }
+.f3  { left: -12%; top: -34%; width: 20%; rotate: -38deg; }
+.f4  { left: -28%; top: 46%;  width: 38%; rotate: 8deg; }
+.f5  { left: -4%;  top: 28%;  width: 18%; rotate: 24deg; }
+.f6  { left: -40%; top: 72%;  width: 22%; rotate: -60deg; }
+.f7  { right: -28%; top: -46%; width: 48%; rotate: 22deg; }
+.f8  { right: -14%; top: 0%;   width: 24%; rotate: 28deg; scale: -1 1; }
+.f9  { right: -36%; top: 26%;  width: 38%; rotate: -12deg; scale: -1 1; }
+.f10 { right: -26%; top: 58%;  width: 36%; rotate: 10deg; }
+.f11 { right: -6%;  top: 40%;  width: 22%; rotate: -18deg; }
+.f12 { left: 41%;  top: 118%; width: 18%; rotate: 8deg; }
+.f13 { left: 0%;   top: 104%; width: 18%; rotate: -20deg; }
+.f14 { right: 0%;  top: 98%;  width: 20%; rotate: 18deg; }
+.f15 { right: 20%; top: 126%; width: 14%; rotate: 30deg; }
+.stage .envelope { width: min(300px, 70vw); }
+.f7  { right: -36%; top: -58%; width: 46%; }
+.f15 { right: 24%; top: 132%; width: 12%; z-index: 3; }

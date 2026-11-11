@@ -144,3 +144,29 @@ function heart_locket(string $left, string $right, string $label): string
         . $side($right, 'lkR', 110, 6)
         . '</svg>';
 }
+
+/**
+ * Rangkaian bunga di sekitar amplop: [nama file tanpa ekstensi, kelas posisi].
+ * Rangkaian bertangkai dipasang dua kali (fl-stems di belakang amplop,
+ * fl-heads di depan) agar ujung tangkai tersembunyi.
+ */
+const ENVELOPE_FLOWERS = [
+    // kiri
+    ['fl-anthurium-cluster', 'f1 fl-stems'], ['fl-anthurium-cluster', 'f1 fl-heads'],
+    ['fl-orchid',            'f2'],
+    ['fl-anthurium',         'f3'],
+    ['fl-hibiscus',          'f4'],
+    ['fl-hibiscus-sm',       'f5'],
+    ['fl-anthurium',         'f6'],
+    // kanan
+    ['fl-lily',              'f7 fl-stems'], ['fl-lily', 'f7 fl-heads'],
+    ['fl-anthurium',         'f8'],
+    ['fl-lily',              'f9 fl-stems'], ['fl-lily', 'f9 fl-heads'],
+    ['fl-orchid',            'f10'],
+    ['fl-hibiscus',          'f11'],
+    // bawah, di sekitar liontin
+    ['fl-anthurium',         'f12'],
+    ['fl-orchid-sm',         'f13'],
+    ['fl-hibiscus-sm',       'f14'],
+    ['fl-orchid-sm',         'f15'],
+];
