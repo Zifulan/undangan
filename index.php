@@ -86,9 +86,11 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         </div>
 
         <div class="envelope" id="envelope">
-            <picture class="fl fl-a1 fl-back" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium-cluster.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium-cluster.png')) ?>" alt="" width="526" height="620" decoding="async"></picture>
-            <picture class="fl fl-li fl-back" aria-hidden="true"><source srcset="<?= e(img_url('fl-lily.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-lily.png')) ?>" alt="" width="558" height="618" decoding="async"></picture>
-            <picture class="fl fl-a2 fl-back" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium.png')) ?>" alt="" width="338" height="620" decoding="async"></picture>
+            <picture class="fl fl-a1 fl-stems" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium-cluster.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium-cluster.png')) ?>" alt="" width="526" height="620" decoding="async"></picture>
+            <picture class="fl fl-a1 fl-heads" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium-cluster.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium-cluster.png')) ?>" alt="" width="526" height="620" decoding="async"></picture>
+            <picture class="fl fl-li fl-stems" aria-hidden="true"><source srcset="<?= e(img_url('fl-lily.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-lily.png')) ?>" alt="" width="558" height="618" decoding="async"></picture>
+            <picture class="fl fl-li fl-heads" aria-hidden="true"><source srcset="<?= e(img_url('fl-lily.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-lily.png')) ?>" alt="" width="558" height="618" decoding="async"></picture>
+            <picture class="fl fl-a2 fl-front" aria-hidden="true"><source srcset="<?= e(img_url('fl-anthurium.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-anthurium.png')) ?>" alt="" width="366" height="391" decoding="async"></picture>
             <div class="env-back"></div>
             <div class="env-card">
                 <span class="cc cc-tl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-tr"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-bl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-br"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
@@ -106,7 +108,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
                 <?= wax_seal($sealText, 'plum') ?>
             </button>
-            <picture class="fl fl-hb fl-front" aria-hidden="true"><source srcset="<?= e(img_url('fl-hibiscus.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-hibiscus.png')) ?>" alt="" width="452" height="465" decoding="async"></picture>
+            <picture class="fl fl-hb fl-front" aria-hidden="true"><source srcset="<?= e(img_url('fl-hibiscus.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-hibiscus.png')) ?>" alt="" width="440" height="331" decoding="async"></picture>
             <picture class="fl fl-or fl-front" aria-hidden="true"><source srcset="<?= e(img_url('fl-orchid.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-orchid.png')) ?>" alt="" width="498" height="451" decoding="async"></picture>
 
             <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
@@ -115,8 +117,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <path d="M31.7 59.6 C50 55.5 78 57 106 58"/>
             </svg>
             <div class="keepsake">
-            <picture class="fl fl-os" aria-hidden="true"><source srcset="<?= e(img_url('fl-orchid-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-orchid-sm.png')) ?>" alt="" width="354" height="605" decoding="async"></picture>
-            <picture class="fl fl-hs" aria-hidden="true"><source srcset="<?= e(img_url('fl-hibiscus-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-hibiscus-sm.png')) ?>" alt="" width="395" height="489" decoding="async"></picture>
+            <picture class="fl fl-os" aria-hidden="true"><source srcset="<?= e(img_url('fl-orchid-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-orchid-sm.png')) ?>" alt="" width="342" height="348" decoding="async"></picture>
+            <picture class="fl fl-hs" aria-hidden="true"><source srcset="<?= e(img_url('fl-hibiscus-sm.webp')) ?>" type="image/webp"><img src="<?= e(img_url('fl-hibiscus-sm.png')) ?>" alt="" width="383" height="283" decoding="async"></picture>
                 <span class="name-tag tag-l script"><?= e($G['nickname']) ?></span>
                 <?= heart_locket(img_url(has_img('kid-fatah-locket.jpg') ? 'kid-fatah-locket.jpg' : 'kid-fatah.jpg'), img_url(has_img('kid-gege-locket.jpg') ? 'kid-gege-locket.jpg' : 'kid-gege.jpg'), 'Foto ' . $G['nickname'] . ' dan ' . $B['nickname'] . ' semasa SD') ?>
                 <span class="name-tag tag-r script"><?= e($B['nickname']) ?></span>

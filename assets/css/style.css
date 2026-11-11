@@ -1300,3 +1300,29 @@ p { margin: 0 0 1rem; }
 .chain { stroke-width: .75; stroke-dasharray: .02 .62; stroke: #ECE8E1; }
 .chain { z-index: 6; }
 .cover.stage { padding-top: 7rem; }
+
+/* Mempelai: ilustrasi pasangan di antara kedua nama (dipulihkan) */
+.portrait { display: block; width: min(280px, 74vw); margin: .5rem auto; rotate: -1.5deg; }
+.portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, .35), 0 3px 8px rgba(0, 0, 0, .25);
+}
+@media (min-width: 760px) { .portrait { width: 300px; } }
+
+/* Bunga v3: kepala bunga menimpa amplop, ujung tangkai tersembunyi di belakangnya.
+   Rangkaian bertangkai dipasang dua kali di posisi sama: salinan belakang (utuh)
+   di balik amplop, salinan depan hanya bagian kepala bunga. */
+.fl-stems { z-index: -1; }
+.fl-heads { z-index: 7; }
+.fl-a1.fl-heads img { clip-path: inset(0 0 46% 0); }
+.fl-li.fl-heads img { clip-path: inset(0 0 22% 0); }
+.fl-a1 { left: -22%; top: -40%; width: 44%; rotate: -24deg; }
+.fl-li { right: -22%; top: -34%; width: 46%; rotate: 22deg; }
+.fl-a2 { left: -17%; top: 36%; width: 22%; rotate: -18deg; }
+.fl-hb { left: -22%; bottom: -16%; width: 38%; rotate: -8deg; }
+.fl-or { right: -20%; bottom: -14%; width: 36%; rotate: 6deg; }
+.fl-os { left: -15%; top: 26%; width: 21%; rotate: -16deg; }
+.fl-hs { right: -14%; top: 22%; width: 22%; rotate: 14deg; }
