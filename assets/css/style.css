@@ -1405,3 +1405,58 @@ p { margin: 0 0 1rem; }
 .stage .scroll-cue { color: var(--wine); }
 .opening .dd-corner-r { color: var(--wine); }
 .opening.paper { background-image: none; }
+
+/* =========================================================
+   KARTU "SAVE THE DATE" + FOTO SD MUNCUL DARI DALAM AMPLOP
+   ========================================================= */
+.std { display: flex; flex-direction: column; align-items: center; margin: 0 0 .1rem !important; line-height: .9; color: var(--wine); }
+.std-w { font-size: clamp(2.3rem, 10vw, 2.9rem); }
+.std-the { font-size: .62rem; letter-spacing: .4em; margin: -.1rem 0 .05rem .4em; color: var(--sage-dark); }
+.card-names { margin: .35rem 0 0; font-size: .74rem; font-weight: 600; letter-spacing: .3em; color: var(--ink); }
+.stage .env-card { padding-top: 8%; }
+.stage .card-rule { margin: .2rem 0 .25rem; width: 50%; }
+
+/* foto tersimpan di dalam amplop (di belakang kartu & kantong) */
+.env-photo { position: absolute; z-index: 1; margin: 0; width: 34%; bottom: 6%; transition: transform 1s cubic-bezier(.3, .7, .3, 1) .55s; }
+.ep-l { left: 9%;  transform: rotate(-4deg); }
+.ep-r { right: 9%; transform: rotate(4deg); }
+.env-photo .idp-card { width: 100%; rotate: 0deg; translate: none; }
+.env-photo .name-tag { position: absolute; top: -9%; left: 50%; right: auto; translate: -50% 0; font-size: 1.25rem; padding: .05rem .7rem .2rem; white-space: nowrap; }
+.ep-l .name-tag { rotate: -6deg; }
+.ep-r .name-tag { rotate: 6deg; }
+/* saat dibuka: keduanya meluncur keluar ke kiri & kanan kartu */
+.cover.is-opening .ep-l { transform: translate(-48%, -86%) rotate(-12deg); }
+.cover.is-opening .ep-r { transform: translate(48%, -80%) rotate(11deg); }
+.stage .envelope { margin-top: 12rem; }
+
+/* bunga atas digeser agar tidak menutup foto; bunga bawah merapat ke amplop */
+.f1  { left: -40%; top: -10%; }
+.f3  { left: -26%; top: 8%; }
+.f7  { right: -42%; top: -14%; }
+.f8  { right: -24%; top: 20%; }
+.f12 { left: 40%; top: 86%; }
+.f13 { left: 8%;  top: 84%; }
+.f14 { right: 8%; top: 82%; }
+.f15 { right: 30%; top: 96%; }
+@media (prefers-reduced-motion: reduce) { .env-photo { transition: none; } }
+@media (min-width: 760px) { .stage .envelope { margin-top: 15rem; } .std-w { font-size: 3.2rem; } }
+.stage .env-card { z-index: 1; }
+.env-photo { z-index: 2; width: 32%; }
+.cover.is-opening .stage .env-card, .cover.is-opening.stage .env-card { transform: translateY(-80%); }
+.cover.is-opening .ep-l { transform: translate(-62%, -112%) rotate(-13deg); }
+.cover.is-opening .ep-r { transform: translate(62%, -104%) rotate(12deg); }
+.stage .envelope { margin-top: 14rem; }
+@media (min-width: 760px) { .stage .envelope { margin-top: 17rem; } }
+.stage .env-card { z-index: 2; }
+.env-photo { z-index: 2; }
+.stage .envelope { margin-top: 12rem; }
+@media (min-width: 760px) { .stage .envelope { margin-top: 15rem; } }
+.cover.is-opening.stage .env-card { transform: translateY(-90%); }
+.stage .env-card { padding-top: 5.5%; overflow: hidden; }
+.std-w { font-size: clamp(1.9rem, 8.2vw, 2.4rem); }
+.std-the { font-size: .55rem; }
+.card-names { margin-top: .2rem; font-size: .66rem; }
+.stage .card-rule { margin: .1rem 0 .15rem; }
+.cover.is-opening .ep-r { transform: translate(62%, -114%) rotate(12deg); }
+@media (min-width: 760px) { .std-w { font-size: 2.9rem; } .card-names { font-size: .8rem; } }
+@media (min-width: 760px) { .std-w { font-size: 2.45rem; } .card-names { font-size: .72rem; } }

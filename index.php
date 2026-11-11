@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=24">
+    <link rel="stylesheet" href="assets/css/style.css?v=25">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="is-locked">
@@ -92,11 +92,21 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <div class="env-back"></div>
             <div class="env-card">
                 <span class="cc cc-tl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-tr"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-bl"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="cc cc-br"><svg class="card-corner" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
-                <p class="caps caps-xs card-kicker">Undangan Akad Nikah</p>
-                <h1 class="script env-names"><?= e($G['nickname']) ?> <span>&amp;</span> <?= e($B['nickname']) ?></h1>
+                <p class="std" aria-label="Save the Date"><span class="script std-w">Save</span><span class="caps std-the">the</span><span class="script std-w">Date</span></p>
+                <h1 class="caps card-names"><?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?></h1>
                 <svg class="card-rule" viewBox="0 0 160 14" aria-hidden="true"><path d="M4 7 H62 M98 7 H156"/><path class="r-heart" d="M80 12 c-6 -4 -9 -6 -9 -9 c0 -2.4 3.4 -3.4 5 -1 l4 3 l4 -3 c1.6 -2.4 5 -1.4 5 1 c0 3 -3 5 -9 9z"/><circle cx="66" cy="7" r="1.6"/><circle cx="94" cy="7" r="1.6"/></svg>
                 <p class="caps caps-xs card-date"><?= e(date('d . m . Y', $startTs)) ?></p>
             </div>
+            <?php if (has_img('kid-fatah-id.jpg') && has_img('kid-gege-id.jpg')): ?>
+            <figure class="env-photo ep-l">
+                <span class="idp-card"><img class="idp" src="<?= e(img_url('kid-fatah-id.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="574" decoding="async"><i class="pc pc-tl"></i><i class="pc pc-tr"></i><i class="pc pc-bl"></i><i class="pc pc-br"></i></span>
+                <figcaption class="name-tag script"><?= e($G['nickname']) ?></figcaption>
+            </figure>
+            <figure class="env-photo ep-r">
+                <span class="idp-card"><img class="idp" src="<?= e(img_url('kid-gege-id.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="570" decoding="async"><i class="pc pc-tl"></i><i class="pc pc-tr"></i><i class="pc pc-bl"></i><i class="pc pc-br"></i></span>
+                <figcaption class="name-tag script"><?= e($B['nickname']) ?></figcaption>
+            </figure>
+            <?php endif; ?>
             <svg class="env-pocket" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                 <path class="pk" d="M0 0 L50 52 L100 0 L100 100 L0 100 Z"/>
                 <path class="pk-line" d="M0 100 L50 52 L100 100"/>
@@ -106,18 +116,6 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
                 <?= wax_seal_deluxe($sealText) ?>
             </button>
-
-            <?php if (has_img('kid-fatah-id.jpg') && has_img('kid-gege-id.jpg')): ?>
-            <div class="keepsake">
-                <span class="name-tag tag-l script"><?= e($G['nickname']) ?></span>
-                <div class="idphotos">
-                    <svg class="idp-heart" viewBox="0 0 40 36" aria-hidden="true"><path d="M20 33 C6 24 2 16 4 10 C6 4 15 3 20 11 C25 3 34 4 36 10 C38 16 34 24 20 33Z"/></svg>
-                    <span class="idp-card idp-l"><img class="idp" src="<?= e(img_url('kid-fatah-id.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="574" decoding="async"><i class="pc pc-tl"></i><i class="pc pc-tr"></i><i class="pc pc-bl"></i><i class="pc pc-br"></i></span>
-                    <span class="idp-card idp-r"><img class="idp" src="<?= e(img_url('kid-gege-id.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="570" decoding="async"><i class="pc pc-tl"></i><i class="pc pc-tr"></i><i class="pc pc-bl"></i><i class="pc pc-br"></i></span>
-                </div>
-                <span class="name-tag tag-r script"><?= e($B['nickname']) ?></span>
-            </div>
-            <?php endif; ?>
         </div>
 
         <p class="cover-hint">Ketuk segel</p>
