@@ -66,7 +66,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=29">
+    <link rel="stylesheet" href="assets/css/style.css?v=30">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="is-locked">
@@ -178,10 +178,10 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <h2 class="script section-script words reveal"><?= e($ev['name']) ?></h2>
 
         <div class="event-grid">
-            <div class="calendar-wrap reveal"><picture class="spray sp-cal-tr" aria-hidden="true"><source srcset="<?= e(img_url('spray-c.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-c.png')) ?>" alt="" loading="lazy" decoding="async"></picture><?= doodle_calendar($startTs) ?><picture class="spray sp-cal-bl" aria-hidden="true"><source srcset="<?= e(img_url('spray-b.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-b.png')) ?>" alt="" loading="lazy" decoding="async"></picture></div>
+            <div class="calendar-wrap reveal"><picture class="spray sp-cal-tr" aria-hidden="true"><source srcset="<?= e(img_url('spray-a.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-a.png')) ?>" alt="" loading="lazy" decoding="async"></picture><?= doodle_calendar($startTs) ?></div>
 
             <dl class="event-meta sketch tilt-r reveal">
-                <picture class="spray sp-ev-tl" aria-hidden="true"><source srcset="<?= e(img_url('spray-a.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-a.png')) ?>" alt="" loading="lazy" decoding="async"></picture><picture class="spray sp-ev-br" aria-hidden="true"><source srcset="<?= e(img_url('spray-b.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-b.png')) ?>" alt="" loading="lazy" decoding="async"></picture><span class="em-c em-tl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-tr" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-bl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-br" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
+                <picture class="spray sp-ev-br" aria-hidden="true"><source srcset="<?= e(img_url('spray-b.webp')) ?>" type="image/webp"><img src="<?= e(img_url('spray-b.png')) ?>" alt="" loading="lazy" decoding="async"></picture><span class="em-c em-tl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-tr" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-bl" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span><span class="em-c em-br" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M3 30 V9 Q3 3 9 3 H30 M8 22 Q8 8 22 8 M12 15 q3 -3 6 0 q-3 3 -6 0z M30 3 q4 0 4 4 M3 30 q0 4 4 4"/></svg></span>
                 <div>
                     <dt class="caps caps-xs">Hari &amp; Tanggal</dt>
                     <dd><?= e(tanggal_id($ev['start'])) ?></dd>

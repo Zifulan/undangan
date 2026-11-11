@@ -1657,3 +1657,23 @@ p { margin: 0 0 1rem; }
 .sp-ev-br { bottom: -30%; width: 38%; }
 @media (min-width: 760px) { .sp-ev-br { bottom: -24%; width: 44%; } }
 .closing-spray { width: min(220px, 56%); }
+/* versi ringkas: satu rangkaian di kalender (kanan-atas), satu di kartu acara (kiri-bawah) */
+.sp-cal-tr { right: -12%; left: auto; top: -16%; width: 42%; rotate: 8deg; transform: scaleX(-1); }
+.sp-ev-br  { left: -12%; right: auto; bottom: -26%; width: 40%; rotate: 180deg; transform: scaleX(-1); }
+.event .countdown { margin-top: 5rem; }
+@media (min-width: 760px) {
+    .sp-cal-tr { right: auto; left: -24%; top: -16%; rotate: -8deg; transform: none; }
+    .sp-ev-br  { left: auto; right: -22%; bottom: -22%; rotate: 172deg; transform: none; }
+    .event .countdown { margin-top: 4rem; }
+}
+.sp-cal-tr { width: 50%; top: -20%; }
+.sp-ev-br  { width: 46%; bottom: -24%; }
+@media (min-width: 760px) { .sp-cal-tr { width: 58%; left: -30%; top: -22%; } .sp-ev-br { width: 56%; right: -28%; bottom: -26%; } }
+.sp-cal-tr { width: 44%; right: -20%; top: -4%; }
+.sp-ev-br  { width: 42%; left: -16%; bottom: -36%; }
+.event .countdown { margin-top: 6rem; }
+@media (min-width: 760px) {
+    .sp-cal-tr { width: 54%; left: -36%; right: auto; top: -18%; }
+    .sp-ev-br  { width: 52%; left: auto; right: -36%; bottom: -30%; }
+    .event .countdown { margin-top: 4.5rem; }
+}
