@@ -13,7 +13,7 @@ $ev    = $c['event'] + [
     'address'  => '',
     'city'     => 'Jakarta',
 ];
-// Nama tamu: dari kode link pribadi (?u=KODE), atau cara lama (?to=Nama).
+// Nama tamu hanya dari kode link pribadi (?u=KODE) yang dibuat di admin.
 $guest = '';
 if (isset($_GET['u']) && is_string($_GET['u'])) {
     try {
@@ -21,9 +21,6 @@ if (isset($_GET['u']) && is_string($_GET['u'])) {
     } catch (Throwable $ex) {
         // database belum siap: tampilkan sebagai tamu umum
     }
-}
-if ($guest === '') {
-    $guest = trim(mb_substr((string) ($_GET['to'] ?? ''), 0, 80));
 }
 
 // Mode atur bunga: hanya untuk admin yang sudah login (admin.php).
