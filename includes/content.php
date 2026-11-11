@@ -5,6 +5,16 @@
 return [
     'title' => 'Fatah & Gege',
 
+    // Alamat situs (untuk link tamu & pratinjau WhatsApp).
+    'site_url' => 'https://undangan.zif.my.id',
+
+    // Pesan WhatsApp dari halaman admin. {nama} dan {link} diganti otomatis.
+    'wa_message' => "Assalamu'alaikum {nama},\n\n"
+        . "Dengan memohon rahmat dan ridho Allah SWT, kami mengundang {nama} untuk hadir dan mendoakan akad nikah kami.\n\n"
+        . "Undangan lengkap:\n{link}\n\n"
+        . "Merupakan suatu kebahagiaan bagi kami apabila {nama} berkenan hadir dan memberikan doa restu.\n\n"
+        . "Wassalamu'alaikum,\nFatah & Gege",
+
     'groom' => [
         'nickname' => 'Fatah',
         'name'     => 'Fatahillah Rachman',

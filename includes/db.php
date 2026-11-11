@@ -55,6 +55,68 @@ function ensure_schema(PDO $pdo): void
             INDEX idx_created (created_at)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
+    // Daftar tamu untuk link pribadi: nama disimpan di sini, link hanya memuat kode acak.
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS guests (
+            id          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            code        CHAR(6) NOT NULL,
+            name        VARCHAR(100) NOT NULL,
+            created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_code (code)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+    );
+}
+
+/* ---------- Tamu & link pribadi ---------- */
+
+/** Kode link valid: 6 karakter tanpa huruf/angka yang mudah tertukar (0/O, 1/I/L). */
+function guest_code_valid(string $code): bool
+{
+    return (bool) preg_match('/^[2-9A-HJKMNP-Z]{6}$/', $code);
+}
+
+function guest_by_code(string $code): ?string
+{
+    $code = strtoupper($code);
+    if (!guest_code_valid($code)) {
+        return null;
+    }
+    $stmt = db()->prepare('SELECT name FROM guests WHERE code = :c');
+    $stmt->execute([':c' => $code]);
+    $name = $stmt->fetchColumn();
+    return $name === false ? null : (string) $name;
+}
+
+/** Tambah tamu; mengembalikan kode barunya. */
+function guest_create(string $name): string
+{
+    $alphabet = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
+    $stmt = db()->prepare('INSERT INTO guests (code, name) VALUES (:c, :n)');
+    for ($try = 0; $try < 8; $try++) {
+        $code = '';
+        for ($i = 0; $i < 6; $i++) {
+            $code .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+        }
+        try {
+            $stmt->execute([':c' => $code, ':n' => $name]);
+            return $code;
+        } catch (PDOException $ex) {
+            if (($ex->errorInfo[1] ?? 0) !== 1062) { // selain kode kembar
+                throw $ex;
+            }
+        }
+    }
+    throw new RuntimeException('Gagal membuat kode unik.');
+}
+
+function guests_all(): array
+{
+    return db()->query('SELECT id, code, name, created_at FROM guests ORDER BY created_at DESC, id DESC')->fetchAll();
+}
+
+function guest_delete(int $id): void
+{
+    db()->prepare('DELETE FROM guests WHERE id = :id')->execute([':id' => $id]);
 }
 
 /** Ucapan terbaru yang berisi pesan, untuk ditampilkan di halaman. */

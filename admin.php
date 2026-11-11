@@ -46,6 +46,29 @@ if ($authed) {
             exit;
         }
 
+        // Tambah tamu (satu nama per baris)
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['add_guests'])) {
+            if (csrf_valid($_POST['csrf'] ?? null)) {
+                foreach (preg_split('/\R/u', (string) $_POST['add_guests']) as $line) {
+                    $name = trim(preg_replace('/\s+/u', ' ', $line));
+                    if ($name !== '') {
+                        guest_create(mb_substr($name, 0, 100));
+                    }
+                }
+            }
+            header('Location: admin.php#tamu');
+            exit;
+        }
+
+        // Hapus tamu
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['delete_guest'])) {
+            if (csrf_valid($_POST['csrf'] ?? null)) {
+                guest_delete((int) $_POST['delete_guest']);
+            }
+            header('Location: admin.php#tamu');
+            exit;
+        }
+
         // Ekspor CSV
         if (isset($_GET['export'])) {
             $rows = db()->query('SELECT id, name, attendance, guests, message, invited_as, created_at FROM rsvp ORDER BY created_at ASC')->fetchAll();
@@ -62,6 +85,14 @@ if ($authed) {
         }
 
         $rows  = db()->query('SELECT * FROM rsvp ORDER BY created_at DESC, id DESC')->fetchAll();
+        $guestList = guests_all();
+        $siteUrl   = rtrim((string) ($CONTENT['site_url'] ?? base_url()), '/');
+        $replied   = [];
+        foreach ($rows as $r) {
+            if ($r['invited_as']) {
+                $replied[mb_strtolower($r['invited_as'])] = true;
+            }
+        }
         $stats = ['hadir' => 0, 'tidak_hadir' => 0, 'ragu' => 0, 'guests' => 0];
         foreach ($rows as $r) {
             $stats[$r['attendance']]++;
@@ -104,6 +135,17 @@ if ($authed) {
         .login input { width:100%; padding:.7rem .8rem; border:1px solid var(--line); margin:8px 0 14px; font-size:1rem; }
         .err { color:#9B2C1F; }
         .empty { padding:24px; text-align:center; color:var(--ink); }
+        .guests { margin:0 0 28px; padding:18px; background:var(--ivory-2); border:1px solid var(--line); }
+        .guests h2 { margin:0 0 4px; font:500 1.2rem/1.2 Georgia,serif; }
+        .guests p.hint { margin:0 0 12px; color:var(--ink); font-size:.85rem; }
+        .guests textarea { width:100%; min-height:90px; padding:.6rem .7rem; border:1px solid var(--line); font:inherit; }
+        .glist td { vertical-align:middle; }
+        .glist code { font-size:.85rem; background:var(--ivory-2); padding:.1rem .35rem; }
+        .mini { padding:.3rem .65rem; border:1px solid var(--espresso); border-radius:999px; background:#fff; color:var(--espresso); font-size:.78rem; cursor:pointer; text-decoration:none; white-space:nowrap; }
+        .mini.wa { background:#1F7A4D; border-color:#1F7A4D; color:#fff; }
+        .tag-ok { color:#1F7A4D; font-size:.78rem; }
+        .toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:var(--espresso); color:var(--ivory); padding:.5rem 1rem; border-radius:999px; font-size:.85rem; opacity:0; transition:opacity .2s; pointer-events:none; }
+        .toast.on { opacity:1; }
     </style>
 </head>
 <body>
@@ -134,6 +176,45 @@ if ($authed) {
         <?php if (!empty($dbError)): ?>
             <p class="err">Database error: <?= e($dbError) ?> — periksa pengaturan di <code>config.php</code>.</p>
         <?php else: ?>
+            <section class="guests" id="tamu">
+                <h2>Link Undangan</h2>
+                <p class="hint">Tulis nama tamu, satu per baris. Setiap tamu mendapat link pribadi berkode acak, jadi nama tidak terlihat di link.</p>
+                <form method="post">
+                    <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                    <textarea name="add_guests" placeholder="Budi Santoso&#10;Keluarga Bapak Ahmad" required></textarea>
+                    <p style="margin:.6rem 0 1rem"><button class="btn" type="submit">Buat link</button></p>
+                </form>
+                <?php if ($guestList): ?>
+                <div class="table-wrap">
+                    <table class="glist">
+                        <thead><tr><th>Nama</th><th>Link</th><th>Kirim</th><th></th></tr></thead>
+                        <tbody>
+                        <?php foreach ($guestList as $g):
+                            $link = $siteUrl . '/?u=' . $g['code'];
+                            $msg  = strtr((string) $CONTENT['wa_message'], ['{nama}' => $g['name'], '{link}' => $link]);
+                        ?>
+                            <tr>
+                                <td><?= e($g['name']) ?><?php if (!empty($replied[mb_strtolower($g['name'])])): ?><br><span class="tag-ok">✓ sudah konfirmasi</span><?php endif; ?></td>
+                                <td><code><?= e($link) ?></code></td>
+                                <td style="white-space:nowrap">
+                                    <button class="mini" type="button" data-copy="<?= e($link) ?>">Salin link</button>
+                                    <button class="mini" type="button" data-copy="<?= e($msg) ?>">Salin pesan</button>
+                                    <a class="mini wa" href="https://wa.me/?text=<?= e(rawurlencode($msg)) ?>" target="_blank" rel="noopener">Kirim WA</a>
+                                </td>
+                                <td>
+                                    <form method="post" onsubmit="return confirm('Hapus link untuk tamu ini? Link lama tidak akan menampilkan namanya lagi.')">
+                                        <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                                        <button class="del" name="delete_guest" value="<?= (int) $g['id'] ?>">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+            </section>
+
             <div class="stats">
                 <div class="stat"><b><?= count($rows) ?></b><span>Total respons</span></div>
                 <div class="stat"><b><?= $stats['hadir'] ?></b><span>Hadir</span></div>
@@ -178,5 +259,16 @@ if ($authed) {
         <?php endif; ?>
     </div>
 <?php endif; ?>
+<div class="toast" id="toast">Tersalin ✓</div>
+<script>
+document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+        var t = b.getAttribute('data-copy'), toast = document.getElementById('toast');
+        var done = function () { toast.classList.add('on'); setTimeout(function () { toast.classList.remove('on'); }, 1400); };
+        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(t).then(done); }
+        else { var a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); done(); }
+    });
+});
+</script>
 </body>
 </html>

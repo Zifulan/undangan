@@ -13,7 +13,18 @@ $ev    = $c['event'] + [
     'address'  => '',
     'city'     => 'Jakarta',
 ];
-$guest = trim(mb_substr((string) ($_GET['to'] ?? ''), 0, 80));
+// Nama tamu: dari kode link pribadi (?u=KODE), atau cara lama (?to=Nama).
+$guest = '';
+if (isset($_GET['u']) && is_string($_GET['u'])) {
+    try {
+        $guest = (string) guest_by_code(trim($_GET['u']));
+    } catch (Throwable $ex) {
+        // database belum siap: tampilkan sebagai tamu umum
+    }
+}
+if ($guest === '') {
+    $guest = trim(mb_substr((string) ($_GET['to'] ?? ''), 0, 80));
+}
 
 // Mode atur bunga: hanya untuk admin yang sudah login (admin.php).
 $editing = !empty($_GET['atur']) && !empty($_SESSION['admin']);
@@ -61,7 +72,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <meta property="og:type" content="website">
     <meta property="og:title" content="<?= e($pageTitle) ?>">
     <meta property="og:description" content="<?= e($pageDesc) ?>">
-    <meta property="og:image" content="<?= e(base_url() . '/' . img_url('og.jpg')) ?>">
+    <meta property="og:image" content="<?= e(rtrim((string) ($c['site_url'] ?? base_url()), '/') . '/' . img_url('og.jpg')) ?>">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:alt" content="Undangan akad nikah <?= e($G['nickname']) ?> &amp; <?= e($B['nickname']) ?>, <?= e(tanggal_id($ev['start'])) ?>">
     <meta property="og:image:width" content="1200">
