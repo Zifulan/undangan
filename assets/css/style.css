@@ -1550,3 +1550,14 @@ p { margin: 0 0 1rem; }
 .cover.is-opening .ep-l { transform: translate(-74%, -120%) rotate(-9deg); }
 .cover.is-opening .ep-r { transform: translate(74%, -116%) rotate(8deg); }
 .stage .env-card { left: 18%; right: 18%; }
+
+/* foto di depan tepi kartu (hanya menutup bingkai kartu, bukan tulisannya),
+   cukup tinggi agar cetakan nama sekolah terlihat utuh di atas amplop */
+.stage .env-card { left: 6%; right: 6%; }
+.env-photo { z-index: 2; width: 30%; filter: drop-shadow(0 12px 14px rgba(0, 0, 0, .35)); }
+.env-photo .idp-card { box-shadow: 0 1px 3px rgba(0, 0, 0, .3), inset 0 0 0 1px rgba(46, 27, 31, .08); }
+.cover.is-opening .ep-l { transform: translate(-46%, -128%) rotate(-8deg); }
+.cover.is-opening .ep-r { transform: translate(46%, -124%) rotate(7deg); }
+.stage .envelope { margin-top: 14rem; }
+@media (min-width: 760px) { .stage .envelope { margin-top: 17rem; } }
+.stage .envelope { margin-top: 12.5rem; } @media (min-width: 760px) { .stage .envelope { margin-top: 15.5rem; } }
