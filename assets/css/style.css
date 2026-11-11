@@ -1266,29 +1266,12 @@ p { margin: 0 0 1rem; }
 
 /* liontin bersandar di bagian bawah amplop, dengan rantai perak */
 .keepsake { top: 80%; z-index: 9; width: 70%; }
-.chain {
-    position: absolute;
-    inset: 0;
-    z-index: 8;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    pointer-events: none;
-    fill: none;
-    stroke: #D9D5CE;
-    stroke-width: 2.2;
-    stroke-dasharray: 2.2 1.6;
-    stroke-linecap: round;
-    filter: drop-shadow(0 1.5px 1px rgba(0, 0, 0, .45));
-}
-.chain path { vector-effect: non-scaling-stroke; }
 .fl-os { left: -20%; top: 30%; width: 24%; rotate: -30deg; z-index: 3; }
 .fl-hs { right: -20%; top: 18%; width: 28%; rotate: 24deg; z-index: 3; }
 .name-tag { top: 76%; z-index: 4; }
 .tag-l { left: -6%; }
 .tag-r { right: -6%; }
 .stage .cover-hint { margin-top: 9.5rem; }
-.chain { stroke: #E4E0D8; stroke-width: 2.6; stroke-dasharray: .01 1.15; }
 .card-kicker { letter-spacing: .22em; font-size: .68rem; }
 .stage .envelope { width: min(310px, 76vw); margin-top: 6.5rem; }
 .cover.stage { padding-top: 4.5rem; padding-bottom: 4.5rem; }
@@ -1296,9 +1279,6 @@ p { margin: 0 0 1rem; }
     .stage .envelope { width: 400px; margin-top: 7.5rem; }
     .card-kicker { font-size: .78rem; }
 }
-.chain path { vector-effect: none; }
-.chain { stroke-width: .75; stroke-dasharray: .02 .62; stroke: #ECE8E1; }
-.chain { z-index: 6; }
 .cover.stage { padding-top: 7rem; }
 
 /* Mempelai: ilustrasi pasangan di antara kedua nama (dipulihkan) */
@@ -1350,3 +1330,8 @@ p { margin: 0 0 1rem; }
 .stage .envelope { width: min(300px, 70vw); }
 .f7  { right: -36%; top: -58%; width: 46%; }
 .f15 { right: 24%; top: 132%; width: 12%; z-index: 3; }
+
+/* segel mewah di amplop pembuka */
+.stage .env-seal { width: 92px; height: 92px; margin: -46px 0 0 -46px; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .4)); }
+.seal-deluxe .sd-mono { font-size: 27px; }
+@media (min-width: 760px) { .stage .env-seal { width: 112px; height: 112px; margin: -56px 0 0 -56px; } }

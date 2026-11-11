@@ -104,14 +104,10 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             </svg>
             <div class="env-flap-wrap"><div class="env-flap"></div></div>
             <button type="button" class="env-seal" id="openInvitation" aria-label="Buka undangan">
-                <?= wax_seal($sealText, 'plum') ?>
+                <?= wax_seal_deluxe($sealText) ?>
             </button>
 
             <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
-            <svg class="chain" viewBox="0 0 100 70.4" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M-6 57 C8 63 22 63.5 31.7 59.6"/>
-                <path d="M31.7 59.6 C50 55.5 78 57 106 58"/>
-            </svg>
             <div class="keepsake">
                 <span class="name-tag tag-l script"><?= e($G['nickname']) ?></span>
                 <?= heart_locket(img_url(has_img('kid-fatah-locket.jpg') ? 'kid-fatah-locket.jpg' : 'kid-fatah.jpg'), img_url(has_img('kid-gege-locket.jpg') ? 'kid-gege-locket.jpg' : 'kid-gege.jpg'), 'Foto ' . $G['nickname'] . ' dan ' . $B['nickname'] . ' semasa SD') ?>

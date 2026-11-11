@@ -138,8 +138,6 @@ function heart_locket(string $left, string $right, string $label): string
         // engsel di tengah
         . '<rect x="101" y="44" width="12" height="20" rx="3" fill="url(#lkRim)" stroke="#6F6A66" stroke-width="1"/>'
         . '<path d="M101 50 h12 M101 58 h12" stroke="#6F6A66" stroke-width=".8"/>'
-        // gantungan di atas sisi kiri
-        . '<circle cx="54" cy="9" r="6" fill="none" stroke="url(#lkRim)" stroke-width="3"/>'
         . $side($left, 'lkL', 4, -6)
         . $side($right, 'lkR', 110, 6)
         . '</svg>';
@@ -170,3 +168,78 @@ const ENVELOPE_FLOWERS = [
     ['fl-hibiscus-sm',       'f14'],
     ['fl-orchid-sm',         'f15'],
 ];
+
+/**
+ * Segel lilin "mewah" untuk amplop pembuka: tepi lilin meleleh tak beraturan,
+ * cincin cap yang tertekan, monogram timbul, kilau basah, dan tekstur halus.
+ */
+function wax_seal_deluxe(string $monogram): string
+{
+    // tepi lilin: beberapa gelombang + tonjolan lelehan
+    $pts = [];
+    $steps = 120;
+    for ($i = 0; $i < $steps; $i++) {
+        $a = 2 * M_PI * $i / $steps;
+        $r = 44 + 2.4 * sin($a * 5 + .7) + 1.6 * sin($a * 11 + 2.1) + .9 * sin($a * 19);
+        // lelehan di beberapa titik
+        foreach ([[.9, 4.5], [2.6, 3.2], [4.3, 5.2], [5.6, 2.6]] as [$c, $h]) {
+            $d = atan2(sin($a - $c), cos($a - $c));
+            $r += $h * exp(-($d * $d) / .03);
+        }
+        $pts[] = round(50 + $r * cos($a), 2) . ' ' . round(50 + $r * sin($a), 2);
+    }
+    $blob = 'M' . implode(' L', $pts) . 'Z';
+
+    // cincin titik pada cap
+    $dots = '';
+    for ($i = 0; $i < 32; $i++) {
+        $a = 2 * M_PI * $i / 32;
+        $dots .= '<circle cx="' . round(50 + 28.5 * cos($a), 2) . '" cy="' . round(50 + 28.5 * sin($a), 2) . '" r=".75"/>';
+    }
+
+    // ranting daun kecil di bawah monogram
+    $sprig = '<path d="M38 66 Q50 71 62 66" fill="none" stroke-width=".9"/>'
+        . '<path d="M42 67.2 q-2 -3.2 1 -4.6 q1.4 2.6 -1 4.6z M46 68.4 q-1.4 -3.4 1.6 -4.4 q1 2.8 -1.6 4.4z'
+        . ' M58 67.2 q2 -3.2 -1 -4.6 q-1.4 2.6 1 4.6z M54 68.4 q1.4 -3.4 -1.6 -4.4 q-1 2.8 1.6 4.4z"/>';
+
+    $mono = e($monogram);
+
+    return '<svg class="wax-seal seal-deluxe" viewBox="0 0 100 100" aria-hidden="true">'
+        . '<defs>'
+        . '<radialGradient id="sdWax" cx="36%" cy="30%" r="80%">'
+        . '<stop offset="0" stop-color="#9A4A5C"/><stop offset=".35" stop-color="#7A2E40"/>'
+        . '<stop offset=".75" stop-color="#5A1E2C"/><stop offset="1" stop-color="#3A111B"/></radialGradient>'
+        . '<radialGradient id="sdPress" cx="60%" cy="66%" r="72%">'
+        . '<stop offset="0" stop-color="#7C3042"/><stop offset="1" stop-color="#521A28"/></radialGradient>'
+        . '<linearGradient id="sdRim" x1="0" y1="0" x2="1" y2="1">'
+        . '<stop offset="0" stop-color="#2E0C15" stop-opacity=".9"/><stop offset=".5" stop-color="#2E0C15" stop-opacity=".2"/>'
+        . '<stop offset="1" stop-color="#C98493" stop-opacity=".75"/></linearGradient>'
+        . '<filter id="sdTex" x="-5%" y="-5%" width="110%" height="110%">'
+        . '<feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4" result="n"/>'
+        . '<feColorMatrix in="n" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .22 0" result="g"/>'
+        . '<feComposite in="g" in2="SourceGraphic" operator="in"/></filter>'
+        . '</defs>'
+        // bayangan lilin di kertas
+        . '<path d="' . $blob . '" fill="#1E0910" opacity=".35" transform="translate(1.2 2)"/>'
+        // badan lilin + tekstur
+        . '<path d="' . $blob . '" fill="url(#sdWax)"/>'
+        . '<path d="' . $blob . '" fill="#000" filter="url(#sdTex)"/>'
+        // bibir lilin yang terangkat di sekeliling cap
+        . '<circle cx="50" cy="50" r="35.5" fill="none" stroke="#B0607A" stroke-opacity=".35" stroke-width="2.4" transform="translate(-.6 -.8)"/>'
+        // cap yang tertekan
+        . '<circle cx="50" cy="50" r="33" fill="url(#sdPress)"/>'
+        . '<circle cx="50" cy="50" r="33" fill="none" stroke="url(#sdRim)" stroke-width="1.6"/>'
+        . '<circle cx="50" cy="50" r="30.6" fill="none" stroke="#C98493" stroke-opacity=".45" stroke-width=".5"/>'
+        . '<g fill="#C98493" fill-opacity=".7">' . $dots . '</g>'
+        // monogram timbul: bayangan gelap, lalu sorot terang, lalu warna
+        . '<text x="50" y="47" class="seal-mono sd-mono" text-anchor="middle" dominant-baseline="central" fill="#2A0A12" fill-opacity=".75" transform="translate(.7 .9)">' . $mono . '</text>'
+        . '<text x="50" y="47" class="seal-mono sd-mono" text-anchor="middle" dominant-baseline="central" fill="#E9B9C3" fill-opacity=".55" transform="translate(-.45 -.55)">' . $mono . '</text>'
+        . '<text x="50" y="47" class="seal-mono sd-mono" text-anchor="middle" dominant-baseline="central" fill="#8E3A4E">' . $mono . '</text>'
+        . '<g fill="#8E3A4E" stroke="#8E3A4E">' . $sprig . '</g>'
+        . '<g fill="none" stroke="#E9B9C3" stroke-opacity=".45" transform="translate(-.4 -.5)">' . str_replace(['<path d="M42', '"/>'], ['<path fill="none" d="M42', '"/>'], $sprig) . '</g>'
+        // kilau basah
+        . '<path d="M24 30 Q30 18 44 15" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2.6" stroke-linecap="round"/>'
+        . '<path d="M20 40 Q20.5 36 22 33" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.6" stroke-linecap="round"/>'
+        . '<ellipse cx="70" cy="78" rx="6" ry="2.2" fill="#fff" fill-opacity=".12" transform="rotate(-30 70 78)"/>'
+        . '</svg>';
+}
