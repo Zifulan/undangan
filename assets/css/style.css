@@ -1335,3 +1335,33 @@ p { margin: 0 0 1rem; }
 .stage .env-seal { width: 92px; height: 92px; margin: -46px 0 0 -46px; filter: drop-shadow(0 5px 6px rgba(0, 0, 0, .4)); }
 .seal-deluxe .sd-mono { font-size: 27px; }
 @media (min-width: 760px) { .stage .env-seal { width: 112px; height: 112px; margin: -56px 0 0 -56px; } }
+
+/* foto pas SD asli (dengan cetakan nama sekolah) di bawah amplop */
+.keepsake { top: 74%; width: 66%; }
+.idphotos { position: relative; display: flex; justify-content: center; gap: 4%; }
+.idp {
+    display: block;
+    width: 44%;
+    height: auto;
+    padding: 4px 4px 5px;
+    background: #F7F0E2;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, .4), 0 2px 4px rgba(0, 0, 0, .3);
+}
+.idp-l { rotate: -6deg; translate: 4% 0; }
+.idp-r { rotate: 5deg; translate: -4% 6%; }
+.name-tag { top: auto; bottom: -10%; }
+.tag-l { left: -10%; }
+.tag-r { right: -10%; }
+.f12 { top: 150%; left: 40%; }
+.f13 { top: 128%; left: -6%; }
+.f14 { top: 112%; right: -6%; }
+.f15 { top: 156%; right: 18%; }
+.keepsake { top: 80%; }
+.name-tag { top: 14%; bottom: auto; }
+.tag-l { left: -16%; rotate: -10deg; }
+.tag-r { right: -16%; rotate: 9deg; }
+.f13 { top: 112%; left: -8%; }
+.f14 { top: 96%; right: -8%; }
+.name-tag { top: 2%; }
+.tag-l { left: -27%; }
+.tag-r { right: -27%; }

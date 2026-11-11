@@ -107,10 +107,13 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <?= wax_seal_deluxe($sealText) ?>
             </button>
 
-            <?php if (has_img('kid-fatah.jpg') && has_img('kid-gege.jpg')): ?>
+            <?php if (has_img('kid-fatah-id.jpg') && has_img('kid-gege-id.jpg')): ?>
             <div class="keepsake">
                 <span class="name-tag tag-l script"><?= e($G['nickname']) ?></span>
-                <?= heart_locket(img_url(has_img('kid-fatah-locket.jpg') ? 'kid-fatah-locket.jpg' : 'kid-fatah.jpg'), img_url(has_img('kid-gege-locket.jpg') ? 'kid-gege-locket.jpg' : 'kid-gege.jpg'), 'Foto ' . $G['nickname'] . ' dan ' . $B['nickname'] . ' semasa SD') ?>
+                <div class="idphotos">
+                    <img class="idp idp-l" src="<?= e(img_url('kid-fatah-id.jpg')) ?>" alt="Foto <?= e($G['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="574" decoding="async">
+                    <img class="idp idp-r" src="<?= e(img_url('kid-gege-id.jpg')) ?>" alt="Foto <?= e($B['nickname']) ?> semasa SD, SDN Joglo 01 Pagi" width="316" height="570" decoding="async">
+                </div>
                 <span class="name-tag tag-r script"><?= e($B['nickname']) ?></span>
             </div>
             <?php endif; ?>
