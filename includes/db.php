@@ -70,6 +70,13 @@ function ensure_schema(PDO $pdo): void
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
     ensure_column($pdo, 'guests', 'group_name', 'VARCHAR(50) NULL');
+    // Status link: kapan dikirim (dicatat saat admin menekan Salin/Kirim), dibuka, & jumlah dibuka.
+    ensure_column($pdo, 'guests', 'sent_at', 'DATETIME NULL');
+    ensure_column($pdo, 'guests', 'opened_at', 'DATETIME NULL');
+    ensure_column($pdo, 'guests', 'last_open_at', 'DATETIME NULL');
+    ensure_column($pdo, 'guests', 'open_count', 'INT UNSIGNED NOT NULL DEFAULT 0');
+    // RSVP yang dikirim lewat link pribadi menyimpan kodenya.
+    ensure_column($pdo, 'rsvp', 'guest_code', 'CHAR(6) NULL');
 }
 
 /** Tambah kolom bila belum ada (tanpa migrasi manual). */
@@ -129,7 +136,33 @@ function guest_create(string $name, ?string $group = null): string
 
 function guests_all(): array
 {
-    return db()->query('SELECT id, code, name, group_name, created_at FROM guests ORDER BY created_at DESC, id DESC')->fetchAll();
+    return db()->query(
+        'SELECT g.id, g.code, g.name, g.group_name, g.created_at, g.sent_at, g.opened_at, g.last_open_at, g.open_count,
+                (SELECT r.attendance FROM rsvp r WHERE r.guest_code = g.code ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS rsvp_attendance,
+                (SELECT r.guests FROM rsvp r WHERE r.guest_code = g.code ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS rsvp_guests
+           FROM guests g ORDER BY g.created_at DESC, g.id DESC'
+    )->fetchAll();
+}
+
+/** Catat bahwa tamu membuka linknya. */
+function guest_mark_opened(string $code): void
+{
+    db()->prepare(
+        'UPDATE guests SET open_count = open_count + 1, last_open_at = NOW(),
+                opened_at = COALESCE(opened_at, NOW()) WHERE code = :c'
+    )->execute([':c' => strtoupper($code)]);
+}
+
+/** Catat bahwa link sudah dikirim (pertama kali saja). */
+function guest_mark_sent(int $id): void
+{
+    db()->prepare('UPDATE guests SET sent_at = COALESCE(sent_at, NOW()) WHERE id = :id')->execute([':id' => $id]);
+}
+
+/** Batalkan tanda terkirim (bila salah tekan). */
+function guest_unmark_sent(int $id): void
+{
+    db()->prepare('UPDATE guests SET sent_at = NULL WHERE id = :id')->execute([':id' => $id]);
 }
 
 function guest_delete(int $id): void

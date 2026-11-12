@@ -15,9 +15,20 @@ $ev    = $c['event'] + [
 ];
 // Nama tamu hanya dari kode link pribadi (?u=KODE) yang dibuat di admin.
 $guest = '';
+$guestCode = '';
 if (isset($_GET['u']) && is_string($_GET['u'])) {
     try {
         $guest = (string) guest_by_code(trim($_GET['u']));
+        if ($guest !== '') {
+            $guestCode = strtoupper(trim($_GET['u']));
+            // Catat "dibuka" — kecuali admin sendiri yang sedang mengecek link.
+            // Abaikan juga robot pratinjau link (WhatsApp, Telegram, dll.) yang membuka link saat ditempel.
+            $ua = (string) ($_SERVER['HTTP_USER_AGENT'] ?? '');
+            $isBot = $ua === '' || preg_match('/whatsapp|facebookexternalhit|facebot|telegram|twitterbot|slackbot|discordbot|linkedinbot|skypeuripreview|googlebot|bingbot|bot\b|crawler|spider|preview|curl|wget|python|headless/i', $ua);
+            if (empty($_SESSION['admin']) && !$isBot) {
+                guest_mark_opened($guestCode);
+            }
+        }
     } catch (Throwable $ex) {
         // database belum siap: tampilkan sebagai tamu umum
     }
@@ -48,6 +59,18 @@ $gcal = 'https://calendar.google.com/calendar/render?' . http_build_query([
     'location' => $ev['venue'] . ($ev['address'] !== '' ? ', ' . $ev['address'] : ''),
     'ctz'      => 'Asia/Jakarta',
 ]);
+
+// Mode "setelah akad": otomatis mulai hari berikutnya. Admin bisa melihat pratinjaunya dengan ?pasca=1.
+$after = time() > strtotime(date('Y-m-d 23:59:59', $startTs))
+    || (!empty($_GET['pasca']) && !empty($_SESSION['admin']));
+// Foto hari-H: taruh file .jpg/.webp/.png di assets/img/akad/ (urut sesuai nama file).
+$akadPhotos = [];
+if ($after) {
+    foreach (glob(APP_ROOT . '/assets/img/akad/*.{jpg,jpeg,JPG,JPEG,webp,png}', GLOB_BRACE) ?: [] as $f) {
+        $akadPhotos[] = 'akad/' . basename($f);
+    }
+    sort($akadPhotos, SORT_NATURAL);
+}
 
 $G = $c['groom'];
 $B = $c['bride'];
@@ -80,7 +103,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=34">
+    <link rel="stylesheet" href="assets/css/style.css?v=35">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="<?= $editing ? 'is-editing' : 'is-locked' ?>">
@@ -145,14 +168,36 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <div class="opening-text">
                 <p class="arabic reveal" lang="ar" dir="rtl">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
                 <h2 class="script section-script words reveal">Ikatan Suci Kami</h2>
+                <?php if ($after): ?>
+                <p class="reveal">
+                    Alhamdulillah, akad nikah kami telah berlangsung pada <?= e(tanggal_id($ev['start'])) ?>.
+                    Terima kasih<?= $guest !== '' ? ', <strong class="guest-name">' . e($guest) . '</strong>,' : '' ?>
+                    atas doa, kehadiran, dan kasih sayang yang sudah diberikan untuk kami.
+                </p>
+                <?php else: ?>
                 <p class="reveal">
                     Dengan memohon rahmat dan ridho Allah Subhanahu wa Ta'ala, kami mengundang
                     <?= $guest !== '' ? '<strong class="guest-name">' . e($guest) . '</strong>' : 'Bapak/Ibu/Saudara/i' ?>
                     untuk hadir dan mendoakan akad nikah kami.
                 </p>
+                <?php endif; ?>
             </div>
         </div>
     </section>
+
+    <?php if ($akadPhotos): ?>
+    <!-- ============ MOMEN AKAD (setelah hari-H) ============ -->
+    <section class="section paper moments" id="momen">
+        <h2 class="script section-script words reveal">Momen Akad</h2>
+        <div class="moment-grid">
+            <?php foreach ($akadPhotos as $i => $ph): ?>
+                <a class="moment sketch reveal<?= $i % 3 === 1 ? ' tilt-s' : '' ?>" href="<?= e(img_url($ph)) ?>" target="_blank" rel="noopener">
+                    <img src="<?= e(img_url($ph)) ?>" alt="Foto akad nikah <?= $i + 1 ?>" loading="lazy" decoding="async">
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
     <!-- ============ MEMPELAI ============ -->
     <section class="section wine couple" id="mempelai">
@@ -213,6 +258,9 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             </dl>
         </div>
 
+        <?php if ($after): ?>
+        <p class="script countdown-done reveal">Alhamdulillah, telah sah</p>
+        <?php else: ?>
         <div class="countdown reveal" id="countdown" data-target="<?= e($startIso) ?>" aria-live="polite">
             <div><span data-unit="days">0</span><small>Hari</small></div>
             <div><span data-unit="hours">0</span><small>Jam</small></div>
@@ -222,8 +270,10 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <p class="script countdown-done" id="countdownDone" hidden>Alhamdulillah, hari bahagia telah tiba</p>
 
         <div class="actions reveal">
-            <a class="btn btn-ivory" href="<?= e($gcal) ?>" target="_blank" rel="noopener">Simpan ke Kalender</a>
+            <a class="btn btn-ivory" id="calBtn" href="<?= e($gcal) ?>" data-ics="kalender.php" target="_blank" rel="noopener">Simpan ke Kalender</a>
+            <a class="cal-alt" id="calAlt" href="kalender.php">iPhone / Outlook? Unduh file kalender</a>
         </div>
+        <?php endif; ?>
     </section>
 
     <!-- ============ LOKASI ============ -->
@@ -273,14 +323,17 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
             <?= slot_img('floral-rsvp.png', 'floral floral-rsvp') ?>
             <div class="note-seal"><?= wax_seal_img($sealText, 'olive') ?></div>
             <?= doodle('envelope', 'dd dd-note-env') ?>
-            <h2 class="script section-script">Konfirmasi</h2>
+            <h2 class="script section-script"><?= $after ? 'Terima Kasih' : 'Konfirmasi' ?></h2>
 
-            <?php if (!$dbReady): ?>
+            <?php if ($after): ?>
+                <p class="muted after-note">Konfirmasi kehadiran sudah ditutup. Terima kasih untuk setiap doa dan ucapan yang sudah dikirimkan — semuanya kami baca dengan bahagia.</p>
+            <?php elseif (!$dbReady): ?>
                 <p class="notice">Formulir konfirmasi sedang disiapkan. Silakan kembali beberapa saat lagi.</p>
             <?php else: ?>
             <form class="rsvp-form" id="rsvpForm" action="api/rsvp.php" method="post" novalidate>
                 <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
                 <input type="hidden" name="invited_as" value="<?= e($guest) ?>">
+                <input type="hidden" name="u" value="<?= e($guestCode) ?>">
                 <div class="hp" aria-hidden="true">
                     <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
                 </div>
@@ -405,6 +458,6 @@ window.FLOWER_EDITOR = <?= json_encode([
 </script>
 <script src="<?= e('assets/js/flower-editor.js?v=' . filemtime(APP_ROOT . '/assets/js/flower-editor.js')) ?>" defer></script>
 <?php endif; ?>
-<script src="assets/js/main.js?v=15" defer></script>
+<script src="assets/js/main.js?v=16" defer></script>
 </body>
 </html>

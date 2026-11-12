@@ -37,6 +37,7 @@ $attendance = (string) ($_POST['attendance'] ?? '');
 $guests     = (int) ($_POST['guests'] ?? 0);
 $message    = trim((string) ($_POST['message'] ?? ''));
 $invitedAs  = trim((string) ($_POST['invited_as'] ?? ''));
+$guestCode  = strtoupper(trim((string) ($_POST['u'] ?? '')));
 
 $errors = [];
 if (mb_strlen($name) < 2 || mb_strlen($name) > 100) {
@@ -60,9 +61,15 @@ if ($errors) {
 }
 
 try {
+    // Kode link pribadi: hanya disimpan bila memang terdaftar; nama undangan diambil dari database.
+    if ($guestCode !== '' && ($gName = guest_by_code($guestCode)) !== null) {
+        $invitedAs = $gName;
+    } else {
+        $guestCode = '';
+    }
     $stmt = db()->prepare(
-        'INSERT INTO rsvp (name, attendance, guests, message, invited_as, ip, user_agent)
-         VALUES (:name, :attendance, :guests, :message, :invited_as, :ip, :ua)'
+        'INSERT INTO rsvp (name, attendance, guests, message, invited_as, guest_code, ip, user_agent)
+         VALUES (:name, :attendance, :guests, :message, :invited_as, :guest_code, :ip, :ua)'
     );
     $stmt->execute([
         ':name'       => $name,
@@ -70,6 +77,7 @@ try {
         ':guests'     => $guests,
         ':message'    => $message !== '' ? $message : null,
         ':invited_as' => $invitedAs !== '' ? mb_substr($invitedAs, 0, 100) : null,
+        ':guest_code' => $guestCode !== '' ? $guestCode : null,
         ':ip'         => substr((string) ($_SERVER['REMOTE_ADDR'] ?? ''), 0, 45),
         ':ua'         => mb_substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 255),
     ]);

@@ -83,6 +83,18 @@
         startReveals();
     }
 
+    /* ---------- Simpan ke kalender: iPhone/iPad/Mac pakai file .ics ---------- */
+    var calBtn = document.getElementById('calBtn');
+    if (calBtn && /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)) {
+        calBtn.href = calBtn.getAttribute('data-ics');
+        calBtn.removeAttribute('target');
+        var calAlt = document.getElementById('calAlt');
+        if (calAlt) {
+            calAlt.href = calBtn.getAttribute('data-gcal') || calAlt.href;
+            calAlt.hidden = true;
+        }
+    }
+
     /* ---------- Hitung mundur ---------- */
     var cd = document.getElementById('countdown');
     if (cd) {
@@ -195,6 +207,14 @@
     }
 
     /* ---------- RSVP ---------- */
+    var more = document.getElementById('wishMore');
+    if (more) {
+        more.addEventListener('click', function () {
+            more.closest('.wishes').classList.add('is-all');
+            more.hidden = true;
+        });
+    }
+
     var form = document.getElementById('rsvpForm');
     if (!form) return;
 
@@ -203,13 +223,6 @@
     var list = document.getElementById('wishList');
     var empty = document.getElementById('wishEmpty');
     var count = document.getElementById('wishCount');
-    var more = document.getElementById('wishMore');
-    if (more) {
-        more.addEventListener('click', function () {
-            more.closest('.wishes').classList.add('is-all');
-            more.hidden = true;
-        });
-    }
 
     form.addEventListener('change', function (e) {
         if (e.target.name === 'attendance') {

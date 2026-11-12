@@ -1756,3 +1756,17 @@ p { margin: 0 0 1rem; }
 /* QS Ar-Rum 21 tepat di atas Konfirmasi */
 .ayat-rsvp { margin: 0 auto 4.5rem; }
 .ayat-rsvp .arabic-ayat { color: var(--wine); }
+
+/* ---------- Kalender: tautan alternatif ---------- */
+.actions .cal-alt { display:block; margin-top:.7rem; font-size:.78rem; color:inherit; opacity:.75; text-decoration:underline; text-underline-offset:3px; }
+.actions .cal-alt[hidden] { display:none; }
+
+/* ---------- Setelah akad ---------- */
+.after-note { text-align:center; max-width:30rem; margin:0 auto; line-height:1.7; }
+.moments .section-script { text-align:center; }
+.moment-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; max-width:880px; margin:1.6rem auto 0; padding:0 4px; }
+@media (min-width: 760px) { .moment-grid { grid-template-columns:repeat(3, 1fr); gap:22px; } }
+.moment { display:block; background:#fff; padding:7px 7px 22px; box-shadow:0 6px 18px rgba(74,28,36,.14); }
+.moment:nth-child(odd) { transform:rotate(-1.2deg); }
+.moment:nth-child(even) { transform:rotate(1.1deg); }
+.moment img { display:block; width:100%; aspect-ratio:4/5; object-fit:cover; }

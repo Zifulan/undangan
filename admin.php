@@ -71,6 +71,25 @@ if ($authed) {
             exit;
         }
 
+        // Tandai link sudah dikirim (dipanggil otomatis saat Salin/Kirim, atau manual)
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['mark_sent'])) {
+            $ok = csrf_valid($_POST['csrf'] ?? null);
+            if ($ok) {
+                if (($_POST['undo'] ?? '') === '1') {
+                    guest_unmark_sent((int) $_POST['mark_sent']);
+                } else {
+                    guest_mark_sent((int) $_POST['mark_sent']);
+                }
+            }
+            if (($_POST['ajax'] ?? '') === '1') {
+                header('Content-Type: application/json');
+                echo json_encode(['ok' => $ok, 'when' => date('j/n H.i')]);
+                exit;
+            }
+            header('Location: admin.php#tamu');
+            exit;
+        }
+
         // Ubah grup tamu
         if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['set_group'])) {
             if (csrf_valid($_POST['csrf'] ?? null)) {
@@ -146,9 +165,26 @@ if ($authed) {
         $replied   = [];
         foreach ($rows as $r) {
             if ($r['invited_as']) {
-                $replied[mb_strtolower($r['invited_as'])] = true;
+                $replied[mb_strtolower($r['invited_as'])] = $replied[mb_strtolower($r['invited_as'])] ?? $r;
             }
         }
+        // Status link per tamu: belum → terkirim → dibuka → konfirmasi.
+        $attLabel = ['hadir' => 'Hadir', 'tidak_hadir' => 'Tidak hadir', 'ragu' => 'Masih ragu'];
+        $gStatus = [];
+        $gCount  = ['belum' => 0, 'terkirim' => 0, 'dibuka' => 0, 'konfirmasi' => 0];
+        foreach ($guestList as $g) {
+            $att = $g['rsvp_attendance'];
+            $num = (int) $g['rsvp_guests'];
+            if ($att === null && isset($replied[mb_strtolower($g['name'])])) { // RSVP lama (sebelum ada kode)
+                $att = $replied[mb_strtolower($g['name'])]['attendance'];
+                $num = (int) $replied[mb_strtolower($g['name'])]['guests'];
+            }
+            $st = $att !== null ? 'konfirmasi' : ($g['opened_at'] ? 'dibuka' : ($g['sent_at'] ? 'terkirim' : 'belum'));
+            $gStatus[$g['id']] = ['st' => $st, 'att' => $att, 'num' => $num];
+            $gCount[$st]++;
+        }
+        $fmtWhen = fn($d) => $d ? date('j/n H.i', strtotime((string) $d)) : '';
+
         $stats = ['hadir' => 0, 'tidak_hadir' => 0, 'ragu' => 0, 'guests' => 0];
         foreach ($rows as $r) {
             $stats[$r['attendance']]++;
@@ -223,7 +259,15 @@ if ($authed) {
         tr.is-hidden td { opacity:.55; }
         .pin, .hid { display:inline-block; margin-left:.35rem; font-size:.72rem; padding:.05rem .4rem; border-radius:999px; background:#F6E9C9; }
         .hid { background:#EEE; }
-        tr.gone { display:none; }
+        tr.gone, tr.sgone { display:none; }
+        .gstat { min-width:150px; }
+        .gstat .st { display:block; font-size:.78rem; color:#9a8f86; white-space:nowrap; line-height:1.55; }
+        .gstat .st.on { color:var(--ink); }
+        .gstat .st-hadir { color:#1F7A4D; font-weight:600; }
+        .gstat .st-tidak_hadir { color:#9b3b3b; }
+        .gstat .st-ragu { color:#a07020; }
+        .link-mini { background:none; border:0; padding:0; margin-top:2px; font-size:.72rem; color:#8a6d5a; text-decoration:underline; cursor:pointer; }
+        .sfilter { margin-bottom:6px; }
         @media (max-width: 700px) {
             .wrap { padding:16px 12px 40px; }
             header h1 { font-size:1.25rem; }
@@ -294,6 +338,14 @@ if ($authed) {
                 </p>
                 <pre class="wa-preview" id="waPreview" hidden></pre>
 
+                <div class="gfilter sfilter" id="sfilter" title="Saring menurut status">
+                    <button type="button" class="chip is-on" data-sfilter="*">Semua status</button>
+                    <button type="button" class="chip" data-sfilter="belum">○ Belum dikirim <b><?= $gCount['belum'] ?></b></button>
+                    <button type="button" class="chip" data-sfilter="terkirim">✉️ Terkirim, belum dibuka <b><?= $gCount['terkirim'] ?></b></button>
+                    <button type="button" class="chip" data-sfilter="dibuka">👀 Dibuka, belum konfirmasi <b><?= $gCount['dibuka'] ?></b></button>
+                    <button type="button" class="chip" data-sfilter="konfirmasi">✅ Sudah konfirmasi <b><?= $gCount['konfirmasi'] ?></b></button>
+                </div>
+
                 <div class="gfilter" id="gfilter">
                     <button type="button" class="chip is-on" data-filter="*">Semua <b><?= count($guestList) ?></b></button>
                     <?php foreach ($groups as $gn => $n): ?>
@@ -315,7 +367,7 @@ if ($authed) {
 
                 <div class="table-wrap">
                     <table class="glist cards">
-                        <thead><tr><th>Nama</th><th>Grup</th><th>Link</th><th>Kirim</th><th></th></tr></thead>
+                        <thead><tr><th>Nama</th><th>Status</th><th>Grup</th><th>Link</th><th>Kirim</th><th></th></tr></thead>
                         <tbody>
                         <?php foreach ($guestList as $g):
                             $gn   = (string) ($g['group_name'] ?? '');
@@ -323,8 +375,24 @@ if ($authed) {
                             $vars = ['{nama}' => $g['name'], '{link}' => $link] + $waVars;
                             $msgs = array_map(fn($t) => strtr((string) $t, $vars), $waTemplates);
                         ?>
-                            <tr data-group="<?= e($gn) ?>" data-gstyle="<?= e($groupStyles[$gn] ?? '') ?>">
-                                <td data-label="Nama"><b><?= e($g['name']) ?></b><?php if (!empty($replied[mb_strtolower($g['name'])])): ?><br><span class="tag-ok">✓ sudah konfirmasi</span><?php endif; ?></td>
+                            <?php $S = $gStatus[$g['id']]; ?>
+                            <tr data-group="<?= e($gn) ?>" data-status="<?= $S['st'] ?>" data-gstyle="<?= e($groupStyles[$gn] ?? '') ?>" data-id="<?= (int) $g['id'] ?>">
+                                <td data-label="Nama"><b><?= e($g['name']) ?></b></td>
+                                <td data-label="Status" class="gstat">
+                                    <span class="st st-sent<?= $g['sent_at'] ? ' on' : '' ?>" title="<?= $g['sent_at'] ? 'Dikirim ' . e($fmtWhen($g['sent_at'])) : 'Belum ditandai terkirim' ?>">✉️ <span class="st-txt"><?= $g['sent_at'] ? 'Terkirim ' . e($fmtWhen($g['sent_at'])) : 'Belum dikirim' ?></span></span>
+                                    <?php if ($g['opened_at']): ?>
+                                        <span class="st on" title="Pertama dibuka <?= e($fmtWhen($g['opened_at'])) ?>">👀 Dibuka <?= (int) $g['open_count'] ?>× · <?= e($fmtWhen($g['last_open_at'])) ?></span>
+                                    <?php else: ?>
+                                        <span class="st">👀 Belum dibuka</span>
+                                    <?php endif; ?>
+                                    <?php if ($S['att'] !== null): ?>
+                                        <span class="st on st-<?= e($S['att']) ?>">✅ <?= e($attLabel[$S['att']] ?? $S['att']) ?><?= $S['att'] === 'hadir' && $S['num'] ? ' · ' . $S['num'] . ' org' : '' ?></span>
+                                    <?php else: ?>
+                                        <span class="st">✅ Belum konfirmasi</span>
+                                    <?php endif; ?>
+                                    <button type="button" class="st-undo link-mini"<?= $g['sent_at'] ? '' : ' hidden' ?>>batal tanda terkirim</button>
+                                    <button type="button" class="st-mark link-mini"<?= $g['sent_at'] ? ' hidden' : '' ?>>tandai sudah dikirim</button>
+                                </td>
                                 <td data-label="Grup">
                                     <form method="post" class="gset">
                                         <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
@@ -441,6 +509,39 @@ document.querySelectorAll('#gfilter .chip').forEach(function (c) {
         var f = c.dataset.filter;
         document.querySelectorAll('.glist tbody tr').forEach(function (tr) { tr.classList.toggle('gone', f !== '*' && tr.dataset.group !== f); });
     });
+});
+document.querySelectorAll('#sfilter .chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+        document.querySelectorAll('#sfilter .chip').forEach(function (x) { x.classList.toggle('is-on', x === c); });
+        var f = c.dataset.sfilter;
+        document.querySelectorAll('.glist tbody tr').forEach(function (tr) { tr.classList.toggle('sgone', f !== '*' && tr.dataset.status !== f); });
+    });
+});
+// Tandai "terkirim" otomatis saat link/pesan disalin atau tombol Kirim WA ditekan.
+var CSRF = <?= json_encode(csrf_token()) ?>;
+var markSent = function (tr, undo) {
+    if (!tr || !tr.dataset.id) return;
+    var st = tr.querySelector('.st-sent');
+    if (!undo && st.classList.contains('on')) return;
+    var fd = new FormData();
+    fd.append('csrf', CSRF); fd.append('mark_sent', tr.dataset.id); fd.append('ajax', '1');
+    if (undo) fd.append('undo', '1');
+    fetch('admin.php', { method: 'POST', body: fd, credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) {
+        if (!j.ok) return;
+        var when = j.when || '';
+        st.classList.toggle('on', !undo);
+        st.querySelector('.st-txt').textContent = undo ? 'Belum dikirim' : 'Terkirim ' + when;
+        tr.querySelector('.st-undo').hidden = !!undo;
+        tr.querySelector('.st-mark').hidden = !undo;
+        if (tr.dataset.status === 'belum' && !undo) tr.dataset.status = 'terkirim';
+        else if (tr.dataset.status === 'terkirim' && undo) tr.dataset.status = 'belum';
+    }).catch(function () {});
+};
+document.querySelectorAll('.glist .send button, .glist .send a.wa, .glist .st-mark').forEach(function (b) {
+    b.addEventListener('click', function () { markSent(b.closest('tr'), false); });
+});
+document.querySelectorAll('.glist .st-undo').forEach(function (b) {
+    b.addEventListener('click', function () { markSent(b.closest('tr'), true); });
 });
 var pvBtn = document.getElementById('waPreviewBtn');
 if (pvBtn) pvBtn.addEventListener('click', function () { var pv = document.getElementById('waPreview'); pv.hidden = !pv.hidden; });
