@@ -103,7 +103,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=35">
+    <link rel="stylesheet" href="assets/css/style.css?v=36">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="<?= $editing ? 'is-editing' : 'is-locked' ?>">
