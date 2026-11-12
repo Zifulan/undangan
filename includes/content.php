@@ -9,7 +9,7 @@ return [
     'site_url' => 'https://undangan.zif.my.id',
 
     // Pesan WhatsApp di halaman admin (pilih gayanya di sana). Kode yang diganti otomatis:
-    // {nama} {link} {tanggal} (Sabtu, 12 Desember 2026) {jam} (08.00 WIB) {tempat} {alamat}
+    // {nama} {link} {tanggal} (Sabtu, 12 Desember 2026) {jam} (07.30 WIB) {tempat} {alamat}
     'wa_messages' => [
         'hangat' => "Assalamu'alaikum {nama} 🤍\n\n"
             . "Insya Allah kami akan melangsungkan akad nikah pada:\n"
@@ -29,7 +29,7 @@ return [
             . "Atas kehadiran dan doa restunya, kami ucapkan terima kasih.\n\n"
             . "Wassalamu'alaikum Warahmatullahi Wabarakatuh\n*Fatah & Gege*",
         'santai' => "Hai {nama}! 👋\n\n"
-            . "Kita nikah nih 😄 Akadnya *{tanggal}*, jam 8 pagi di {tempat}.\n\n"
+            . "Kita nikah nih 😄 Akadnya *{tanggal}*, jam setengah 8 pagi di {tempat}.\n\n"
             . "Dateng ya, sekalian doain kita 🤍\n"
             . "Detail & RSVP di sini: {link}\n\n"
             . "— Fatah & Gege",
@@ -48,9 +48,9 @@ return [
 
     'event' => [
         'name'      => 'Akad Nikah',
-        'start'     => '2026-12-12 08:00:00',   // Asia/Jakarta (WIB)
+        'start'     => '2026-12-12 07:30:00',   // Asia/Jakarta (WIB)
         'end'       => '2026-12-12 10:00:00',   // perkiraan, untuk kalender
-        'time_text' => '08.00 WIB – selesai',
+        'time_text' => '07.30 WIB – selesai',
         'venue'     => "Masjid Manarul 'Amal",
         'address'   => 'Jl. Meruya Selatan No. 1, RT.1/RW.8, Meruya Selatan, Kembangan, Jakarta Barat 11650',
         // Koordinat lokasi (untuk peta di halaman)
