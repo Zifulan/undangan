@@ -284,7 +284,7 @@ if ($authed) {
         tr.is-hidden td { opacity:.55; }
         .pin, .hid { display:inline-block; margin-left:.35rem; font-size:.72rem; padding:.05rem .4rem; border-radius:999px; background:#F6E9C9; }
         .hid { background:#EEE; }
-        tr.gone, tr.sgone { display:none; }
+        tr.gone, tr.sgone, table.cards tr.gone, table.cards tr.sgone { display:none !important; }
         .gstat { min-width:150px; }
         .gstat .st { display:block; font-size:.78rem; color:#9a8f86; white-space:nowrap; line-height:1.55; }
         .gstat .st.on { color:var(--ink); }
@@ -586,6 +586,14 @@ var markSent = function (tr, undo) {
         tr.querySelector('.st-mark').hidden = !undo;
         if (tr.dataset.status === 'belum' && !undo) tr.dataset.status = 'terkirim';
         else if (tr.dataset.status === 'terkirim' && undo) tr.dataset.status = 'belum';
+        // perbarui angka di tombol filter status
+        document.querySelectorAll('#sfilter [data-sfilter]').forEach(function (c) {
+            var b = c.querySelector('b'); if (!b) return;
+            b.textContent = document.querySelectorAll('.glist tbody tr[data-status="' + c.dataset.sfilter + '"]').length;
+        });
+        // sembunyikan bila tidak lagi cocok dengan filter yang aktif
+        var on = document.querySelector('#sfilter .chip.is-on');
+        if (on) tr.classList.toggle('sgone', on.dataset.sfilter !== '*' && tr.dataset.status !== on.dataset.sfilter);
     }).catch(function () {});
 };
 document.querySelectorAll('.glist .send button, .glist .send a.wa, .glist .st-mark').forEach(function (b) {
@@ -601,8 +609,9 @@ document.querySelectorAll('[data-copy]').forEach(function (b) {
     b.addEventListener('click', function () {
         var t = b.getAttribute('data-copy'), toast = document.getElementById('toast');
         var done = function () { toast.classList.add('on'); setTimeout(function () { toast.classList.remove('on'); }, 1400); };
-        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(t).then(done); }
-        else { var a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); done(); }
+        var fallback = function () { var a = document.createElement('textarea'); a.value = t; a.setAttribute('readonly', ''); a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); a.setSelectionRange(0, t.length); try { document.execCommand('copy'); } catch (e) {} a.remove(); done(); };
+        if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(t).then(done, fallback); }
+        else { fallback(); }
     });
 });
 </script>
