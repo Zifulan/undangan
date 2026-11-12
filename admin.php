@@ -53,8 +53,14 @@ if ($authed) {
                 $group = $group !== '' ? mb_substr($group, 0, 50) : null;
                 foreach (preg_split('/\R/u', (string) $_POST['add_guests']) as $line) {
                     $name = trim(preg_replace('/\s+/u', ' ', $line));
+                    // Jumlah orang di akhir baris: "Nama = 5", "Nama | 5", atau "Nama (5 orang)"
+                    $pax = null;
+                    if (preg_match('/\s*(?:[=|]\s*(\d{1,2})\s*(?:orang)?|\(\s*(\d{1,2})\s*(?:orang)?\s*\))\s*$/iu', $name, $m)) {
+                        $pax = max(1, min(20, (int) ($m[1] !== '' ? $m[1] : $m[2])));
+                        $name = trim(mb_substr($name, 0, mb_strlen($name) - mb_strlen($m[0])));
+                    }
                     if ($name !== '') {
-                        guest_create(mb_substr($name, 0, 100), $group);
+                        guest_create(mb_substr($name, 0, 100), $group, $pax);
                     }
                 }
             }
@@ -85,6 +91,16 @@ if ($authed) {
                 header('Content-Type: application/json');
                 echo json_encode(['ok' => $ok, 'when' => date('j/n H.i')]);
                 exit;
+            }
+            header('Location: admin.php#tamu');
+            exit;
+        }
+
+        // Ubah jumlah orang yang diundang
+        if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['set_pax'])) {
+            if (csrf_valid($_POST['csrf'] ?? null)) {
+                $n = (int) ($_POST['pax'] ?? 0);
+                guest_set_pax((int) $_POST['set_pax'], $n > 0 ? min(20, $n) : null);
             }
             header('Location: admin.php#tamu');
             exit;
@@ -172,6 +188,7 @@ if ($authed) {
         $attLabel = ['hadir' => 'Hadir', 'tidak_hadir' => 'Tidak hadir', 'ragu' => 'Masih ragu'];
         $gStatus = [];
         $gCount  = ['belum' => 0, 'terkirim' => 0, 'dibuka' => 0, 'konfirmasi' => 0];
+        $paxSum  = ['invited' => 0, 'coming' => 0, 'notcoming' => 0, 'waiting' => 0, 'ragu' => 0, 'over' => 0, 'unset' => 0];
         foreach ($guestList as $g) {
             $att = $g['rsvp_attendance'];
             $num = (int) $g['rsvp_guests'];
@@ -180,8 +197,16 @@ if ($authed) {
                 $num = (int) $replied[mb_strtolower($g['name'])]['guests'];
             }
             $st = $att !== null ? 'konfirmasi' : ($g['opened_at'] ? 'dibuka' : ($g['sent_at'] ? 'terkirim' : 'belum'));
-            $gStatus[$g['id']] = ['st' => $st, 'att' => $att, 'num' => $num];
+            $pax = $g['pax'] !== null ? (int) $g['pax'] : null;
+            $gStatus[$g['id']] = ['st' => $st, 'att' => $att, 'num' => $num, 'over' => $att === 'hadir' && $pax !== null && $num > $pax];
             $gCount[$st]++;
+            // Rekap jumlah orang
+            $paxSum['invited'] += $pax ?? 0;
+            if ($pax === null) { $paxSum['unset']++; }
+            if ($att === 'hadir') { $paxSum['coming'] += $num; }
+            elseif ($att === 'tidak_hadir') { $paxSum['notcoming'] += $pax ?? 0; }
+            else { $paxSum['waiting'] += $pax ?? 0; if ($att === 'ragu') { $paxSum['ragu'] += $pax ?? 0; } }
+            if ($gStatus[$g['id']]['over']) { $paxSum['over']++; }
         }
         $fmtWhen = fn($d) => $d ? date('j/n H.i', strtotime((string) $d)) : '';
 
@@ -268,6 +293,16 @@ if ($authed) {
         .gstat .st-ragu { color:#a07020; }
         .link-mini { background:none; border:0; padding:0; margin-top:2px; font-size:.72rem; color:#8a6d5a; text-decoration:underline; cursor:pointer; }
         .sfilter { margin-bottom:6px; }
+        .pset { margin-top:4px; }
+        .pset label { font-size:.75rem; color:#8a7d74; }
+        .pset input { width:3.2rem; padding:.15rem .3rem; border:1px solid var(--line); font:inherit; font-size:.85rem; text-align:center; }
+        .gstat .st-over { color:#b0412f; font-weight:600; white-space:normal; }
+        .pax-sum { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; margin:14px 0; }
+        .pax-sum div { background:var(--ivory-2); border:1px solid var(--line); padding:10px 12px; }
+        .pax-sum b { display:block; font:500 1.5rem/1 Georgia,serif; }
+        .pax-sum span { font-size:.72rem; color:var(--ink); }
+        .pax-sum .ok b { color:#1F7A4D; }
+        .pax-sum .warn { border-color:#e3b0a5; background:#fbeeea; } .pax-sum .warn b { color:#b0412f; }
         @media (max-width: 700px) {
             .wrap { padding:16px 12px 40px; }
             header h1 { font-size:1.25rem; }
@@ -319,7 +354,8 @@ if ($authed) {
                 <p class="hint">Tulis nama tamu, satu per baris. Setiap tamu mendapat link pribadi berkode acak, jadi nama tidak terlihat di link.</p>
                 <form method="post" class="add-form">
                     <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
-                    <textarea name="add_guests" placeholder="Prabowo Teddy&#10;Keluarga Prabowo Teddy" required></textarea>
+                    <textarea name="add_guests" placeholder="Prabowo Teddy = 2&#10;Keluarga Prabowo Teddy = 5" required></textarea>
+                    <p class="hint">Tambahkan <b>= angka</b> di akhir baris untuk jumlah orang yang diundang (boleh dikosongkan, bisa diubah nanti).</p>
                     <div class="add-row">
                         <label>Grup <small>(opsional)</small>
                             <input name="group" list="groupList" placeholder="mis. Keluarga Fatah" maxlength="50">
@@ -337,6 +373,14 @@ if ($authed) {
                     <button class="mini" type="button" id="waPreviewBtn">Lihat contoh</button>
                 </p>
                 <pre class="wa-preview" id="waPreview" hidden></pre>
+
+                <div class="pax-sum">
+                    <div><b><?= $paxSum['invited'] ?></b><span>orang diundang<?= $paxSum['unset'] ? ' (' . $paxSum['unset'] . ' link tanpa jumlah)' : '' ?></span></div>
+                    <div class="ok"><b><?= $paxSum['coming'] ?></b><span>konfirmasi hadir</span></div>
+                    <div><b><?= $paxSum['waiting'] ?></b><span>belum pasti<?= $paxSum['ragu'] ? ' (' . $paxSum['ragu'] . ' masih ragu)' : '' ?></span></div>
+                    <div><b><?= $paxSum['notcoming'] ?></b><span>tidak hadir</span></div>
+                    <?php if ($paxSum['over']): ?><div class="warn"><b><?= $paxSum['over'] ?></b><span>link melebihi jumlah undangan</span></div><?php endif; ?>
+                </div>
 
                 <div class="gfilter sfilter" id="sfilter" title="Saring menurut status">
                     <button type="button" class="chip is-on" data-sfilter="*">Semua status</button>
@@ -377,7 +421,13 @@ if ($authed) {
                         ?>
                             <?php $S = $gStatus[$g['id']]; ?>
                             <tr data-group="<?= e($gn) ?>" data-status="<?= $S['st'] ?>" data-gstyle="<?= e($groupStyles[$gn] ?? '') ?>" data-id="<?= (int) $g['id'] ?>">
-                                <td data-label="Nama"><b><?= e($g['name']) ?></b></td>
+                                <td data-label="Nama"><b><?= e($g['name']) ?></b>
+                                    <form method="post" class="pset" title="Jumlah orang yang diundang">
+                                        <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                                        <input type="hidden" name="set_pax" value="<?= (int) $g['id'] ?>">
+                                        <label>Diundang <input type="number" name="pax" min="0" max="20" value="<?= $g['pax'] !== null ? (int) $g['pax'] : '' ?>" placeholder="–" onchange="this.form.submit()"> orang</label>
+                                    </form>
+                                </td>
                                 <td data-label="Status" class="gstat">
                                     <span class="st st-sent<?= $g['sent_at'] ? ' on' : '' ?>" title="<?= $g['sent_at'] ? 'Dikirim ' . e($fmtWhen($g['sent_at'])) : 'Belum ditandai terkirim' ?>">✉️ <span class="st-txt"><?= $g['sent_at'] ? 'Terkirim ' . e($fmtWhen($g['sent_at'])) : 'Belum dikirim' ?></span></span>
                                     <?php if ($g['opened_at']): ?>
@@ -387,6 +437,7 @@ if ($authed) {
                                     <?php endif; ?>
                                     <?php if ($S['att'] !== null): ?>
                                         <span class="st on st-<?= e($S['att']) ?>">✅ <?= e($attLabel[$S['att']] ?? $S['att']) ?><?= $S['att'] === 'hadir' && $S['num'] ? ' · ' . $S['num'] . ' org' : '' ?></span>
+                                        <?php if ($S['over']): ?><span class="st st-over">⚠️ lebih dari undangan (<?= (int) $g['pax'] ?> org)</span><?php endif; ?>
                                     <?php else: ?>
                                         <span class="st">✅ Belum konfirmasi</span>
                                     <?php endif; ?>

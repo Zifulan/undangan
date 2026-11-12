@@ -16,10 +16,13 @@ $ev    = $c['event'] + [
 // Nama tamu hanya dari kode link pribadi (?u=KODE) yang dibuat di admin.
 $guest = '';
 $guestCode = '';
+$guestPax = null;
 if (isset($_GET['u']) && is_string($_GET['u'])) {
     try {
-        $guest = (string) guest_by_code(trim($_GET['u']));
-        if ($guest !== '') {
+        $gRow = guest_row_by_code(trim($_GET['u']));
+        if ($gRow !== null) {
+            $guest = (string) $gRow['name'];
+            $guestPax = $gRow['pax'] !== null ? (int) $gRow['pax'] : null;
             $guestCode = strtoupper(trim($_GET['u']));
             // Catat "dibuka" — kecuali admin sendiri yang sedang mengecek link.
             // Abaikan juga robot pratinjau link (WhatsApp, Telegram, dll.) yang membuka link saat ditempel.
@@ -356,8 +359,8 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
                 <label class="field" id="guestsField" hidden>
                     <span class="caps caps-xs">Jumlah tamu</span>
                     <select name="guests">
-                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <option value="<?= $i ?>"><?= $i ?> orang</option>
+                        <?php for ($i = 1; $i <= max(5, (int) $guestPax); $i++): ?>
+                            <option value="<?= $i ?>"<?= $i === $guestPax ? ' selected' : '' ?>><?= $i ?> orang</option>
                         <?php endfor; ?>
                     </select>
                 </label>

@@ -46,9 +46,17 @@ if (mb_strlen($name) < 2 || mb_strlen($name) > 100) {
 if (!in_array($attendance, ['hadir', 'tidak_hadir', 'ragu'], true)) {
     $errors[] = 'Silakan pilih konfirmasi kehadiran.';
 }
+// Batas jumlah tamu: 5, atau lebih bila link pribadinya memang mengundang lebih banyak.
+$maxGuests = 5;
+try {
+    if ($guestCode !== '' && ($gr = guest_row_by_code($guestCode)) !== null && $gr['pax'] !== null) {
+        $maxGuests = max(5, (int) $gr['pax']);
+    }
+} catch (Throwable $ex) {
+}
 if ($attendance === 'hadir') {
-    if ($guests < 1 || $guests > 5) {
-        $errors[] = 'Jumlah tamu 1–5 orang.';
+    if ($guests < 1 || $guests > $maxGuests) {
+        $errors[] = 'Jumlah tamu 1–' . $maxGuests . ' orang.';
     }
 } else {
     $guests = 0;

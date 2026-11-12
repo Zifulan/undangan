@@ -75,6 +75,8 @@ function ensure_schema(PDO $pdo): void
     ensure_column($pdo, 'guests', 'opened_at', 'DATETIME NULL');
     ensure_column($pdo, 'guests', 'last_open_at', 'DATETIME NULL');
     ensure_column($pdo, 'guests', 'open_count', 'INT UNSIGNED NOT NULL DEFAULT 0');
+    // Jumlah orang yang diharapkan hadir dari satu link (opsional).
+    ensure_column($pdo, 'guests', 'pax', 'TINYINT UNSIGNED NULL');
     // RSVP yang dikirim lewat link pribadi menyimpan kodenya.
     ensure_column($pdo, 'rsvp', 'guest_code', 'CHAR(6) NULL');
 }
@@ -112,18 +114,31 @@ function guest_by_code(string $code): ?string
     return $name === false ? null : (string) $name;
 }
 
+/** Data tamu lengkap dari kode link (null bila tidak ada). */
+function guest_row_by_code(string $code): ?array
+{
+    $code = strtoupper($code);
+    if (!guest_code_valid($code)) {
+        return null;
+    }
+    $stmt = db()->prepare('SELECT id, code, name, pax FROM guests WHERE code = :c');
+    $stmt->execute([':c' => $code]);
+    $row = $stmt->fetch();
+    return $row === false ? null : $row;
+}
+
 /** Tambah tamu; mengembalikan kode barunya. */
-function guest_create(string $name, ?string $group = null): string
+function guest_create(string $name, ?string $group = null, ?int $pax = null): string
 {
     $alphabet = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';
-    $stmt = db()->prepare('INSERT INTO guests (code, name, group_name) VALUES (:c, :n, :g)');
+    $stmt = db()->prepare('INSERT INTO guests (code, name, group_name, pax) VALUES (:c, :n, :g, :p)');
     for ($try = 0; $try < 8; $try++) {
         $code = '';
         for ($i = 0; $i < 6; $i++) {
             $code .= $alphabet[random_int(0, strlen($alphabet) - 1)];
         }
         try {
-            $stmt->execute([':c' => $code, ':n' => $name, ':g' => $group]);
+            $stmt->execute([':c' => $code, ':n' => $name, ':g' => $group, ':p' => $pax]);
             return $code;
         } catch (PDOException $ex) {
             if (($ex->errorInfo[1] ?? 0) !== 1062) { // selain kode kembar
@@ -137,7 +152,7 @@ function guest_create(string $name, ?string $group = null): string
 function guests_all(): array
 {
     return db()->query(
-        'SELECT g.id, g.code, g.name, g.group_name, g.created_at, g.sent_at, g.opened_at, g.last_open_at, g.open_count,
+        'SELECT g.id, g.code, g.name, g.group_name, g.pax, g.created_at, g.sent_at, g.opened_at, g.last_open_at, g.open_count,
                 (SELECT r.attendance FROM rsvp r WHERE r.guest_code = g.code ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS rsvp_attendance,
                 (SELECT r.guests FROM rsvp r WHERE r.guest_code = g.code ORDER BY r.created_at DESC, r.id DESC LIMIT 1) AS rsvp_guests
            FROM guests g ORDER BY g.created_at DESC, g.id DESC'
@@ -183,6 +198,11 @@ function latest_wishes(int $limit = 50): array
     $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetchAll();
+}
+
+function guest_set_pax(int $id, ?int $pax): void
+{
+    db()->prepare('UPDATE guests SET pax = :p WHERE id = :id')->execute([':p' => $pax, ':id' => $id]);
 }
 
 function guest_set_group(int $id, ?string $group): void
