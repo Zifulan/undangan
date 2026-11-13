@@ -189,7 +189,7 @@
     /* ---------- daftar bunga (bertab) + unggah ---------- */
     var tabs = document.getElementById('fxTabs');
     var fileInput = document.getElementById('fxFile');
-    var GROUPS = ['Buket', 'Rangkaian', 'Satuan', 'Unggahan'];
+    var GROUPS = ['Buket', 'Rangkaian', 'Satuan', 'Lukisan', 'Unggahan'];
     var currentGroup = 'Buket';
 
     var addItem = function (key) {

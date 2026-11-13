@@ -33,6 +33,15 @@ const FLOWER_BUILTIN = [
     'orchid-spray'    => [174, 256, 'Anggrek putih', 'Satuan'],
     'mum'             => [152, 104, 'Krisan', 'Satuan'],
     'tassel'          => [126, 250, 'Untaian', 'Satuan'],
+    // Bunga lukisan (gaya ilustrasi cat air)
+    'lk-anthurium-cluster' => [526, 620, 'Anthurium (rumpun)', 'Lukisan'],
+    'lk-anthurium'         => [366, 391, 'Anthurium', 'Lukisan'],
+    'lk-hibiscus'          => [440, 331, 'Kembang sepatu', 'Lukisan'],
+    'lk-hibiscus-sm'       => [383, 283, 'Kembang sepatu kecil', 'Lukisan'],
+    'lk-lily'              => [558, 618, 'Lili pink', 'Lukisan'],
+    'lk-orchid'            => [498, 451, 'Anggrek putih', 'Lukisan'],
+    'lk-orchid-sm'         => [342, 348, 'Anggrek putih kecil', 'Lukisan'],
+    'lk-spray'             => [620, 336, 'Rangkaian lukisan', 'Lukisan'],
 ];
 
 /**
