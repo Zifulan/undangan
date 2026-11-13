@@ -1770,3 +1770,15 @@ p { margin: 0 0 1rem; }
 .moment:nth-child(odd) { transform:rotate(-1.2deg); }
 .moment:nth-child(even) { transform:rotate(1.1deg); }
 .moment img { display:block; width:100%; aspect-ratio:4/5; object-fit:cover; }
+
+/* ---------- Bunga amplop: tampil saat terbuka / tertutup saja ---------- */
+.envelope .fx { transition: opacity .6s ease; }
+.cover:not(.is-opening) .fx-s-open { opacity: 0; }
+.cover.is-opening .fx-s-open { transition-delay: .7s; }   /* muncul setelah tutup amplop terbuka */
+.cover.is-opening .fx-s-closed { opacity: 0; }
+/* mode atur: bunga yang sedang tersembunyi tetap terlihat samar agar bisa dipilih */
+.is-editing .cover:not(.is-opening) .fx-s-open,
+.is-editing .cover.is-opening .fx-s-closed { opacity: .22; transition-delay: 0s; }
+.is-editing .fx-s-open.is-selected, .is-editing .fx-s-closed.is-selected { opacity: 1 !important; }
+.fx-chip .when { opacity: .75; margin-left: .25em; }
+.fx-bar:not(.on-envelope) .fx-env-only { display: none; }

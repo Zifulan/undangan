@@ -106,7 +106,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css?v=36">
+    <link rel="stylesheet" href="assets/css/style.css?v=37">
     <noscript><style>.reveal,.words .w{opacity:1;transform:none;filter:none}body.is-locked{overflow:auto;height:auto}.cover-hint{display:none}</style></noscript>
 </head>
 <body class="<?= $editing ? 'is-editing' : 'is-locked' ?>">
@@ -431,6 +431,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <select id="fxArea" aria-label="Bagian">
             <?php foreach (FLOWER_AREA_LABELS as $k => $label): ?><option value="<?= e($k) ?>"><?= e($label) ?></option><?php endforeach; ?>
         </select>
+        <button type="button" id="fxEnvState" class="fx-env-only" title="Lihat amplop terbuka / tertutup">Amplop: terbuka</button>
         <button type="button" id="fxUndo">Urungkan</button>
         <button type="button" class="fx-primary" id="fxSave">Simpan</button>
         <a class="fx-exit" href="admin.php">Keluar</a>
@@ -441,6 +442,7 @@ $pageDesc  = tanggal_id($ev['start']) . ' · ' . $ev['venue'];
         <button type="button" id="fxRotL" title="Putar kiri">⟲</button>
         <button type="button" id="fxRotR" title="Putar kanan">⟳</button>
         <button type="button" id="fxFlip">Cermin</button>
+        <button type="button" id="fxWhen" class="fx-env-only" title="Kapan bunga ini tampil">Tampil: selalu</button>
         <button type="button" id="fxLayer">Depan/Belakang</button>
         <button type="button" id="fxUp">Paling atas</button>
         <button type="button" class="fx-danger" id="fxDel">Hapus</button>

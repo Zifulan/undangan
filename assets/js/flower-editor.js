@@ -36,9 +36,27 @@
         statusEl.className = 'fx-status' + (cls ? ' is-' + cls : '');
     };
     var updateDeviceNote = function () {
+        if (typeof markEnvelopeArea === "function") markEnvelopeArea();
         var hasVariants = document.querySelectorAll('.fx-set[data-area="' + areaSel.value + '"]').length > 1;
         status(hasVariants ? (isDesktop() ? 'Mengatur tampilan desktop' : 'Mengatur tampilan HP') : 'Berlaku untuk HP & desktop');
     };
+
+    /* ---------- amplop terbuka / tertutup (khusus area Amplop) ---------- */
+    var cover = document.getElementById('cover');
+    var setEnvState = function (open) {
+        if (!cover) return;
+        cover.classList.toggle('is-opening', open);
+        var b = document.getElementById('fxEnvState');
+        if (b) b.textContent = 'Amplop: ' + (open ? 'terbuka' : 'tertutup');
+        setTimeout(positionHandle, 950);
+    };
+    var updateWhenLabel = function () {
+        var b = document.getElementById('fxWhen');
+        if (!b) return;
+        var s = selected ? (selected.classList.contains('fx-s-open') ? 'open' : (selected.classList.contains('fx-s-closed') ? 'closed' : 'all')) : 'all';
+        b.textContent = 'Tampil: ' + { all: 'selalu', open: 'saat terbuka', closed: 'saat tertutup' }[s];
+    };
+    var markEnvelopeArea = function () { bar.classList.toggle('on-envelope', areaSel.value === 'envelope'); };
 
     /* ---------- baca / tulis properti item ---------- */
     var num = function (v, d) { var n = parseFloat(v); return isNaN(n) ? d : n; };
@@ -46,7 +64,8 @@
         return {
             x: num(el.style.left, 50), y: num(el.style.top, 50), w: num(el.style.width, 30),
             r: num(el.style.getPropertyValue('--r'), 0), f: el.style.getPropertyValue('--f').trim() === '-1',
-            z: el.classList.contains('fx-back') ? 'back' : 'front', a: el.dataset.a
+            z: el.classList.contains('fx-back') ? 'back' : 'front', a: el.dataset.a,
+            s: el.classList.contains('fx-s-open') ? 'open' : (el.classList.contains('fx-s-closed') ? 'closed' : 'all')
         };
     };
     var put = function (el, p) {
@@ -57,6 +76,10 @@
         el.style.setProperty('--f', p.f ? '-1' : '1');
         el.classList.toggle('fx-back', p.z === 'back');
         el.classList.toggle('fx-front', p.z !== 'back');
+        if (p.s !== undefined) {
+            el.classList.toggle('fx-s-open', p.s === 'open');
+            el.classList.toggle('fx-s-closed', p.s === 'closed');
+        }
     };
 
     /* ---------- riwayat (urungkan) ---------- */
@@ -93,6 +116,7 @@
             if (areaSel.value !== set.dataset.area) { areaSel.value = set.dataset.area; updateDeviceNote(); renderChips(); }
         }
         bar.classList.toggle('has-selection', !!el);
+        updateWhenLabel();
         positionHandle();
         renderChips();
     };
@@ -107,6 +131,8 @@
             b.type = 'button';
             b.className = 'fx-chip' + (el === selected ? ' is-on' : '') + (el.classList.contains('fx-back') ? ' is-back' : '');
             b.textContent = (i + 1) + '. ' + ((CFG.assets[el.dataset.a] || {}).label || el.dataset.a);
+            var w = el.classList.contains('fx-s-open') ? 'terbuka' : (el.classList.contains('fx-s-closed') ? 'tertutup' : '');
+            if (w) { var sp = document.createElement('span'); sp.className = 'when'; sp.textContent = '· ' + w; b.appendChild(sp); }
             b.addEventListener('click', function () { select(el); });
             chips.appendChild(b);
         });
@@ -171,6 +197,14 @@
         };
     };
     var btn = function (id, fn) { var b = document.getElementById(id); if (b) b.addEventListener('click', fn); };
+    btn('fxWhen', act(function (p) {
+        p.s = p.s === 'all' ? 'open' : (p.s === 'open' ? 'closed' : 'all');
+        put(selected, p);
+        // tunjukkan keadaan amplop yang cocok supaya hasilnya langsung terlihat
+        if (p.s === 'open') setEnvState(true); else if (p.s === 'closed') setEnvState(false);
+        updateWhenLabel();
+    }));
+    btn('fxEnvState', function () { setEnvState(!cover.classList.contains('is-opening')); });
     btn('fxFlip',   act(function (p) { p.f = !p.f; put(selected, p); }));
     btn('fxLayer',  act(function (p) { p.z = p.z === 'back' ? 'front' : 'back'; put(selected, p); }));
     btn('fxUp',     act(function () { selected.parentNode.appendChild(selected); }));

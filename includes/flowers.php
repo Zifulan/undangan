@@ -6,7 +6,8 @@ declare(strict_types=1);
  *
  * Susunan disimpan di data/flowers.json. Bila file belum ada, dipakai susunan bawaan.
  * Setiap item: aset, x & y (titik tengah, % lebar/tinggi wadah), w (lebar, % lebar wadah),
- * r (putaran, derajat), f (cermin, bool), z ('back' di belakang amplop | 'front').
+ * r (putaran, derajat), f (cermin, bool), z ('back' di belakang amplop | 'front'),
+ * s (kapan tampil di amplop: 'all' | 'open' saat terbuka | 'closed' saat tertutup).
  *
  * Area & varian:
  *   envelope  — satu susunan (amplop berskala sama di HP & desktop)
@@ -190,6 +191,7 @@ function flowers_sanitize($items): ?array
             'r' => $num($it['r'] ?? 0, -360, 360),
             'f' => !empty($it['f']),
             'z' => ($it['z'] ?? 'front') === 'back' ? 'back' : 'front',
+            's' => in_array($it['s'] ?? 'all', ['open', 'closed'], true) ? $it['s'] : 'all',
         ];
     }
     return $clean;
@@ -216,7 +218,8 @@ function flower_item(array $it): string
         return '';
     }
     $style = sprintf('left:%s%%;top:%s%%;width:%s%%;--r:%sdeg;--f:%d', $it['x'], $it['y'], $it['w'], $it['r'], $it['f'] ? -1 : 1);
-    return '<picture class="fx fx-' . ($it['z'] === 'back' ? 'back' : 'front') . '" data-a="' . e($it['a']) . '" style="' . $style . '" aria-hidden="true">'
+    $when = in_array($it['s'] ?? 'all', ['open', 'closed'], true) ? ' fx-s-' . $it['s'] : '';
+    return '<picture class="fx fx-' . ($it['z'] === 'back' ? 'back' : 'front') . $when . '" data-a="' . e($it['a']) . '" style="' . $style . '" aria-hidden="true">'
         . ($as['webp'] ? '<source srcset="' . e(img_url($as['src'] . '.webp')) . '" type="image/webp">' : '')
         . '<img src="' . e(img_url($as['src'] . '.png')) . '" alt="" width="' . (int) $as['w'] . '" height="' . (int) $as['h'] . '" loading="lazy" decoding="async" draggable="false">'
         . '</picture>';
